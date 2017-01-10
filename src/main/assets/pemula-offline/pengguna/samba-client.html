@@ -1,0 +1,274 @@
+<head><title>Linux untuk Pemula: Mengakses Windows Share dengan Samba</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Mengakses Windows Share dengan Samba</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/zakaria.html">Zakaria</a>
+</strong></p>
+<div class="ARTICLE">
+<div class="TITLEPAGE">
+<h1 class="TITLE"><a name="AEN2">Mengakses Windows Share dengan Samba</a></h1>
+<hr>
+</div>
+<div class="TOC">
+<dl>
+<dt><b>Table of Contents</b></dt>
+<dt><a href="#AEN6">Pendahuluan</a></dt>
+<dt><a href="#AEN13">Akses Share dengan smbclient</a></dt>
+<dt><a href="#AEN41">Melihat
+Direktori yang Di-<i class="EMPHASIS">share</i>
+dengan smbclient</a></dt>
+<dt><a href="#AEN50">Mounting Share dengan smbmount</a></dt>
+<dt><a href="#AEN78">Client yang lain</a></dt>
+<dt><a href="#AEN85">Sumber Lebih Lanjut</a></dt>
+</dl>
+</div>
+<div class="SECT1">
+<h1 class="SECT1"><a name="AEN6">Pendahuluan</a></h1>
+<p>Samba adalah implementasi dari SMB protocol yaitu protocol yang digunakan oleh sistem operasi MS seperti MS Windows untuk men-sharing file dan printer. Dengan SMB anda bisa mengakses
+file &amp; printer yang di-<i class="EMPHASIS">share</i>
+oleh komputer Windows atau men-<i class="EMPHASIS">share</i>
+file &amp; printer di komputer linux anda. Artikel ini hanya membahas cara mengakses
+<i class="EMPHASIS">share</i>
+file. Semua
+<i class="EMPHASIS">utility</i>
+yang dibahas disini terdapat dalam paket samba-client yang biasanya sudah terinstall pada waktu instalasi.</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN13">Akses Share dengan smbclient</a></h1>
+<p>smbclient
+berguna untuk mengakses share komputer lain dengan interface seperti ftp.</p>
+<p>Syntaxnya adalah:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+smbclient service <font color="RED">[options]
+</font>
+</pre>
+</td>
+</tr>
+</table>
+<p>Dimana service dalam bentuk //namakomputer/namashare misalnya //ntserver/cdrom. Misalnya kita ingin mengakses isi direktori cdrom dari komputer ntserver kita tinggal menjalankan</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[zakaria@linux zakaria]$ smbclient "//itcom2/my documents"
+Password: 
+smb: \&gt; 
+</pre>
+</td>
+</tr>
+</table>
+<p>Nanti smbclient akan memberikan prompt untuk password, dan passwordnya seperti biasa tidak akan ditampilkan. Kalau semuanya beres akan keluar prompt ' smb:&gt;' pada prompt ini anda dapat mengetikkan perintah-perintah yang dipakai di ftp seperti ls, get, put, mget, mput, binary dsb. Kalau sudah selesai ketik saja quit.</p>
+<p>Option yang sering dipakai adalah:</p>
+<dl>
+<dt>-U namauser</dt>
+<dd>
+<p>Koneksi dengan nama user lain dari username linux</p>
+</dd>
+<dt>-W workgroup</dt>
+<dd>
+<p>Koneksi dengan nama workgroup selain yang di setting di /etc/smb.conf</p>
+</dd>
+<dt>-n NetBios_Name</dt>
+<dd>
+<p>Koneksi dengan nama host yang berbeda dengan nama host komputer</p>
+</dd>
+<dt>-I IP address</dt>
+<dd>
+<p>Koneksi ke host tertentu dengan IP tersebut. Sangat berguna jika samba tidak berhasil me-<i class="EMPHASIS">resolve</i>
+nama host yang di tuju.</p>
+</dd>
+</dl>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN41">Melihat Direktori yang Di-<i class="EMPHASIS">share</i>
+dengan smbclient</a></h1>
+<p>Selain dapat meng-ftp
+<i class="EMPHASIS">share</i>
+Windows smbclient juga dapat menampilkan daftar direktori yang di-<i class="EMPHASIS">share</i>
+oleh sebuah komputer dengan cara:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+smbclient -L nama_komputer
+</pre>
+</td>
+</tr>
+</table>
+<p>Misalnya:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[zakaria@linux zakaria]$ smbclient -L itcom2
+Password: 
+ 
+        Sharename      Type      Comment
+        ---------      ----      -------
+        SYSTEM         Disk
+        C              Disk
+        MY DOCUMENTS   Disk
+        PRINTER$       Disk
+        HP             Printer
+        D              Disk
+        A              Disk
+        IPC$           IPC       Remote Inter Process Communication
+ 
+        Server               Comment
+        ---------            -------
+ 
+        Workgroup            Master
+        ---------            -------
+</pre>
+</td>
+</tr>
+</table>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN50">Mounting Share dengan smbmount</a></h1>
+<p>Cara lain mengakses share adalah me-<i class="EMPHASIS">mount</i>
+remote share tersebut ke suatu direktori dengan menggunakan smbmount. Setelah di mount anda bisa mengakses shsre tersebut seperti anda mengakses direktori biasa. Seperti juga
+mount, smbmount harus dijalankan oleh root.</p>
+<p>Syntaxnya adalah seperti berikut:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+smbmount service mountpoint [-o options]
+</pre>
+</td>
+</tr>
+</table>
+<p>Dimana service dalam bentuk //namakomputer/namashare misalnya //ntserver/cdrom dan mountpoint adalah direktori yang akan di mount. Parameter options-nya dalam bentuk keyword=nilai dan dipisahkan dengan koma untuk setiap parameter.</p>
+<p>Dimana option yang
+sering digunakan adalah:</p>
+<dl>
+<dt>username=user</dt>
+<dd>
+<p>Koneksi dengan nama user lain dari username linux (root)</p>
+</dd>
+<dt>netbiosname=name</dt>
+<dd>
+<p>Koneksi dengan memakai nama host yang berbeda dengan nama host komputer</p>
+</dd>
+<dt>workgroup=name</dt>
+<dd>
+<p>Koneksi dengan nama workgroup selain yang di setting di /etc/smb.conf</p>
+</dd>
+<dt>ip=1.2.3.4</dt>
+<dd>
+<p>Koneksi ke host tertentu dengan IP tertentu misalnya 1.2.3.4. Sangat berguna jika samba tidak berhasil me-<i class="EMPHASIS">resolve</i>
+nama host yang di tuju.</p>
+</dd>
+</dl>
+<p>Contoh penggunaan:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[root@linux /root]# smbmount "//itcom2/my documents" /mnt/net/itcom2 -o netbiosname=linux
+Password:
+</pre>
+</td>
+</tr>
+</table>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN78">Client yang lain</a></h1>
+<p>Jika anda menginginkan client yang grafis seperti Windows Network Neighborhood anda bisa menginstall program
+LinNeighborhood bisa dicari di <a href="http://freshmeat.net">http://freshmeat.net</a></p>
+<p></p>
+<div class="FIGURE">
+<p><b>Figure 1. LinNeigborhood in Action</b></p>
+<p><img src="samba-client-files/linneigborhood.gif" width="462" height="355" alt="linneigborhood.gif 462x355 (17 KB)"></p>
+</div>
+<br>
+<br>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN85">Sumber Lebih Lanjut</a></h1>
+<p>Untuk informasi yang lebih lengkap anda dapat membaca:</p>
+<ul>
+<li>
+<p>man smbclient</p>
+</li>
+<li>
+<p>man smbmount</p>
+</li>
+<li>
+<p>SMB HOWTO</p>
+</li>
+<li>
+<p>Dokumentasi samba di
+/usr/doc/samba-*/docs/</p>
+</li>
+</ul>
+</div>
+</div>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Mengakses Windows Share dengan Samba</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/samba-client.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/samba-client.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

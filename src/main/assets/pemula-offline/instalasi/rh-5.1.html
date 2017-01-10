@@ -1,0 +1,471 @@
+<head><title>Linux untuk Pemula: Instalasi RedHat Linux 5.1</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="instalasi, disk, boot, supplemental">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Instalasi</a>
+::
+<b>Instalasi RedHat Linux 5.1</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Instalasi RedHat Linux 5.1</h1>
+<h2>Persiapan</h2>
+<p>RedHat Linux merupakan salah satu distribusi yang memiliki program instalasi yang sangat baik sehingga
+instalasi dapat dilakukan secara otomatis. User hanya perlu memasukkan informasi mengenai sistem yang dimiliki dan sisanya akan dikerjakan oleh program instalasi tersebut. Oleh karena itu sebelum melakukan instalasi sebaiknya mengumpulkan dulu dokumentasi mengenai semua
+<i>hardware</i>
+yang dimiliki, kalau perlu siapkan buku
+<i>manual</i>
+komputer.</p>
+<p>Periksa apakah semua
+<i>hardware</i>
+komputer memang tercantum dalam daftar
+<i>Hardware-HOWTO</i>
+atau
+<a href="http://www.redhat.com/support/docs/hardware.html">RedHat Compatibility List</a>
+bila ada
+<i>hardware</i>
+yang tidak tercantum, catat dan tanyakan ke forum
+<i><a href="../intro/milis.html">Mailing List</a></i>
+Linux mungkin ada orang lain yang mempunyai masalah sama tapi berhasil menangani masalah
+<i>hardware</i>
+tersebut.</p>
+<h3>Membuat Disket Boot dan Supplemental</h3>
+<p>Bila instalasi RedHat Linux direncanakan melalui NFS,
+<i>hard disk</i>, FTP, SMB atau PCMCIA maka disket
+<i>boot</i>
+dan
+<i>supplemental</i>
+ini harus disiapkan lebih dahulu. Untuk
+itu diperlukan dua buah disket 3.5 inci
+<i>high-density</i>
+(1.44MB) yang telah di format. Beri label pada disket tersebut, masing-masing
+<b>RedHat Boot Disk</b>
+dan
+<b>RedHat Supplemental Disk.</b></p>
+<p>Untuk membuat kedua disket itu dari MS-DOS, jalankan program
+<b>rawrite.exe</b>
+yang terdapat pada cd RedHat:</p>
+<pre>
+d:
+cd \images
+\dosutils\rawrite
+</pre>
+<p>rawrite akan menanyakan nama
+<i>disk image.</i>
+Masukkan disket
+<i>RedHat Boot Disk</i>
+di drive A:, ketik
+<b>boot.img</b>
+dan tekan Enter.
+Selesai, disket
+<i>RedHat Boot Disk</i>
+bisa dikeluarkan dari drive A:</p>
+<p>Setelah selesai jalankan lagi rawrite.exe. Masukkan disket ke
+<i>Supplemental</i>
+di drive A:, ketik
+<b>supp.img</b>
+dan tekan Enter. Selesai.</p>
+<p>Untuk membuat kedua disket itu dari sistem Linux, dapat digunakan program utilitas
+<b>dd.</b>
+<i>Mount</i>
+dulu cd RedHat kemudian pindah ke direktori
+<i>images</i>
+di CD-ROM. Gunakan perintah ini untuk membuat
+<i>RedHat Boot Disk</i>:</p>
+<pre>
+dd if=boot.img of=/dev/fd0 bs=1440k
+</pre>
+<p>Kemudian untuk
+<i>RedHat Supplemental Disk</i>
+dibuat dengan perintah:</p>
+<pre>
+dd if=supp.img of=/dev/fd0 bs=1440k
+</pre>
+<h3>Instalasi Tanpa Menggunakan Disket Boot</h3>
+<p>Bila ada MS-DOS di dalam komputer, instalasi dapat langsung dilakukan tanpa bantuan disket
+<i>boot.</i>
+Program instalasi RedHat dapat langsung di jalankan dari
+<i>prompt</i>
+MS-DOS:</p>
+<pre>
+d:
+cd \dosutils
+autoboot.bat
+</pre>
+<p>Catatan: Distribusi terbaru RedHat kabarnya malah bisa langsung
+<i>boot</i>
+dari CD-ROM
+begitu cd tersebut dimasukkan dalam cd drive komputer.</p>
+<h2>Virtual Console</h2>
+<p>Saat instalasi berlangsung,
+<i>user</i>
+tidak hanya bisa melihat kotak dialog yang menuntun proses instalasi tapi bagi
+<i>user</i>
+yang sudah berpengalaman juga dapat melihat proses diagnostik dan jalannya proses dengan memanfaatkan
+<i>virtual console.</i>
+Lima buah
+<i>virtual console</i>
+yang tersedia dapat membantu mengatasi masalah saat instalasi, yaitu:</p>
+<p><i>Console</i>
+1 menampilkan kotak dialog<br>
+<i>Console</i>
+2 menampilkan
+<i>prompt shell</i><br>
+<i>Console</i>
+3 menampilkan pesan-pesan instalasi program (<i>install log</i>)<br>
+<i>Console</i>
+4 menampilkan pesan-pesan kernel dan sistem program lainnya (<i>system log</i>)<br>
+<i>Console</i>
+5 menampilkan pesan-pesan lainnya</p>
+<p>Untuk berpindah-pindah
+<i>console</i>
+dapat dilakukan dengan menekan tombol Alt+F1, Alt+F2 .... Alt+F5. Tidak perlu harus mengetahui pesan-pesan di
+<i>console</i>
+lain karena instalasi di
+<i>console</i>
+1 sudah lebih dari
+cukup.</p>
+<h2>Instalasi dari CD-ROM</h2>
+<p>Instalasi yang paling mudah adalah melalui distribusi CD-ROM RedHat 5.1 walapun cara lain seperti melalui
+<i>hard disk</i>, NFS, FTP dan lain-lain tidak juga terlalu sulit. Saya hanya menuliskan langkah-langkah instalasi melalui CD-ROM saja.</p>
+<h3>Booting</h3>
+<p>Dapat dilakukan melalui
+<i>boot disk</i>
+yang telah dibuat sebelumnya atau melalui MS-DOS dengan program
+<b>autoboot.</b>. Bila memilih melakukan boot dari
+<i>disk boot</i>
+, masukkan disket tersebut
+dan
+<i>boot</i>
+komputer. Beberapa saat kernel akan memeriksa
+<i>hardware,</i>
+bila tidak ada masalah akan di tampilkan
+<b>boot: prompt.</b>
+Tekan Enter begitu
+<i>prompt</i>
+tersebut muncul. Parameter bisa ditambahkan bila
+<i>hardware</i>
+tidak terdeteksi, misalnya:</p>
+<pre>
+boot: linux hdc=cdrom
+</pre>
+<p>Bila melalui MS-DOS, masuk ke direktori d:\dosutils disitu ada
+<i>batch file</i>,
+<b>autoboot.bat</b>
+yang bisa langsung di jalankan.</p>
+<h2>Program Instalasi</h2>
+<p>Kotak dialog pertama kali yang
+muncul setelah program diatas dijalankan adalah kotak selamat datang dari Red Hat, kemudian pilihan monitor, berwarna atau tidak.</p>
+<p>Kotak dialog selanjutnya adalah pilihan
+<i>keyboard</i>, gunakan tanda panah atau tombol TAB untuk bergerak.</p>
+<center><img src="rh-5.1-files/keyboard.jpg" width="256" height="189" alt="keyboard.jpg 256x189 (15 KB)"></center>
+<p>Selanjutnya adalah kotak dialog pilihan metode instalasi yang akan dipakai, pilihan pertama Local CDROM dan yang lain NFS, Hard disk, FTP serta SMB. Untuk kali ini pilihan metode instalasinya adalah
+dari CDROM (untuk yang lain mungkin di lain waktu akan saya coba juga).</p>
+<center><img src="rh-5.1-files/instmet.jpg" width="256" height="189" alt="instmet.jpg 256x189 (7 KB)"></center>
+<p>Program instalasi akan menanyakan apa jenis CD-ROM drive. Kebanyakan CD-ROM drive untuk
+<i>home PC</i>
+adalah IDE/ATAPI. Bila jenisnya SCSI CD-ROM drive selanjutnya program menanyakan jenis
+<i>adapter</i>
+SCSI-nya. Bila CD-ROM drive bukan termasuk keduanya, pilih
+<i>other</i>
+dan
+<i>driver</i>
+untuk CD-ROM tersebut.</p>
+<p>Setelah semua informasi benar di masukkan, program
+menanyakan apakah akan menginstalasi sistem baru atau
+<i>upgrade</i>. Pilihan
+<i>upgrade</i>
+hanya bisa dilakukan bila versi lama dari RedHat Linux yang berbasis
+<a href="../pengguna/rpm.html">RPM</a>
+telah ada dalam komputer.</p>
+<center><img src="rh-5.1-files/instpath.jpg" width="294" height="134" alt="instpath.jpg 294x134 (9 KB)"></center>
+<p>Bila yang di pilih
+<b>Install,</b>
+program secara otomatis akan menjalankan program utilitas
+<b>fips</b>
+atau
+<b>disk druid</b>
+yang akan menyusun partisi-partisi
+<i>hard disk</i>.</p>
+<h2>Partisi Hard Disk</h2>
+<p>PERHATIAN: Terutama bagi mereka yang akan berbagi partisi dengan sistem lain (Windows95, OS/2 dll). Kesalahan mempartisi hard disk dapat
+<b>menghapus seluruh sistem dan isi
+<i>hard disk</i></b>
+oleh karena itu lakukan bagian ini dengan hati-hati, bila perlu
+<i>backup</i>
+dulu sistem yang ada. (Sepertinya ini peringatan untuk hati-hati yang kesekian kali dan saya harap Anda tidak berpikir Linux sangat tidak aman dan susah di instalasi. Peringatan-peringatan tersebut hanya untuk membuat kita lebih teliti dalam
+bekerja dan cermat membaca petunjuk instalasi)</p>
+<p>Perintah-perintah yang di gunakan dalam program partisi
+<b>fdisk</b>
+adalah:</p>
+<ul>
+<li><b>m,</b>
+untuk menampilkan seluruh perintah yang tersedia berikut penjelasannya/<i>help</i>.</li>
+<li><b>p</b>, untuk menampilkan tabel partisi hard disk.</li>
+<li><b>n,</b>
+membuat partisi baru.</li>
+<li><b>t,</b>
+mengeset atau merubah tipe partisi.</li>
+<li><b>l,</b>
+menampilkan daftar tipe-tipe partisi berikut nomor ID masing-masing.</li>
+<li><b>w,</b>
+menyimpan semua perubahan yang telah dilakukan.</li>
+</ul>
+<p>Sebelum mulai, selalu periksa informasi partisi hard disk saat itu dengan perintah
+<b>p</b>. Sedikitnya diperlukan dua buah partisi untuk Linux, yaitu partisi untuk
+<b><i>root</i></b>
+dan
+<b><i>swap</i></b>
+tapi bila spasi
+<i>hard disk</i>
+tidak membatasi bisa di buat beberapa partisi lain.</p>
+<p>Partisi dibuat dengan perintah
+<b>n</b>
+dan kemudian bisa dipilih
+<b>e</b>
+untuk
+<b><i>partisi extended</i></b>
+dan
+<b>p</b>
+untuk
+<b><i>partisi primer.</i></b>
+Pilih
+<b>p</b>
+untuk pertama kali ini. Berikutnya adalah menentukan silinder awal dan besar partisinya, misalanya untuk partisi ini diinginkan besarnya 500MB maka masukkan +500M. Sampai disini, partisi
+<i>Linux native</i>
+yang pertama sudah terbentuk.</p>
+<p>Selanjutnya adalah membuat
+<b><i>partisi swap.</i></b>
+Partisi ini digunakan sebagai penampung informasi yang sedang tidak digunakan oleh RAM, tujuannya agar RAM tetap memiliki ruangan yang kosong untuk menerima informasi baru. Beberapa orang
+berpendapat partisi ini harus diberikan sedikitnya 32MB saat menjalankan X Window atau sedikitnya 2 kali jumlah RAM. Tapi beberapa orang yang memiliki RAM lebih dari 64MB melaporkan sistem mereka dapat bekerja dengan baik walaupun tanpa partisi
+<i>swap</i>.</p>
+<p>Membuat partisi swap sama halnya dengan diatas, dengan perintah
+<b>n</b>, pilih
+<b>p</b>
+dan tentukan silender awal serta besarnya partisi
+<i>swap</i>
+tersebut. Untuk partisi
+<i>swap,</i>
+tipe partisinya harus dirubah dengan perintah
+<b>t</b>
+dan
+masukkan
+<b>kode hex 82</b>
+untuk partisi ini.</p>
+<p>Bila ruang
+<i>hard disk</i>
+masih tersisa ulangi pembuatan partisi yang lain. Kita di ijinkan membuat hingga empat buah partisi primer dalam sebuah
+<i>hard disk</i>, setelah itu hanya dapat di buat partisi
+<i>extended</i>
+di masing-masing partisi primer.</p>
+<p>Setelah semua partisi di buat, tekan
+<b>w</b>
+untuk menyimpannya dan akan kembali ke program instalasi. Selanjutnya partisi
+<i>swap</i>
+baru di buat akan di format supaya bisa di gunakan untuk
+Linux. Bila ada partisi sistem lain, misalnya Windows95, kita diberi kesempatan untuk memberikan nama
+<b><i>mount point</i></b>
+ke partisi tersebut agar nanti Linux bisa membaca partisi tersebut. Tombol Edit dapat digunakan untuk merubah
+<i>mount point</i>
+masing-masing partisi.</p>
+<center><img src="rh-5.1-files/partition.jpg" width="447" height="251" alt="partition.jpg 447x251 (21 KB)"></center>
+<h2>Instalasi Paket Program</h2>
+<p>Instalasi paket program adalah tahap berikutnya dari rangkaian tahap instalasi RedHat Linux. Instalasi paket program juga akan dipandu
+dengan baik, pertama kali akan ditampilkan kotak dialog yang menampilkan komponen program yang telah dikelompokkan secara rapi oleh RedHat. Tapi kita bisa memilih paket-paket program apa yang ingin di instalasi dengan mengaktifkan(memberi tanda *) pada pilihan
+<i>Select individual packages.</i></p>
+<center><img src="rh-5.1-files/componen.jpg" width="316" height="265" alt="componen.jpg 316x265 (43 KB)"></center>
+<p>Kadang-kadang, program tertentu tergantung pada program lain supaya dapat bekerja dengan baik. Hal ini disebut
+<i>dependency</i>
+dan ini sering terjadi
+bila user yang tidak berpengalaman memilih
+<i>Select individual packages</i>
+dan menentukan sendiri paket program yang ingin di instalasi. Tapi tidak perlu khawatir, bila program instalasi mendeteksi adanya paket program tidak dipilih padahal dibutuhkan oleh paket program lain maka secara otomatis program instalasi akan menunjukkan paket-paket program yang harus di instalasi.</p>
+<center><img src="rh-5.1-files/depend.jpg" width="317" height="251" alt="depend.jpg 317x251 (47 KB)"></center>
+<h2>Format, Instalasi dan Menunggu</h2>
+<p>Tugas selanjutnya biarlah
+dikerjakan oleh program instalasi, memformat semua partisi dan menginstalasi paket program yang telah ditentukan. Pekerjaan ini akan memakan waktu sedikit lama dan yang dapat kita lakukan saat itu adalah hanya menunggu. Siapkan saja minuman dan kudapan secukupnya karena menunggu selama kurang lebih 30 menit bisa sangat membosankan bila tidak dilewati sambil menikmati minuman dan kudapan favorit.</p>
+<p>Bila tidak ada masalah, waktu menunggu akan berakhir dengan tampilan kotak dialog selanjutnya, yaitu
+Konfigurasi Alat seperti
+<i>mouse, video, monitor,</i>
+kartu
+<i>ethernet</i>
+dan
+<i>printer</i>.</p>
+<h2>Konfigurasi Alat</h2>
+<h3>Mouse</h3>
+<p>Setelah memformat seluruh partisi dan menginstalasi semua paket program, selanjutnya secara otomatis program instalasi akan mendeteksi kehadiran
+<i>mouse</i>
+berikut
+<i>port</i>
+di mana
+<i>mouse</i>
+tersebut dihubungkan.</p>
+<h3>Video Card dan Video Monitor</h3>
+<p>Bila saat instalasi paket program kita memilih X Window System, maka program instalasi akan menjalankan
+Xconfigurator. Pertama, akan ditanyakan informasi mengenai kartu video bila kartu video yang kita miliki tidak ada dalam daftar yang di berikan, cobalah pilih
+<i>unlisted card.</i>
+Kedua, Xconfigurator akan memberi daftar pilihan monitor atu pilih saja
+<i>custom</i>
+bila monitor milik kita tidak ada dalam daftar.</p>
+<p>Selanjutnya adalah pilihan modus video. Pilih modus video yang ingin di jalankan tapi perhatikan jumlah memori video yang dimiliki, untuk 1MB video memori tidak cukup baik menjalankan modus
+32.</p>
+<p>Semua informasi di atas akan ditulis dalam file /etc/X11/XF86Config.</p>
+<h3>Networking</h3>
+<p>Bila komputer tidak di rencanakan untuk di hubungkan dengan mesin lain dalam suatu jaringan, pilih saja No. Bila dipilih Yes, kita harus memasukkan<i>IP address, netmask, default gateway</i>
+dan
+<i>nameserver</i>
+primer serta
+<i>domain name, hostname</i>
+dan
+<i>nameserver</i>
+tambahan lainnya.</p>
+<h3>Printer</h3>
+<p>Konfigurasi printer bisa di lewati dan di setup di lain waktu. Koneksi printer
+dapat dipilih:
+<i>Local, Remote</i>
+atau
+<i>LAN-Manager</i>. Kemudian ditanyakan nama
+<i>queue</i>, direktori
+<i>spool</i>, merek dan modelnya, ukuran kertas yang dipakai serta kedalaman warna bila printernya berwarna.</p>
+<p>Untuk
+<i>local printer</i>
+harus diberikan nama
+<i>port</i>
+dimana printer tersebut dihubungkan. Untuk
+<i>remote printer</i>
+memerlukan
+<i>IP address host</i>
+serta nama
+<i>queue</i>
+di
+<i>remote host</i>. Sedangkan untuk printer
+<i>LAN-Manger</i>
+memerlukan nama
+<i>host,</i>
+<i>IP
+number host</i>, nama printer,
+<i>username</i>
+yang akan menggunakan printer dan
+<i>password</i>-nya.</p>
+<h2>Clock</h2>
+<p>Program instalasi juga akan menanyakan
+<i>time zone</i>
+dimana kita berada dan mengeset CMOS
+<i>clock</i>
+komputer. Bila
+<i>clock</i>
+diset untuk waktu lokal, Linux maupun sistem operasi lain (seperti Windows95) akan menggunakan
+<i>clock</i>
+tersebut. Bila diset menggunakan GMT atau UTC, Linux akan mengikuti perubahan itu tapi Windows95 tidak.</p>
+<h2>Password</h2>
+<p>Isian
+<i>password</i>
+muncul setelah seting
+<i>clock</i>.
+<i>Password</i>
+ini adalah
+<b><i>password root</i></b>
+dan digunakan untuk melindungi sistem. Perlu dua kali memasukkan
+<i>password</i>
+dengan benar,
+<i>password</i>
+sedikitnya enam karakter atau angka dan dapat berupa huruf besar atau kecil, atau campuran diantara itu semua.
+<i>Password</i>
+sebaiknya tidak mudah ditebak orang lain dan jangan melupakan
+<i>password</i>
+ini karena sistem tidak akan bisa dibuka tanpa
+<i>password.</i></p>
+<p>Kotak dialog berikutnya
+adalah Instalasi LILO, Linux Loader.</p>
+<h2>Instalasi LILO</h2>
+<p>Setelah mengeset
+<i>password</i>, selesai sudah instalasi RedHat Linux. Bisa dilanjutkan dengan menginstalasi LILO jika dikendaki. Kotak dialog LILO menanyakan di mana LILO akan di instalasi. Pilih dimana LILO akan diletakkan atau
+<b>Skip</b>
+saja bila tidak ingin menginstalasinya. Cobalah dengan memilih MBR.</p>
+<center><img src="rh-5.1-files/liloinst.jpg" width="353" height="156" alt="liloinst.jpg 353x156 (30 KB)"></center>
+<p>Setelah menekan
+<b>Ok</b>, program instalasi akan me<i>reboot</i>
+sistem, tunggu beberapa detik. Pada beberapa komputer ada kalanya BIOS melaporkan adanya penulisan di MBR, pilih saja
+<b>Ok</b>
+atau
+<b><i>expected</i></b>
+(karena memang kita sengaja menuliskan informasi LILO di MBR).</p>
+<p><i>Prompt</i>
+boot: menandakan LILO telah dimuat tekan Enter atau biarkan beberapa saat , LILO akan me<i>load</i>
+kernel Linux (defaultnya, LILO akan me<i>load</i>
+Linux). Ketikan
+<b>root</b>
+pada
+<i>prompt</i>
+login: dan isi password pada
+<i>prompt password:</i></p>
+<p>Bila melihat
+<i>prompt</i>
+pagar seperti ini</p>
+<pre>
+[root@localhost root] # 
+</pre>
+berarti instalasi yang melelahkan ini telah berhasil. Selamat!<br>
+<br>
+<p>Lalu apa yang akan dilakukan dengan kursor yang berkedip-kedip itu? Anda dapat meneruskan membaca bab mengenai
+<a href="../pengguna/command.html">Command Line</a>
+atau mencoba mencari informasi bagaimana bekerja di lingkungan grafik pada bab
+<a href="../pengguna/window-manager.html">Window Manager &amp; Desktop Manager</a>.</p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Instalasi</a>
+::
+<b>Instalasi RedHat Linux 5.1</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/instalasi/rh-5.1.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/instalasi/rh-5.1.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

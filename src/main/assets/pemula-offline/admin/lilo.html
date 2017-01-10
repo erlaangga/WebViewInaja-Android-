@@ -1,0 +1,284 @@
+<head><title>Linux untuk Pemula: LILO, Linux Loader</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="lilo, loadlin">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>LILO, Linux Loader</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>LILO</h1>
+<p>Untuk memuat
+<i>kernel</i>
+diperlukan sebuah program
+<i>loader</i>
+khusus. RedHat telah menyediakan sebuah program yang dinamakan LILO atau
+<i>Linux Loader</i>
+(Werner Almesberger). LILO digunakan untuk mesin Intel-compatible, sedangkan mesin lain seperti Digital Equipment Corp. menggunakan MILO. Alpha PC, SPARC-compatible dapat menggunakan SILO.</p>
+<p>Saya menggunakan LILO karena mesin saya adalah Intel-compatible.</p>
+<p>Pada saat instalasi RedHat Linux ada pilihan untuk menginstalasi LILO Bila saat instalasi pilihan ini dilewati atau Skip, LILO bisa di instalasi sekarang dengan perintah /sbin/lilo.</p>
+<p>Disamping dengan LILO,
+<i>kernel</i>
+juga dapat dimuat
+dari DOS dengan menggunakan program
+<b>LOADLIN.EXE</b>. Cara yang mudah adalah men<i>copy kernel</i>
+dan LOADLIN. EXE ke partisi DOS, lalu untuk mem<i>boot</i>
+komputer cukup dengan mengetikkan perintah ini dari prompt DOS:</p>
+<pre>
+c:\loadlin c:\vmlinuz root=/dev/hda3 ro
+</pre>
+<p>/dev/hda3 bisa diganti sesuai dengan partisi
+<i>root</i>
+Linux.</p>
+<h2>Instalasi</h2>
+<p>LILO dapat diistalasi dan ditempatkan pada salah satu partisi sbb:</p>
+<ul>
+<li><i>Master Boot Record</i>
+(MBR) dari
+<i>hard disk.</i></li>
+<li><i>Root</i>
+Partisi Linux.</li>
+<li><i>Floppy disk</i>.</li>
+</ul>
+<p>Untuk menginstalasinya sangat mudah yaitu dengan perintah
+<i>lilo</i>
+(terdapat di direktori
+<i>/sbin</i>). Dokumentasinya dapat dibaca di
+<i>/usr/doc</i>. Ada
+<i>shell script, QuickInst</i>
+yang digunakan untuk mengganti LILO yang telah di instalasi.</p>
+<ul>
+<li>Edit dan konfigurasi sesuai kebutuhan file
+<i>/etc/lilo.conf</i></li>
+<li>Jalankan
+<i>/sbin/lilo</i>
+untuk mengaktifkannya</li>
+</ul>
+<p>Beberapa file akan berubah
+selama instalasi LILO, berikut ini file-file yang dibuat atau berubah selama instalasi LILO:</p>
+<ul>
+<li><i>/sbin/lilo</i>
+--
+<i>map installer;</i>
+keterangan lihat
+<i>man lilo</i></li>
+<li><i>/boot/boot.b</i>
+--
+<i>boot loader</i></li>
+<li>/<i>boot/map</i>
+--
+<i>boot map</i>, berisi lokasi
+<i>kernel</i></li>
+<li><i>/etc/lilo.conf</i>
+-- file konfigurasi LILO</li>
+</ul>
+<p>Untuk mencegah kerusakan sistem atau sistem tidak bisa di
+<i>boot</i>
+maka sebaiknya buat dulu
+<i><a href="5_crash.html#ebd">emergency boot disk</a></i></p>
+<h2>Konfigurasi</h2>
+<p>Sebelum mengkonfigurasi LILO, sebaiknya mengetahui sistem operasi yang ada di setiap partisi
+<i>hard disk</i>
+serta menentukan partisi untuk meletakkan LILO. Pada umumnya LILO diletakkan pada MBR. Bila ada sistem lain seperti OS/2, sebaiknya LILO diletakkan pada
+<i>superblock</i>
+partisi
+<i>root</i>
+karena MBR akan ditempati
+<i>boot loader</i>
+OS/2.</p>
+<p>Bila Linux satu-satunya sistem operasi yang ada di hard disk atau memiliki sistem operasi Windows
+95/NT, LILO bisa diletakkan di MBR. Perhatikan partisi masing-masing dengan cermat, misal Windows di
+<i>/dev/hda1</i>
+dan Linux di
+<i>/dev/hda2.</i></p>
+<p>Umumnya LILO di instalasi setelah partisi
+<i>hard disk</i>
+dibuat dan setelah sistem operasi Linux atau yang lain sudah di instalasi.</p>
+<h2>Mengedit lilo.conf</h2>
+<p><i>Login</i>
+sebagai
+<i>root</i>
+sebelum mengedit file ini. Buka dengan sembarang
+<i>editor</i>
+teks ASCII, misal vi.</p>
+<p>Contoh file
+<i>lilo.conf:</i></p>
+<pre>
+# Start LILO global section
+Boot = /dev/hda
+Prompt
+Vga = normal
+Ramdisk = 0
+# End LILO global section
+image = /vmlinuz
+root = /dev/hda3
+label = linux
+other = /dev/hda1
+label = dos
+tabel = /dev/hda
+</pre>
+<p>Parameter selengkapnya:</p>
+<table>
+<tr>
+<td valign="TOP">boot=&lt;boot_device&gt;</td>
+<td valign="TOP">memberitahu
+<i>device</i>
+yang memiliki
+<i>boot sector</i>.
+<i>Boot sector</i>
+dibaca dari
+<i>device</i>
+ini dan di
+<i>mount</i>
+sebagai
+<i>root.</i></td>
+</tr>
+<tr>
+<td valign="TOP">linear</td>
+<td valign="TOP">Mengenerate
+<i>linear sector addrress.</i>
+Lihat dokumentasi LILO.</td>
+</tr>
+<tr>
+<td valign="TOP">install=&lt;boot_sector&gt;</td>
+<td>Menginstal file yang telah ditentukan sebagi
+<i>boot sector</i>
+yang baru. Jika install tidak dipakai, /etc/lilo/boot.b dipakai sebagi default.</td>
+</tr>
+<tr>
+<td>message=&lt;message_file&gt;</td>
+<td>Untuk menampilkan file teks, besarnya maksimum 65,535 byte.</td>
+</tr>
+<tr>
+<td>verbose=&lt;level&gt;</td>
+<td>Menampilkan
+<i>progress reporting.</i>
+Option lain seperti -v
+dan -q. Lihat dokumentasi LILO.</td>
+</tr>
+<tr>
+<td>backup=&lt;backup_file&gt;</td>
+<td>Menyalin
+<i>boot sector</i>
+asli ke file &lt;backup_file&gt;.</td>
+</tr>
+<tr>
+<td valign="TOP">force-backup&lt;backup_file&gt;</td>
+<td>Sama dengan
+<i>backup</i>. Option ini menimpa salinan
+<i>backup</i>
+yang telah dibuat dan akan mengabaikan option
+<i>backup</i>
+bila keduanya dipakai.</td>
+</tr>
+<tr>
+<td valign="TOP">prompt</td>
+<td>Meminta masukan saat
+<i>boot</i>.</td>
+</tr>
+<tr>
+<td valign="TOP">timeout=&lt;tsecs&gt;</td>
+<td>Mengeset waktu tunggu k<i>eyboard</i>
+sebelum menjalankan option berikutnya. Defaultnya 5 detik. Masukkan
+<i>value</i>
+0 jika ingin LILO menunggu sampai ada masukkan dari
+<i>keyboard.</i></td>
+</tr>
+<tr>
+<td valign="TOP">serial=&lt;parameter&gt;</td>
+<td>Mengijinkan masukan dari
+<i>serial line</i>
+dan
+<i>keyboard</i>
+ke LILO.</td>
+</tr>
+<tr>
+<td valign="TOP">ignore-table</td>
+<td>Mengabaikan tabel partisi yang
+<i>corrupt</i>.</td>
+</tr>
+<tr>
+<td valign="TOP">password=&lt;password&gt;</td>
+<td>Memasang
+<i>password</i>
+untuk melindungi
+<i>boot images</i>.</td>
+</tr>
+</table>
+<h2>Uninstall LILO</h2>
+<p>Menghapus atau menguninstalasi LILO dari sistem sangat mudah, dengan perintah:</p>
+<pre>
+lilo -u
+</pre>
+atau dari partisi aktif Linux yang lain atau partisi DOS dengan menggunakan
+<i>fdisk.</i>
+<p>Bila LILO di instalasi sebagai MBR, maka MBR asli sebelum ditempati LILO dapat di
+<i>restore</i>
+dengan cara mem-<i>boot</i>
+sistem dengan DOS, kemudian jalankan:</p>
+<pre>
+sys c:
+</pre>
+atau
+<pre>
+fdisk /MBR
+</pre>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>LILO, Linux Loader</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/lilo.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/lilo.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

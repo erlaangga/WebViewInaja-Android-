@@ -1,0 +1,355 @@
+<head><title>Linux untuk Pemula: Setting DNS Server</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Setting DNS Server</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/zakaria.html">Zakaria</a>
+</strong></p>
+<div class="ARTICLE">
+<div class="TITLEPAGE">
+<h1 class="TITLE"><a name="AEN2">Setting DNS Server</a></h1>
+<hr>
+</div>
+<div class="TOC">
+<dl>
+<dt><b>Table of Contents</b></dt>
+<dt><a href="#AEN5">Konsep &amp; Cara Kerja DNS</a></dt>
+<dt><a href="#AEN14">DNS Server di Linux</a></dt>
+<dt><a href="#AEN29">Caching Only DNS Server</a></dt>
+<dt><a href="#AEN37">Membuat Domain Sendiri</a></dt>
+<dt><a href="#AEN71">Zona Reverse</a></dt>
+<dt><a href="#AEN84">Security</a></dt>
+<dt><a href="#AEN89">Sumber Lebih Lanjut</a></dt>
+</dl>
+</div>
+<div class="SECT1">
+<h1 class="SECT1"><a name="AEN5">Konsep &amp; Cara Kerja DNS</a></h1>
+<p>DNS (Domain Name System) adalah suatu system yang mengubah nama
+<i class="EMPHASIS">host</i>
+(seperti linux.or.id) menjadi alamat IP (seperti 64.29.24.175) atas semua komputer yang terhubung langsung ke Internet. DNS juga dapat
+mengubah alamat IP menjadi nama
+<i class="EMPHASIS">host</i>.</p>
+<p>DNS bekerja secara hirarki dan berbentuk seperti pohon (tree). Bagian atas adalah
+<i class="EMPHASIS">Top Level Domain</i>
+(TLD) seperti COM, ORG, EDU, MIL dsb. Seperti pohon DNS mempunyai cabang-cabang yang dicari dari pangkal sampai ke ujung. Pada waktu kita mencari alamat misalnya linux.or.id pertama-tama DNS bertanya pada TLD server tentang DNS Server yang melayani domain .id misalnya dijawab ns1.id, setelah itu dia bertanya pada
+ns1.id tentang DNS Server yang bertanggung jawab atas .or.id misalnya ns.or.id kemudian dia bertanya pada ns.or.id tentang linux.or.id dan dijawab 64.29.24.175</p>
+<p>Sedangkan untuk mengubah IP menjadi nama
+<i class="EMPHASIS">host</i>
+melibatkan domain in-addr.arpa. Seperti domain lainnya domain in-addr.arpa pun bercabang-cabang. Yang penting diingat adalah alamat IP-nya ditulis dalam urutan terbalik di bawah in-addr.arpa. Misalnya untuk alamat IP 64.29.24.275 prosesnya seperti contoh linux.or.id: cari
+server untuk arpa, cari server untuk in-addr.arpa, cari server untuk 64.in-addr.arpa, cari server 29.64.in-addr.arpa, cari server untuk 24.29.64.in-addr.arpa. Dan cari informasi untuk 275.24.29.64.in-addr.arpa. Pembalikan urutan angkanya memang bisa membingungkan.</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN14">DNS Server di Linux</a></h1>
+<p>DNS Server di linux biasanya dijalankan oleh program yang bernama named. Program ini merupakan bagian dari paket bind yang dikoordinasikan oleh Paul
+Vixie dari The Internet Software Consortium. Biasanya program ini terletak di /usr/sbin/named dan dijalankan pada waktu booting dari /etc/rc.d/init.d/named start. Agar named dijalankan pada setiap booting masukkan named ke daftar server yang harus distart dengan menggunakan ntsysv.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN17">File Konfigurasi</a></h2>
+<p>File konfigurasi untuk named adalah /etc/named.conf yang seperti biasa adalah text file. Format file ini seperti format program C atau
+Pascal yakni tiap perintah diakhiri dengan ';' dan blok perintah di kurung dengan '&amp;lcub;' dan '&amp;rcub;'. Ada beberapa blok yang sering digunakan yaitu:</p>
+<dl>
+<dt>options</dt>
+<dd>
+<p>untuk mengatur konfigurasi server secara global dan menentukan default</p>
+</dd>
+<dt>zone</dt>
+<dd>
+<p>untuk mengatur konfigurasi zona DNS</p>
+</dd>
+</dl>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN29">Caching Only DNS Server</a></h1>
+<p>Caching Only DNS Server akan mencari jawaban
+dari pertanyaan DNS dan mengingat jawabannya ketika anda bertanya lagi. Ini akan mempersingkat waktu tunggu pada pertanyaan DNS berikutnya terutama jika anda menggunakan koneksi yang lambat seperti modem.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN32">Konfigurasi</a></h2>
+<p>File konfigurasi Caching Only DNS sudah disediakan oleh RedHat dalam paket caching-nameserver anda tinggal menginstal paketnya dan mengedit file /etc/named.conf dan menambahkan baris berikut pada blok options:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+        forward first;
+        forwarders {
+          202.158.3.6;
+          202.158.3.7;
+        };
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Kedua alamat IP diatas adalah alamat IP untuk DNS Server ISP saya yaitu CBN jika ISP anda berbeda anda harus menggantinya.</p>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN37">Membuat Domain Sendiri</a></h1>
+<p>Pada bagian ini kita akan membuat domain untuk jaringan
+lokal (LAN) misalnya intra.aki. Ada baiknya menggunakan domain yang benar-benar tidak ada di Internet sehingga kita tidak mengganggu domain siapa pun. Perlu diingat bahwa tidak semua karakter diperbolehkan untuk menjadi nama
+<i class="EMPHASIS">host</i>
+yang dibolehkan hanya A-Z, a-z, 0-9 dan karakter '-'. Selain itu nama
+<i class="EMPHASIS">host</i>
+itu tidak bergantung pada huruf besar atau huruf kecil, jadi linux.intra.aki dan LINUX.Intra.AKI adalah sama. Kita masih mengedit file yang berasal dari paket
+caching-nameserver.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN42">Tambahan di /etc/named.conf</a></h2>
+<p>Pertama kita mengedit file /etc/named.conf untuk menambahkan baris berikut:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+zone "intra.aki" {
+        type master; 
+        notify no;
+        file "intra.aki";
+}
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Yang berarti bahwa kita membuat zona domain intra.aki dimana kita adalah penguasa domain
+tersebut (type master) tetapi kita tidak ingin domain ini tersebar ke internet (notify no) dan informasi tentang anggota domainnya itu sendiri disimpan di file intra.aki di direktori yang ditentukan oleh
+<i class="EMPHASIS">keyword</i>
+direktory dari blok options yang berisi /var/named</p>
+</div>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN48">File Zona intra.aki</a></h2>
+<p>Kemudian kita membuat file zona intra.aki yang berisi informasi tentang anggota domain</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+; Zone file for intra.aki
+@               IN      SOA     ns.intra.aki.   root.intra.aki. (
+                        2000091401 ; serial
+                        8H ; refresh
+                        3H ; retry
+                        1W ; expire
+                        1D ; default_ttl
+                        )
+                        NS      ns
+                        A       192.168.1.100
+                        MX      10 linux.intra.aki.
+                        MX      20 other.extra.aki.
+localhost               A       127.0.0.1
+linux                   A       192.168.1.100
+ns                      A       192.168.1.100
+ftp                     CNAME   linux
+pop                     CNAME   linux
+www                     CNAME   linux.intra.aki
+cctv                    A       192.168.1.3
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Perhatikan tanda '.' pada akhir dari nama domain di file ini. File zona ini mengandung 9
+<i class="EMPHASIS">Resource Record</i>
+(RR):
+satu SOA RR, satu NS RR, tiga CNAME RR dan empat AA RR. SOA merupakan singkatan dari Start Of Authority. Karakter &ldquo;@&rdquo; berarti nama domain dari zona yaitu intra.aki jadi baris kedua diatas berarti</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+intra.aki.    IN     SOA ....
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>NS adalah Name Server RR. Tidak ada &ldquo;@&rdquo; pada awal baris karena baris diatasnya dimulai dengan '@'. Menghemat waktu mengetiknya. Jadi
+baris NS bisa juga di tulis</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+intra.aki.    IN     NS     ns
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Ini memberitahu DNS
+<i class="EMPHASIS">host</i>
+mana yang menjadi name server bagi domain intra.aki yakni ns.intra.aki. 'ns' adalah nama yang biasa dipakai untuk name server, tetapi seperti web server yang biasa dinamakan www.anu namanya bisa diubah menjadi apapun.</p>
+<p>Baris SOA adalah pembuka bagi semua file zona dan
+harus ada satu dalam setiap file zona. Baris tersebut menjelaskan zona, darimana dia datang (<i class="EMPHASIS">host</i>
+bernama ns.intra.aki), siapa yang bertanggung jawab atas isinya (<a href="mailto:root@intra.aki">root@intra.aki</a>), versi zona file (serial: 2000091401) dan parameter lainnya yang berhubungan dengan
+<i class="EMPHASIS">caching</i>
+dan
+<i class="EMPHASIS">secondary</i>
+DNS Server. Perlu diperhatikan bahwa ns.intra.aki haruslah nama
+<i class="EMPHASIS">host</i>
+dengan A RR. Tidak diperbolehkan membuat CNAME RR untuk nama
+yang disebutkan di SOA.</p>
+<p>RR A mendefinisikan alamat IP dari suatu nama
+<i class="EMPHASIS">host</i>
+sedangkan CNAME mendefinisikan nama alias dari suatu
+<i class="EMPHASIS">host</i>
+yang harus merujuk ke RR lainnya.</p>
+<p>Ada satu lagi tipe RR pada file ini yaitu MX atau Mail eXchanger. RR ini berfungsi untuk memberitahukan sistem mail kemana harus mengirim e-mail yang di alamatkan ke <a href="mailto:seseorang@intra.aki">seseorang@intra.aki</a> dalam hal ini linux.intra.aki atau other.extra.aki. Angka sebelum nama
+<i class="EMPHASIS">host</i>
+adalah prioritas MX. RR dengan angka terendah (10) adalah
+<i class="EMPHASIS">host</i>
+yang harus dikirimkan email pertama kali. Jika tidak berhasil maka e-mail bisa dikirim ke
+<i class="EMPHASIS">host</i>
+lain dengan angka yang lebih besar misalnya other.extra.aki yang mempunyai prioritas 20.</p>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN71">Zona Reverse</a></h1>
+<p>Zona Reverse diperlukan untuk mengubah dari alamat IP menjadi nama. Nama ini digunakan oleh berbagai macam
+server (FTP, IRC, WWW dsb) untuk menentukan apakah anda diperbolehkan mengakses layanan tersebut atau sejauh mana prioritas yang diberikan kepada anda. Untuk mendapatkan akses yang penuh pada semua layanan di Internet diperlukan zona reverse.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN74">Tambahan di /etc/named.conf</a></h2>
+<p>Tambahkan baris berikut di /etc/named.conf</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+zone "1.168.192.in-addr.arpa" {
+        notify no;
+        type master;
+        file "192.168.1";
+}
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Seperti sebelumnya artinya kita membuat zona domain 1.168.192.in-addr.arpa yang tidak disebar ke internet dan disimpan di file /var/named/192.168.1</p>
+</div>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN79">File zona 192.168.1</a></h2>
+<p>Sekarang kita membuat file zona 192.168.1 untuk domain 1.168.192.in-addr.arpa seperti berikut:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+; Zone file for reverse zone 1.168.192.in-addr.arpa (192.168.1.x)
+@               IN      SOA     ns.intra.aki.   root.intra.aki. (
+                        2000072801 ; serial
+                        28800 ; refresh
+                        7200 ; retry
+                        604800 ; expire
+                        86400 ; default_ttl
+                        )
+@               IN      NS      ns.intra.aki.
+100             IN      PTR     linux.intra.aki.
+3               IN      PTR     cctv.intra.aki.
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Ada RR baru disini yakni PTR yang berfungsi untuk memetakan IP ke nama host</p>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN84">Security</a></h1>
+<p>Jika anda memasang DNS server pada komputer yang berfungsi sebagai gateway antara jaringan internal anda dengan jaringan Internet serta DNS Server anda tidak melayani request dari luar (caching only DNS atau DNS untuk jaringan lokal saja) maka anda bisa membuat named untuk
+melayani hanya jaringan lokal saja dengan menambah baris berikut di dalam blok options:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+listen-on { 127.0.0.1; 192.168.1.100; };
+</pre>
+</td>
+</tr>
+</table>
+<p>Sehingga named hanya membuka port pada interface loopback (127.0.0.1) dan eth0 (192.168.1.100).</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN89">Sumber Lebih Lanjut</a></h1>
+<p>Untuk informasi yang lebih lengkap anda dapat membaca:</p>
+<ul>
+<li>
+<p>man named.conf</p>
+</li>
+<li>
+<p>man named</p>
+</li>
+<li>
+<p>NET3-4 HOWTO</p>
+</li>
+<li>
+<p>NET-3 HOWTO</p>
+</li>
+<li>
+<p>DNS HOWTO</p>
+</li>
+</ul>
+</div>
+</div>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Setting DNS Server</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/setting-dns-server.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/setting-dns-server.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

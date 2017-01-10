@@ -1,0 +1,257 @@
+<head><title>Linux untuk Pemula: X Window System</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="x window, gui, xfree86, xf86config, superprobe">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>X Window System</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>X Window System</h1>
+<h2>X Window GUI</h2>
+<p>Linux tidak melulu
+<i>text based</i>
+dan tidak menarik bagi sebagian orang yang sudah lama di manjakan oleh GUI ala MS-Windows tapi Linux juga memiliki
+<i>interface</i>
+berbasis grafik yang
+sangat powerful dan dikenal dengan X Window System. Interface ini mendukung banyak aplikasi berbasis grafik dan sudah menjadi standar industri.</p>
+<p>Versi X Window untuk Linux adalah XFree86 dan pada cd distribusi RedHat 5.1 telah tersedia XFree86 versi 3.3.2. Untuk menjalankan X Window terpaksa harus ada penambahan memori dan spasi
+<i>hard disk</i>, jadi bagi
+<i>user</i>
+yang memiliki minimal
+<i>hardware</i>
+sebaiknya tidak perlu mencoba menginstalasi X Window.</p>
+<p>Instalasi XFree86 adalah satu
+bagian lagi yang sangat sulit, memakan waktu dan bisa membuat frustrasi. Segera cari tahu apakah kartu grafik sudah ada dalam daftar file
+<a href="http://www.linux.or.id">HOWTO-Hardware</a>, bila tidak ada maka ini akan menjadi pekerjaan yang sangat berat.</p>
+<h2>Mempersiapkan Instalasi XFree86</h2>
+<p>Berikut ini file-file referensi di direktori /usr/X11R6/lib/X11/doc yang sebaiknya dibaca: README, README.Config, VideoModes.doc dan README.Linux serta manual page dari XF86Config, XFree86.</p>
+<p>File
+XF86Config biasanya terletak di direktori berikut ini:</p>
+<ul>
+<li>/usr/X11R6/lib/X11 - ini adalah lokasi standar untuk file contoh XF86Config</li>
+<li>/etc</li>
+<li>direktori home</li>
+<li>sebagai file XF86Config.eg di direktori /usr/X11R6/lib/X11</li>
+</ul>
+<p>Server XFree86 tidak akan membaca file XF86Config dari lokasi /etc/X11 sehingga dari lokasi ini harus dibuat link yang menunjuk ke /usr/X11R6/lib/X11/XF86Config.</p>
+<p>Berikut ini persiapan untuk membuat file XF86Config yang benar:</p>
+<ul>
+<li>Server harus sesuai dengan sistem. Jalankan program
+<b>SuperProbe.</b>
+Program ini akan mengidentifikasi chipset yang dimiliki sistem. Catatan: SuperProbe mampu mendeteksi lebih banyak
+<i>hardware</i>
+daripada yang bisa di dukung XFree86.</li>
+<li>Lihat dokumentasi monitor mengenai
+<i>range</i>
+maksimum horisontal dan vertikal
+<i>scan</i>
+frekuensi serta
+<i>bandwidth</i>.</li>
+<li>Nama chipset kartu video.</li>
+<li><i>Dot clock</i>
+serta
+<i>programable dot clock generator</i>
+bila ada.</li>
+<li>Jenis
+mouse serta protokol yang digunakan.</li>
+<li>Jenis
+<i>device</i>
+untuk koneksi
+<i>mouse,</i>
+misalnya
+<i>serial</i>
+atau
+<i>bus</i>.</li>
+<li><i>Keyboard map</i>
+yang ingin digunakan.</li>
+</ul>
+<p>Hasil identifikasi yang dilakukan program SuperProbe dapat dilihat pada beberapa baris akhir:</p>
+<center><img src="x-window-files/suprobe.jpg" border="0" width="400" height="277" alt="suprobe.jpg 400x277 (72 KB)"></center>
+<h2>Xconfigurator</h2>
+<p>RedHat 5.1 juga menyediakan program
+<i>menu-driven</i>
+yang mudah digunakan untuk menghasilkan file XF86Config. Program
+ini akan menuntun
+<i>user</i>
+memasukkan secara detail jenis kartu video,
+<i>monitor</i>
+serta
+<i>mous</i>e. Oleh karena itu persiapkan dulu dokumentasi
+<i>hardware</i>
+sebelum menjalankan program Xconfigurator.</p>
+<center><img src="x-window-files/xconfig.jpg" border="0" width="450" height="312" alt="xconfig.jpg 450x312 (60 KB)"></center>
+<h2>XF86Setup dan xf86config</h2>
+<p>Adakalanya Xconfigurator tidak bisa berhasil baik pada kartu video dan monitor tertentu, untuk mengatasinya cobalah program XF86Setup atau xf86config untuk melakukan setup pada sistem Anda.
+Kedua program tersebut juga akan membuat file konfigurasi XF86Config.</p>
+<h2>File XF86Config</h2>
+<p>File XF86Config berisi konfigurasi parameter-parameter untuk menjalankan X Window. Selain dapat dibuat menggunakan Xconfigurator,file ini bisa juga di
+<i>edit</i>
+secara manual tetapi lakukan dengan hati-hati. Contekan file ada disini /usr/lib/X11/XF86Config.eg.</p>
+<p><b>Perhatian</b>: Jangan menggunakan file XF86Config untuk konfigurasi sistem lain yang memiliki kartu grafik dan
+<i>monitor</i>
+yang
+berbeda. Kesalahan bisa berakibat fatal bagi
+<i>monitor.</i>
+Untuk
+<i>monitor-monitor</i>
+keluaran terbaru, kesalahan
+<i>setting</i>
+mungkin tidak akam menyebabkan kerusakan tapi tetaplah selalu berhati-hati dan&nbsp; berpedoman pada buku manual yang disertakan bersama
+<i>monitor.</i>
+Untuk permulaan sebaiknya gunakan
+<i>setting VGA Standar</i>
+dan kemudian ditingkatkan setelah memahami tentang
+<i>setting</i>
+XF86. (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>)</p>
+<p>File ini terdiri dari beberapa seksi sesuai dengan konfigurasi
+<i>hardware</i>
+yang dimiliki, seperti seksi
+<i>file, font path, keyboard, pointer</i>
+(termasuk
+<i>mouse</i>),
+<i>server flag, monitor (video mode), device</i>
+dan
+<i>screen.</i>
+Masing-masing seksi tersebut menjelaskan konfigurasi
+<i>hardware</i>, lokasi file-nya, atau keduanya. Pemberian nama seksi seperti ini:</p>
+<pre>
+Section "Nama_Seksi"
+   &lt; informasi mengenai seksi &gt;
+EndSection
+</pre>
+<h2>File .xinitrc</h2>
+<p>Untuk
+menggunakan X, diperlukan file
+<i>startup</i>
+yang fungsinya untuk memanggil
+<i><a href="../pengguna/window-manager.html">window manager</a></i>
+dan aplikasi-aplikasi lain yang ingin dijalankan setelah X di jalankan. File
+<i>startup</i>
+xinitrc dibutuhkan pada saat X dijalankan dengan perintah
+<b>startx</b>
+atau
+<b>runx.</b>
+Lokasi file xinitrc biasanya ada di direktori /usr/lib/X11/xinit/xinitrc tapi untuk standar filesystem Linux file ini diletakkan di /etc/X11/xinit/xinitrc.</p>
+<p>Bila isinya tidak sesuai dengan
+yang diharapkan, misalnya untuk menjalankan
+<i><a href="../pengguna/window-manager.html">window manager</a></i>
+yang lain, file xinitrc bisa di
+<i>copy</i>
+ke
+<i>home</i>
+direktori dan di
+<i>edit</i>
+menjadi file .xinitrc (jangan lupa tanda titik di muka).</p>
+<p>File .xinitrc harus berupa file
+<i>readable</i>
+dan
+<i>executable</i>. Jadi setelah di
+<i>edit,</i>
+file harus dirubah menggunakan
+<i>chmod</i></p>
+<pre>
+$ chmod u+rx .xinitrc
+</pre>
+<p>Kalau tidak salah secara default isi file .xinitrc ini akan
+memanggil
+<i>window manager</i>
+<a href="../pengguna/window-manager.html">fvwm</a>
+atau
+<a href="../pengguna/window-manager.html">twm</a>, jika keduanya dipilih saat instalasi. Untuk memanggil
+<i>window manager</i>
+lain, seperti
+<a href="../pengguna/window-manager.html">afterstep</a>
+atau
+<a href="../pengguna/window-manager.html">KDE</a>
+dapat dilakukan dengan menghapus seluruh isi file .xinitrc dan menuliskan perintah 'afterstep' atau 'startkde'.</p>
+<h2>xdm</h2>
+<p>Bila diinginkan sistem menjalankan X
+sepanjang waktu maka X dapat di
+<i>startup</i>
+dengan menggunakan xdm. Pada umumnya sistem memiliki
+<i>preconfigured</i>
+xdm sehingga perlu mengedit beberapa konfigurasi file xdm.</p>
+<p>Pada sistem yang mengunakan
+<i>init</i>
+tanpa
+<i>runlevel,</i>
+lihat file /etc/rc dan /etc/rc.d/rc.local, dengan menghapus tanda komentar pada awal baris-baris yang memanggil xdm. Bila tidak ada baris-baris seperti itu, sistem tersebut kemungkinan tidak memiliki
+<i>preconfigured</i>
+xdm. Secara default xdm akan menjalankan file
+<b>.xinitrc</b></p>
+<p>Bila Anda menghendaki Linux selalu start pada
+<i>runlevel</i>
+3, cobalah merubah konfigurasi file
+<b>/etc/inittab</b>
+pada bagian initdefault:</p>
+<pre>
+id:3:initdefault:
+</pre>
+<p>Catatan: runlevel 5 pada RedHat menjalankan X11, pada distribusi lain mungkin bisa berbeda
+<i>runlevel</i>nya.</p>
+<p>Kemudian run xdm bisa Anda matikan dengan menghapusnya atau memberi tanda
+<i>uncomment</i>(#) didepannya:</p>
+<pre>
+# x:5:respawn:/usr/bin/X11/xdm -nodaemon
+</pre>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>X Window System</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/x-window.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/x-window.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain
+oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

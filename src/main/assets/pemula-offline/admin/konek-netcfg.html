@@ -1,0 +1,134 @@
+<head><title>Linux untuk Pemula: Koneksi Internet dengan Network Configurator</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="network configurator, ppp, simple client">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Koneksi Internet dengan Network Configurator</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Koneksi Internet dengan Network Configurator</h1>
+<p>RedHat 5.1 telah menyediakan segala keperluan
+untuk
+<i>network</i>
+atau jaringan. Cara yang paling mudah mengkonfigurasi jaringan adalah melalui program
+<b>netcfg</b>
+yang berjalan di bawah X Window. Dengan menggunakan program tersebut sebenarnya komputer
+<i>stand alone</i>
+kita bisa menjadi
+<i>client</i>
+untuk koneksi ke internet dengan menggunakan
+<b><i>PPP conection</i></b>.</p>
+<p>Pertama jalankan program netcfg untuk mengkonfigurasi jaringan. Selanjutnya muncul kotak dialog Network Configurator yang menampilkan informasi DNS bila sudah di
+konfigurasi sebelumnya. Bila masih kosong kerjakan langkah-langkah sebagai berikut:</p>
+<ul>
+<li>Isi Hostname dengan nama tertentu</li>
+<li>Isi Domain dengan nama domain ISP</li>
+<li>Biarkan kotak isian Search for hostname in additional domains</li>
+<li>Lanjutkan dengan mengisi Nameservers. Masukkan DNS server IP address yang diberikan oleh ISP (biasanya oleh ISP diberikan dua buah IP, primer dan sekunder)</li>
+</ul>
+<center><img src="konek-netcfg-files/names.jpg" border="0" width="370" height="284" alt="names.jpg 370x284 (13 KB)"></center>
+<p>Selanjutnya
+mengkonfigurasi PPP device. Pilih tombol Interfaces pada jendela bagian atas. Kotak dialog berikutnya akan ditampilkan seperti ini:</p>
+<center><img src="konek-netcfg-files/interface.jpg" border="0" width="370" height="284" alt="interface.jpg 370x284 (12 KB)"></center>
+<p>Pilih tombol
+<b>Add</b>
+untuk membuat interface baru, pada jendela dialog yang muncul pilih
+<b>interface PPP</b>
+dan klik Ok. Jendela Create PPP Interface akan muncul seperti ini:</p>
+<center><img src="konek-netcfg-files/ppp0.jpg" border="0" width="236" height="149" alt="ppp0.jpg 236x149 (8 KB)"></center>
+<ul>
+<li>Isi nomor telepon ISP</li>
+<li>Lewati
+pilihan PAP authentication kecuali ISP membutuhkannya</li>
+<li>Isi login name</li>
+<li>Sebelum mengisi
+<i>password,</i>
+tengok kebelakang dan pastikan tidak ada orang lain ikut melihat
+<i>password</i>
+yang dimasukkan.</li>
+</ul>
+<p>Setelah semua informasi PPP di masukkan, pilih tombol
+<b>Customize.</b>
+Kotak dialog Customize ini akan mengkonfigurasi
+<i>hardware</i>
+kita khususnya modem.</p>
+<p>Untuk kotak Modem port, pilih sesuai konfigurasi yang dibuat dengan program
+<b>modemtool</b>. Bila belum
+mengkonfigurasi modem, jalankan saja program
+<b>modemtool</b>
+sekarang juga.</p>
+<center><img src="konek-netcfg-files/custom.jpg" border="0" width="276" height="228" alt="custom.jpg 276x228 (14 KB)"></center>
+<p>Setelah itu bisa di konfigurasikan yang lain, Communication, Networking atau PAP. Jangan lupa sebelum keluar selalu tekan
+<b>tombol Save.</b></p>
+<p>Sampai disini pekerjaan membuat koneksi PPP sudah selesai dan siap untuk memulai koneksi.</p>
+<h2>Memulai Koneksi ke ISP</h2>
+<p>Untuk mulai koneksi ke ISP sangatlah mudah, tinggal menjalankan kembali program
+<b>netcfg,</b>
+pilih Interfaces di bagian atas jendela, pilih ppp0 interface dan tekan tombol
+<b>Activate</b>
+(untuk memutuskan koneksi, tekan
+<b>Deactive</b>). Bila tidak ada kesalahan konfigurasi sebelumnya, modem akan segera bekerja.</p>
+<p>Setelah koneksi terjadi, kita bisa membuka program internet seperti Netscape Communicator atau program
+<i>client</i>
+internet favorit. Selamat berinternet!</p>
+<center><img src="konek-netcfg-files/konek.jpg" border="0" width="370" height="284" alt="konek.jpg 370x284 (13 KB)"></center>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Koneksi Internet dengan Network Configurator</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/konek-netcfg.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/konek-netcfg.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

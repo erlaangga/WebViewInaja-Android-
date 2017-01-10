@@ -1,0 +1,204 @@
+<head><title>Linux untuk Pemula: Sharing File dengan Samba</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Sharing File dengan Samba</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/zakaria.html">Zakaria</a>
+</strong></p>
+<div class="ARTICLE">
+<div class="TITLEPAGE">
+<h1 class="TITLE"><a name="AEN2">Sharing File dengan Samba</a></h1>
+<hr>
+</div>
+<div class="TOC">
+<dl>
+<dt><b>Table of Contents</b></dt>
+<dt><a href="#AEN6">Pendahuluan</a></dt>
+<dt><a href="#AEN13">File Konfigurasi</a></dt>
+<dt><a href="#AEN18">Setting Server</a></dt>
+<dt><a href="#AEN39">User</a></dt>
+<dt><a href="#AEN52">Membuat
+<i class="EMPHASIS">Share</i>
+Baru</a></dt>
+</dl>
+</div>
+<div class="SECT1">
+<h1 class="SECT1"><a name="AEN6">Pendahuluan</a></h1>
+<p>Samba adalah implementasi dari SMB protocol yaitu protocol yang digunakan oleh sistem operasi MS seperti MS Windows untuk men-sharing file dan printer. Dengan SMB anda bisa mengakses file &amp; printer yang di-<i class="EMPHASIS">share</i>
+oleh komputer Windows atau men-<i class="EMPHASIS">share</i>
+file &amp; printer di
+komputer linux anda.</p>
+<p>Setting samba adalah topik yang luas sekali sehingga artikel ini hanya membahas cara membuat samba server anda bisa dikenali oleh komputer lain (Windows 9x) dan bagaimana membuat share baru.</p>
+<p>Untuk lebih memudahkan settingnya menggunakan linuxconf yaitu berbagai macam setting yang ada dibawah Config -&gt; Networking -&gt; Server tasks -&gt; Samba file server.</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN13">File Konfigurasi</a></h1>
+<p>File konfigurasi
+untuk samba adalah /etc/smb.conf yang formatnya seperti format ini file yaitu:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[blok]
+keyword = nilai
+keyword lain = nilai lainnya juga
+; Komentar
+# Juga tipe komentar
+</pre>
+</td>
+</tr>
+</table>
+<p>Dengan blok utama yaitu global untuk setting server dan default bagi share, homes untuk default bagi share tiap user dan printers untuk setting sharing printer. blok lainnya merupakan setting untuk share. Untuk lebih
+jelas tentang smb.conf dapat anda baca di man smb.conf dan dokumentasi samba (/usr/doc/samba-*/).</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN18">Setting Server</a></h1>
+<p>Ada beberapa hal yang perlu anda set agar server anda bisa dikenali di jaringan Microsoft Network Neighbourhood. Settingnya terdapat di dialog Default dibawah Config -&gt; Networking -&gt; Server tasks -&gt; Samba file server.</p>
+<p>Yang perlu diset adalah:</p>
+<dl>
+<dt>Workgroup</dt>
+<dd>
+<p>Isi dengan nama
+workgroup yang sesuai dengan jaringan anda</p>
+</dd>
+<dt>Netbios name</dt>
+<dd>
+<p>Isi dengan nama server defaultnya sama dengan hostname</p>
+</dd>
+<dt>Encrypted password required</dt>
+<dd>
+<p>Cek jika client anda Windows 9x</p>
+</dd>
+<dt>Authentification mode</dt>
+<dd>
+<p>Anda bisa pilih share atau user tapi saya pilih share karena lebih flexible seperti bisa menggunakan smbuser dan bisa membuat share yang tidak ada passwordnya.</p>
+</dd>
+</dl>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN39">User</a></h1>
+<p>Untuk mengakses share yang di export oleh samba user name di Windows harus sama dengan username di linux tetapi satu hal bahwa passwordnya tidak sama dengan password linux. Untuk mengeset passwordnya pertama-tama root harus menjalankan smbpasswd -a namauser dan memasukkan passwordnya dan kemudian user bisa mengubah password tersebut dengan menjalankan smbpasswd. Kalau rootnya lagi bosen ngarang password bisa juga ngejalanin smbpasswd -an namauser sehingga usernya ditambah dengan
+passwordnya kosong.</p>
+<p>Kalau anda coba akses komputer linux yang ada sambanya dari Network Neighbourhood anda bisa melihat ada
+<i class="EMPHASIS">share</i>
+dengan nama yang sama dengan nama user. Ini adalah salah satu feature samba yaitu otomatis men-<i class="EMPHASIS">share</i>
+home direktori user dengan nama usernya sebagai nama share.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN45">User Aliasing dengan /etc/smbusers</a></h2>
+<p>Anda bisa membuat alias user dengan menambahkan nama
+user dan aliasnya ke file /etc/smbusers dengan format:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+user_unix = alias1 alias2 alias3
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Contoh /etc/smbusers:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+ Unix_name = SMB_name1 SMB_name2 ...
+root = administrator admin
+nobody = guest pcguest smbguest
+zakaria = zk za
+indra_t = in
+herman = hy
+ 
+</pre>
+</td>
+</tr>
+</table>
+<p>Perlu
+diperhatikan kalau anda mengakses server samba dengan user yang merupakan alias, walaupun share home direktorinya tidak muncul anda bisa mengaksesnya dengan mengetikkan //linux/user di kotak explorer untuk server samba linux dan user namanya user.</p>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN52">Membuat
+<i class="EMPHASIS">Share</i>
+Baru</a></h1>
+<p>Untuk membuat share baru kita menggunakan dialog Disk Shares dibawah Config -&gt; Networking -&gt; Server tasks -&gt; Samba file server.
+Di dialog ini kita bisa melihat semua share yang ada dan kita bisa mengedit atau menghapus share yang ada dengan menekan Enter pada share yang diinginkan. Untuk menambah share pilih Add dan akan keluar dialog Share setup.</p>
+<p>Untuk membuat share anda harus mengisi Share name dengan nama share yang diinginkan, Directory to export dengan direktori yang ingin di-share dan jangan lupa
+<i class="EMPHASIS">mencawang</i>
+<i class="EMPHASIS">checkbox</i>
+This share is enabled dan Browsable agar share anda bisa
+terlihat di Network Neighbourhood. Selain itu ada baiknya mengisi Comment/description dengan deskripsi dari share.</p>
+<p>Kalau anda hanya mengisi diatas share anda telihat di daftar share samba tetapi tidak bisa diakses oleh siapapun. Ada dua cara membuat sebuah share bisa diakses. Pertama share itu public sehingga bisa diakses siapapun tanpa memerlukan password berguna misalnya untuk sharing MP3. Cara lain adalah share itu memerlukan username dan password.</p>
+<p>Untuk membuat share public cukup dengan
+<i class="EMPHASIS">mencawang checkbox</i>
+Public access. Defaultnya aksesnya adalah hanya
+<i class="EMPHASIS">read only</i>
+agar user bisa menambah, menghapus atau mengubah file anda harus mencawang checkbox Writable.</p>
+<p>Sedangkan untuk membuat share yang memerlukan username &amp; password anda tinggal memasukkan daftar pengguna yang boleh mengakses ke Valid users. Daftar pengguna berisi nama-nama pengguna yang dibatasi oleh koma. Selain itu juga bisa berisi nama group jika diawali dengan @ misalnya
+@finance. Seperti juga share public anda harus mencawang Writable agar pengguna bisa menambah, menghapus dan mengubah file yang ada di share tersebut.</p>
+<p>invalid users, write list, read only list</p>
+</div>
+</div>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Sharing File dengan Samba</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/setting-samba.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/setting-samba.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

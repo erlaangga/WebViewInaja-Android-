@@ -1,0 +1,155 @@
+<head><title>Linux untuk Pemula: RedHat Package Manager</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="rpm, install, query, verify, uninstall, upgrade, glint">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>RedHat Package Manager</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting
+by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>RedHat Package Manager</h1>
+<h2>RPM</h2>
+<p>Salah satu utilitas yang paling powerful dan inovatif dari RedHat Linux adalah RPM,
+<i>RedHat Package Manager</i>. Teknologi RPM adalah sebuah cara yang paling mudah untuk
+melakukan instalasi, uninstalasi,
+<i>ugrade</i>,
+<i>query, verify</i>
+dan mem-<i>build</i>
+paket
+<i>software</i>.</p>
+<p>Paket
+<i>software</i>
+RPM adalah sebuah arsip dari file-file dengan beberapa informasi yang berhubungan dengan file-file tersebut, seperti nama, versi dan deskripsinya.</p>
+<p>Berbeda dengan cara tradisional menggunakan file tar.gz, metode RPM membuat user tidak direpotkan masalah manajemen file seperti letak file, direktori dsb.</p>
+<p>Untuk menjalankan RPM sangat mudah, berikut ini adalah
+perintah umum untuk:</p>
+<h3><i>Install</i></h3>
+<pre>
+rpm -i [option] [nama_paket_rpm]
+</pre>
+<p>misalnya:</p>
+<pre>
+rpm -ivh vim-4.5-2.i386.rpm
+</pre>
+<p>v dan h adalah option untuk menampilkan jalannya instalasi dan menampilkan grafik berbentuk hash (#). Option lainnya dapat di lihat di
+<b>man rpm.</b></p>
+<p>Bila paket tersebut telah di instalasi atau ditemukan
+<i>dependency</i>, RPM akan memberitahukan dan instalasi di batalkan. Gunakan - -replacepkgs atau - -replacefiles bila ingin menimpa paket
+lama. Untuk
+<i>dependency error,</i>
+paket atau file yang di butuhkan harus di instalasi dulu. Sebaiknya
+<b>tidak</b>
+menggunakan option - -nodeps untuk mengatasi
+<i>error dependency</i>. (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>)</p>
+<h3><i>Upgrade</i></h3>
+<pre>
+rpm -U [option] [nama_paket_rpm]
+</pre>
+<p>misalnya :</p>
+<pre>
+rpm -Uvh emacs-19.34-4.i386.rpm
+</pre>
+<p>Upgrade ini adalah kombinasi dari uninstalasi dan instalasi, artinya RPM akan
+menguninstalasi dulu paket versi lama bila ditemukan dan menggantinya dengan versi baru. Bila tidak ditemukan versi lamanya maka otomatis RPM melakukan instalasi.</p>
+<h3><i>Uninstalasi</i></h3>
+<pre>
+rpm -e [option] [nama_paket]
+</pre>
+<p>misalnya:</p>
+<pre>
+rpm -e emacs
+</pre>
+<p>Untuk uninstalasi tidak dipakai nama paket RPM tapi nama paket itu sendiri.
+<i>Dependency error</i>
+juga terjadi bila paket yang ingin di uninstalasi dibutuhkan oleh program lain. Gunakan - -nodeps bila ingin tetap menghapusnya. Untuk
+uninstalasi ini sebaiknya dilakukan dengan meng-uninstalasi paket-paket sesuai urutan
+<i>dependency</i>-nya. (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id"><a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a></a>)</p>
+<h3><i>Query</i></h3>
+<pre>
+rpm -q [option] [nama_paket]
+</pre>
+<p>misal:<br>
+</p>
+<pre>
+rpm -ql kernel
+</pre>
+<p>Option l menampilkan semua file yang dimiliki oleh paket kernel.</p>
+<h3>Verify</h3>
+<pre>
+rpm -V [nama_paket]
+</pre>
+<p>misal:</p>
+<pre>
+rpm -V bash
+</pre>
+<p>Verify digunakan untuk mendeteksi bila terdapat masalah saat instalasi. RPM akan membandingkan paket yang telah di instalasi dengan informasi yang terdapat pada file paket RPM aslinya. Bila tidak ada kesalahan, RPM tidak menampilkan sesuatu.</p>
+<h2>RPM dengan Glint</h2>
+<p>Untuk berinteraksi dengan RPM dapat dilakukan melalui program Glint. Program berbasis X ini merupakan
+<i>File Manager</i>
+yang memudahkan user melakukan instalasi, uninstalasi,
+<i>upgrade, query</i>
+dan
+<i>verify</i>
+paket software RPM. Untuk dapat menggunakan Glint, tentu saja X Window sudah di instalasi dan berjalan baik.</p>
+<center><img src="rpm-files/glint.jpg" width="401" height="208" alt="glint.jpg 401x208 (40 KB)"></center>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>RedHat Package Manager</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/rpm.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/rpm.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

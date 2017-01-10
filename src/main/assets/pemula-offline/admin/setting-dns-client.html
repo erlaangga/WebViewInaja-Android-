@@ -1,0 +1,324 @@
+<head><title>Linux untuk Pemula: Setting DNS Client</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Setting DNS Client</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/zakaria.html">Zakaria</a>
+</strong></p>
+<div class="ARTICLE">
+<div class="TITLEPAGE">
+<h1 class="TITLE"><a name="AEN2">Setting DNS Client</a></h1>
+<hr>
+</div>
+<div class="TOC">
+<dl>
+<dt><b>Table of Contents</b></dt>
+<dt><a href="#AEN6">Pendahuluan</a></dt>
+<dt><a href="#AEN11">/etc/hosts</a></dt>
+<dt><a href="#AEN42">/etc/resolv.conf</a></dt>
+<dt><a href="#AEN86">/etc/host.conf</a></dt>
+<dt><a href="#AEN94">Tool untuk Testing DNS</a></dt>
+<dt><a href="#AEN101">Sumber Lebih Lanjut</a></dt>
+</dl>
+</div>
+<div class="SECT1">
+<h1 class="SECT1"><a name="AEN6">Pendahuluan</a></h1>
+<p>Supaya Linux dapat mengenali nama-nama site di Internet seperti linux.or.id atau nama
+<i class="EMPHASIS">host</i>
+di jaringan LAN harus ada suatu mekanisme untuk mengubah nama-nama tersebut kedalam bentuk yang dikenali oleh komputer yaitu alamat IP misalnya linux.or.id diubah menjadi 64.29.24.175 . Mekanisme ini
+disediakan oleh Name Resolver yang terdapat dalam
+<i class="EMPHASIS">standard library</i>
+linux. Tentu saja agar mekanisme ini bekerja dengan baik diperlukan beberapa konfigurasi.</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN11">/etc/hosts</a></h1>
+<p>File /etc/hosts berisi pemetaan nama
+<i class="EMPHASIS">host</i>
+dengan alamat IPnya dengan format sebagai berikut:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+IP   nama.domain.lengkap   alias
+</pre>
+</td>
+</tr>
+</table>
+<p>Perlu diperhatikan bahwa jumlah spasi atau tab antara masing-masing kolom tidak berpengaruh, yang penting ada pemisahnya baik spasi atau tab.</p>
+<p>Contoh /etc/hosts</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+127.0.0.1       localhost.intra.aki     localhost
+192.168.1.100   linux.intra.aki         linux
+192.168.1.3     cctv.intra.aki          cctv
+</pre>
+</td>
+</tr>
+</table>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN19">Setting /etc/hosts melalui Linuxconf</a></h2>
+<p>Selain mengedit secara langsung file /etc/hosts anda juga bisa mengeditnya melalui linuxconf.</p>
+<ol type="1">
+<li>
+<p>Jalankan linuxconf</p>
+</li>
+<li>
+<p>Pilih Config -&gt; Networking -&gt; Misc -&gt; Information about other hosts</p>
+</li>
+<li>
+<p>Di dialog tersebut anda bisa menambah (Add) atau mengedit atau menghapus
+<i class="EMPHASIS">entry</i>
+tertentu dengan menekan enter pada entry yang ingin diubah atau dihapus</p>
+</li>
+</ol>
+</div>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN30">Kelemahan /etc/hosts</a></h2>
+<p>Mekanisme /etc/hosts mempunyai beberapa kelemahan seperti:</p>
+<ul>
+<li>
+<p>Tidak
+<i class="EMPHASIS">scalable</i>
+untuk jaringan yang mempunyai banyak
+<i class="EMPHASIS">host</i></p>
+</li>
+<li>
+<p>Host yang berbeda bisa mempunyai isi /etc/hosts yang berbeda sehingga bisa tidak seragam dan menyulitkan peng-<i class="EMPHASIS">update</i>-an</p>
+</li>
+</ul>
+<p>Karena itulah biasanya /etc/hosts hanya
+digunakan untuk mendaftarkan alamat IP lokal saja yaitu untuk alamat IP loopback (127.0.0.1) dan alamat IP ethernet card (jika ada).</p>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN42">/etc/resolv.conf</a></h1>
+<p>File /etc/resolv.conf adalah file konfigurasi utama bagi
+<i class="EMPHASIS">Name Resolver.</i>
+Formatnya sederhana yaitu file text dengan satu
+<i class="EMPHASIS">keyword</i>
+per baris. Ada tiga
+<i class="EMPHASIS">keyword</i>
+yang biasa digunakan yaitu:</p>
+<dl>
+<dt>domain</dt>
+<dd>
+<p>menentukan nama domain lokal</p>
+</dd>
+<dt>search</dt>
+<dd>
+<p>menentukan daftar dari nama-nama domain yang digunakan untuk mencari nama
+<i class="EMPHASIS">host</i></p>
+</dd>
+<dt>namaserver</dt>
+<dd>
+<p>keyword ini yang bisa digunakan beberapa kali, menentukan alamat IP dari server DNS yang digunakan oleh
+<i class="EMPHASIS">Name Resolver</i></p>
+</dd>
+</dl>
+<p>Contoh /etc/resolv.conf</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+domain intra.aki
+search intra.aki cbn.net.id
+nameserver 202.158.3.6
+nameserver 202.158.3.7
+</pre>
+</td>
+</tr>
+</table>
+<p>Perlu diperhatikan bahwa semua domain yang terdapat dalam baris search akan dicari untuk setiap nama
+<i class="EMPHASIS">host</i>
+yang di-<i class="EMPHASIS">resolve.</i>
+Sehingga jika anda ingin telnet ke
+<i class="EMPHASIS">host</i>
+cctv maka untuk mendapatkan alamat IP untuk
+<i class="EMPHASIS">host</i>
+cctv dicari alamat IP untuk cctv.intra.aki pertama kali, lalu cctv.cbn.net.id dan
+terakhir cctv. Begitupun jika untuk linux.or.id maka akan dicoba dulu linux.or.id.intra.aki, lalu linux.or.id.cbn.net.id dan terakhir linux.or.id. Sebaiknya anda tidak menaruh terlalu banyak domain di dalam baris search karena akan memakan waktu untuk mencari domain-domain tersebut.</p>
+<p>Biasanya yang diperlukan hanyalah
+<i class="EMPHASIS">keyword</i>
+nameserver karena
+<i class="EMPHASIS">keyword</i>
+domain mengambil default dari nama
+<i class="EMPHASIS">host</i>
+dan
+<i class="EMPHASIS">keyword</i>
+search defaultnya berisi isi dari
+<i class="EMPHASIS">keyword</i>
+domain.</p>
+<div class="SECT2">
+<hr>
+<h2 class="SECT2"><a name="AEN76">Setting /etc/resolv.conf melalui Linuxconf</a></h2>
+<p>Untuk mengedit /etc/resolv.conf menggunakan linuxconf jalankan langkah berikut</p>
+<ol type="1">
+<li>
+<p>Jalankan linuxconf</p>
+</li>
+<li>
+<p>Pilih Config -&gt; Networking -&gt; Client tasks-&gt; Name server specification (DNS)</p>
+</li>
+<li>
+<p>Di dialog tersebut anda bisa mengedit default domain, nameserver ke-1
+s/d 3, search domain ke-1 s/d 6 dan apakah menggunakan DNS untuk operasi normal</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN86">/etc/host.conf</a></h1>
+<p>File ini mengatur cara kerja dari
+<i class="EMPHASIS">Name Resolver</i>
+defaultnya adalah</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+order hosts,bind
+multi on
+</pre>
+</td>
+</tr>
+</table>
+<p>Konfigurasi ini mengatur agar
+<i class="EMPHASIS">Name Resolver</i>
+untuk
+mencari nama
+<i class="EMPHASIS">host</i>
+di /etc/hosts dahulu sebelum bertanya ke nameserver dan mengembalikan semua alamat yang ditemukan di file /etc/hosts bukan cuma yang pertama saja.</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN94">Tool untuk Testing DNS</a></h1>
+<p>Untuk mengetes Setting DNS Client, anda bisa menggunakan perintah host dan nslookup. Misalnya:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[zakaria@linux zakaria]$ host cctv
+cctv.intra.aki has address 192.168.1.3
+ 
+[zakaria@linux zakaria]$ nslookup linux
+Server:  localhost
+Address:  127.0.0.1
+ 
+Name:    linux.intra.aki
+Address:  192.168.1.100
+</pre>
+</td>
+</tr>
+</table>
+<p>Untuk nslookup anda juga bisa melakukan test secara interaktif contohnya:</p>
+<table border="0" bgcolor="#E0E0E0" width="100%">
+<tr>
+<td>
+<pre class="PROGRAMLISTING">
+[zakaria@linux zakaria]$ nslookup
+Default Server:  localhost
+Address:  127.0.0.1
+ 
+&gt; linux.or.id
+Server:  localhost
+Address:  127.0.0.1
+ 
+Non-authoritative answer:
+Name:    linux.or.id
+Address:  64.29.24.175
+ 
+&gt; yahoo.com
+Server:  localhost
+Address:  127.0.0.1
+ 
+*** localhost can't find yahoo.com: Non-existent host/domain
+</pre>
+</td>
+</tr>
+</table>
+<p>Seperti biasa tekan Ctrl+D untuk kembali ke shell</p>
+</div>
+<div class="SECT1">
+<hr>
+<h1 class="SECT1"><a name="AEN101">Sumber Lebih Lanjut</a></h1>
+<p>Untuk informasi yang lebih lengkap anda dapat membaca:</p>
+<ul>
+<li>
+<p>man 5 resolver</p>
+</li>
+<li>
+<p>NET3-4 HOWTO</p>
+</li>
+<li>
+<p>NET-3 HOWTO</p>
+</li>
+<li>
+<p>DNS HOWTO</p>
+</li>
+</ul>
+</div>
+</div>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Setting DNS Client</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/setting-dns-client.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/setting-dns-client.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

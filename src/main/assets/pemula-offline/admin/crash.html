@@ -1,0 +1,352 @@
+<head><title>Linux untuk Pemula: Sistem Crash</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="tips, crash, emergency, tools">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Sistem Crash</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Sistem Crash</h1>
+<h2>Tips Mencegah Crash</h2>
+<p>Walau di klaim Linux memiliki kestabilan tinggi dan sangat jarang terjadi
+<i>crash</i>
+tapi hal itu tetap dapat terjadi.
+Oleh karena itu strategi yang baik adalah bersiap-siap dan mencegah hal itu terjadi. Persiapan bisa dengan cara membuat
+<i>backup</i>
+sistem, membuat
+<a href="#ebd">emergency boot disk</a>, atau membuat salinan file-file penting. Berikut ini
+<i>tips</i>
+menjaga sistem agar terhindar dari masalah:</p>
+<ul>
+<li>Jangan
+<a href="#root">login sebagai root</a>
+bila tidak perlu</li>
+<li>Buat
+<i>backup</i>
+setelah instalasi atau
+<i>setup</i></li>
+<li>Buat
+<a href="#ebd">emergency boot disk</a>
+dengan kernel terbaru</li>
+<li>Jangan mematikan komputer dengan tombol
+<i>power on/off</i></li>
+<li>Gunakan perintah
+<i>shutdown</i></li>
+<li>Gunakan UPS bila perlu</li>
+<li>Jangan menghapus
+<a href="#ftool">e2fsck</a>
+dari /etc/rc.d/rc.sysinit</li>
+<li>Gunakan
+<a href="#ftool">fsck</a>
+atau
+<a href="#ftool">badblocks</a>
+untuk mengecek disket</li>
+<li>Jangan menjalankan
+<a href="#ftool">fsck</a>
+pada
+<i>filesystem</i>
+yang di
+<i>mount</i></li>
+<li>Buat
+<i>backup</i>
+file penting pada disket</li>
+<li>Jangan pedulikan
+fragmentasi pada partisi Linux</li>
+<li>Gunakan
+<a href="#ftool">tool-tool filesystem</a></li>
+<li>Jangan menginstalasi program-program yang tidak diperlukan</li>
+<li>Gunakan
+<i>flash</i>
+RAM</li>
+<li>Baca
+<i>Lars Wirzenius's Linux System Administrators' Guide 0.5</i>
+(Saya tidak tahu dimana memperoleh buku atau file ini)</li>
+</ul>
+<h2>Login sebagai Root</h2>
+<p>Bila tidak perlu sebaiknya
+<b>jangan login sebagai root</b>
+sepanjang hari.
+<i>Root</i>
+memiliki kekuasaan terhadap sistem, jadi
+<i>root</i>
+bisa melakukan apa saja terhadap sistem tapi yang namanya manusia suatu saat bisa lupa. Maunya memperbaiki sistem tapi ternyata salah memasukkan perintah yang akhirnya menghancurkan sistem.</p>
+<p>Contohnya tanpa sengaja,
+<i>root</i>
+bisa saja mengetikkan perintah:</p>
+<pre>
+rm -rf /*
+</pre>
+<p>Akibatnya sangat fatal, perintah tersebut tidak saja menghapus habis sistem Linux tapi juga seluruh partisi DOS atau Windows bila saat itu sedang di mount.</p>
+<h2>Membuat Boot Disk</h2>
+<p>Setelah melakukan
+instalasi atau
+<i>setup</i>, buatlah
+<i>boot disk</i>
+menggunakan kernel terbaru. Ini untuk persiapan bila suatu saat kita gagal saat
+<i><a href="../pengguna/kompile-kernel.html">recompile kernel</a></i>.</p>
+<p>Pastikan kernel sudah menunjuk ke
+<i>device root</i>
+dengan perintah:</p>
+<pre>
+# rdev zImage
+</pre>
+<p>Selanjutnya, format disket dengan perintah (misalkan disket 1.44MB di drive A):</p>
+<pre>
+# fdformat /dev/fd0H1440
+</pre>
+<p>Copy kernel ke disket tersebut:</p>
+<pre>
+# dd if=zImage of=/dev/fd0
+</pre>
+<p>Coba reboot komputer dengan disket boot tetap di drive A:</p>
+<pre>
+# shutdown -r now
+</pre>
+<p>Dengan cara demikian kita tidak saja memiliki
+<i>emergency boot</i>
+yang berisi kernel tapi juga
+<i>filesystem</i>
+minimal untuk melakukan
+<i>recovery</i>
+sistem.</p>
+<h2>Mengembalikan File Teks yang Terhapus</h2>
+<p>Bila tanpa sengaja sebuah file teks terhapus, jangan panik. Ada
+<i>tips</i>
+yang namanya "<i>Desperate person's text file undelete"</i>
+dari Paul Anderson's
+<i>"The Linux Tips HOWTO"</i>
+milik Michael Hamilton.</p>
+<p>Bila bisa mengingat beberapa teks dari file, tahu di partisi mana file itu sebelum terhapus dan masih tersisa
+<i>space</i>
+di partisi tersebut maka masih ada kemungkinan mengembalikan file tersebut. Michael Hamilton menggunakan perintah
+<b><i>egrep</i></b>
+dan
+<b><i>strings</i></b>
+untuk menyelesaikan kasus ini.</p>
+<p>Misal, kita kehilangan 100 baris file dengan frase
+<i>"Xena",</i>
+diikuti oleh
+<i>"Lawless"</i>
+dan masih ada sisa
+<i>space</i>
+di partisi DOS maka untuk
+mendapatkan 100 baris teks tersebut dengan cara:</p>
+<pre>
+# egrep -100 'Xena.+Lawless' /dev/hda3 &gt; /mnt/dos/lucy
+</pre>
+<p>Mudah-mudahan ke 100 baris teks tersebut bisa dibaca disini:</p>
+<pre>
+# strings /mnt/dos/lucy | less
+</pre>
+<h2>File
+<i>Toolbox</i></h2>
+<p>RedHat menyediakan beberapa file
+<i>tool</i>
+yang sangat berguna untuk memeriksa dan memperbaiki masalah sistem. File tersebut diantaranya adalah
+<i>e2fsck</i>
+yang dapat berjalan secara otomatis dari script
+<i>rc.sysinit.</i>
+File lain
+seperti
+<i>badblocks</i>
+sangat berguna bagi pemilik
+<i>hard disk non-IDE.</i></p>
+<p>Selengkapnya file-file
+<i>tools</i>
+tersebut adalah sebagai berikut:</p>
+<p><b>e2fsck</b>
+Kebanyakan user Linux memilih
+<i>second extended partition</i>
+karena
+<i>e2fs</i>
+ini
+<i>robust</i>, efisien, cepat dan relatif tidak banyak mengalami fragmentasi<i>.</i>
+Untuk memeriksa dan memperbaiki partisi
+<i>e2fs,</i>
+sebaiknya partisi tersebut di
+<i>unmount</i>
+dulu. Misal, untuk memberbaiki partisi /dev/hda3:</p>
+<pre>
+# e2fsck -p /dev/hda3
+</pre>
+<p><b>badblocks</b>
+Perintah ini untuk mencari
+<i>bad block</i>
+pada sebuah
+<i>device.</i>
+Memiliki beberapa option yang dapat dipilih sesuai keperluan. Hati-hati dengan option -w, ini adalah '<i>write-mode</i>' test yang dapat menghapus data pada sebuah partisi.</p>
+<p><b>fsck</b>
+Sama seperti
+<i>e2fsck.</i>
+Hati-hati juga dengan option -P. Lebih jelasnya baca
+<b><i>man page</i></b>. Bila
+<i>filesystem root</i>
+yang mengalami
+<i>corrupted</i>, menjalankan fsck dari
+<i>floppy</i>
+adalah langkah yang paling berhasil untuk dilakukan. (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>)</p>
+<p><b>dump dan restore</b>
+Program
+<i>dump</i>
+digunakan untuk mem<i>backup filesystem</i>. Sedangkan
+<i>restore</i>
+merupakan program pasangannya. Keduanya dapat bekerja melalui
+<i>network.</i></p>
+<p><b>dumpe2fs</b>
+Untuk menghasilkan informasi
+<i>filesystem</i>
+seperti
+<i>inode count, block count, block size, last mount</i>
+dan
+<i>write time.</i>
+Untuk partisi
+sebesar 450MB akan dihasilkan laporan sebesar 26.000 karakter.</p>
+<p><b>tune2fs</b>
+Untuk mengatur parameter agar performa sistem meningkat. Hanya untuk f<i>ilesystem ext2</i>. Gunakan
+<i>tune2fs</i>
+pada saat e<i>2fsck</i>
+berjalan pada sebuah partisi dan jangan jalankan
+<i>tune2fs</i>
+bila sebuah partisi sedang di
+<i>mount</i>.</p>
+<p><b>mke2fs</b>
+Sahabat para
+<i>Linux Hacker</i>! Untuk membuat s<i>econd extended filesystem</i>
+pada sebuah partisi. Berguna saat pembuatan c<i>ompressed filesystem</i>
+pada
+<i><a href="#ebd">emergency disk</a></i>
+atau pada saat instalasi hard disk baru.</p>
+<p><b>debugfs</b>
+<i>Debugger</i>
+untuk
+<i>ext2 filesystem</i>. Memiliki 34 perintah
+<i>built-in</i>.</p>
+<pre>
+# debugfs /dev/hda3
+</pre>
+<h2>Sistem tidak bisa
+<i>Boot</i></h2>
+<p>Mudah saja bila punya
+<i><a href="#ebd">emergency boot disk</a></i>. Lakukan seperti ini:</p>
+<ul>
+<li><i>Boot</i>
+Linux dari disket
+<i>boot disk</i></li>
+<li>Pada prompt lilo boot:, ketik
+<i>rescue</i>; ini untuk me<i>load</i>
+kernel
+dari disket tadi</li>
+<li>Ikuti saja perintahnya sampai diminta memasukkan
+<i>Supplemental Disk</i></li>
+<li>Proses pemuatan
+<i>filesystem</i>
+ditandai grafik batang;
+<i>Prompt</i>
+menandai proses
+<i>loading</i>
+sudah selesai.</li>
+<li>Program-program yang berguna untuk perbaikan ada di direktori
+<i>sbin</i>
+dan
+<i>usr/bin</i>. Sekarang tinggal di coba mendapatkan partisi dan sebisanya dapat di
+<i>mount</i></li>
+<li>Bila partisi ada pada /dev/hda3 lakukan dengan</li>
+</ul>
+<pre>
+# mount -t ext2 /dev/hda3 tmp
+</pre>
+<p>untuk me<i>mount</i>
+partisi di
+<i>tmp,</i>
+dan segera dapat diperbaiki.</p>
+<p>Bagaimana bila tidak memiliki
+<i>boot disk</i>? Mudah juga, coba dengan
+<i>boot</i>
+dari
+<i>CD-ROM</i>
+kemudian jalankan
+<i>AUTOBOOT</i>
+dari
+<i>DOS</i>.</p>
+<p>Untuk masalah-masalah lain seperti lupa apa
+<i>password</i>
+untuk root, lakukan boot dan ketikkan '<b><i>linux single'</i></b>
+pada saat lilo boot. Perhatikan bahwa ini seharusnya hanya boleh dilakukan oleh root atau administrator sistem atau
+<i>super
+user</i>
+yang memiliki akses ke mesin
+<i>server.</i>
+Setelah masuk ke dalam mode
+<i>single user</i>, buat lagi
+<i>password</i>
+baru dengan perintah
+<b><a href="E_cli.html#passwd">passwd</a></b>.</p>
+<p>Bila sistem Anda hanya menampilkan 'Li' pada saat boot, kemungkinan besar terjadi ketidak-sesuaian parameter geometri
+<i>hard disk</i>(<i>cylinder/head/sector</i>) antara versi
+<b>BIOS</b>
+dan versi
+<b>MBR.</b>
+(Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>)</p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Sistem Crash</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/crash.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/crash.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site
+didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

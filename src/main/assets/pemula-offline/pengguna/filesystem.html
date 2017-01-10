@@ -1,0 +1,386 @@
+<head><title>Linux untuk Pemula: Filesystem, Disk &amp; Device</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="filesystem, block device, disk">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Filesystem, Disk &amp; Device</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>FILESYSTEM, DISK &amp; DEVICE</h1>
+<h2>Block &amp; Character Device</h2>
+<p>Ketika pertama kali bisa login ke sistem Linux, saya sedikit bingung
+karena tidak menemukan drive A:, B: atau hard disk C: maupun D:. Mungkin bagi newbie yang lain hal membingungkan ini bisa saja terjadi. Bagi mereka yang telah lama mengenal sistem operasi DOS /Windows ini merupakan sesuatu yang sungguh berbeda, di lingkungan Linux dan juga UNIX (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>), semua
+<i>device</i>
+atau
+<i>hardware device</i>
+di komputer kita akan dianggap sebagai file. Jadi itulah yang menyebabkan drive-drive tersebut
+tidak tampak. File-file khusus yang merupakan simbol untuk semua
+<i>device</i>
+tersebut disimpan dalam direktori /dev.
+<i>Device-device</i>
+tersebut dapat berupa
+<b><i>block device</i></b>
+ataupun
+<b><i>character device.</i></b></p>
+<p><i>Character device</i>
+itu serangkain karakter yang dibaca berurut misalnya serangkaian karakter yang kita tekan dari keyboard atau serangkaian data
+<i>byte</i>
+yang dikirim berurutan melalui
+<i>serial line</i>. Sedangkan block device atau sering disebut random access device
+adalah alat yang dapat menyimpan data dan menawarkan akses keseluruh bagian secara acak. Contoh
+<i>block device</i>
+adalah hard disk dan disket. Dengan menggunakan hard disk kita dapat mengakses data yang tersimpan secara acak sedangkan bila menggunakan
+<i>serial line</i>
+misalnya, kita hanya dapat mengakses data sesuai urutannya.</p>
+<p>Masing-masing
+<i>device node</i>
+memiliki
+<b><i>major</i></b>
+dan
+<b><i>minor number device</i></b>.
+<i>Major number</i>
+memberitahu kernel,
+<i>device</i>
+apa yang mewakili
+<i>node</i>
+tersebut. Misalnya
+<i>major number</i>
+3 adalah IDE
+<i>hard disk</i>
+dan
+<i>major number</i>
+8 adalah SCSI
+<i>disk</i>.
+<i>Minor number</i>
+mewakili nomor partisi,
+<i>minor number</i>
+0 adalah keseluruhan
+<i>hard disk</i>
+yang pertama dan
+<i>minor number</i>
+1 hingga 15 adalah partisi yang mungkin bisa dibuat di
+<i>hard disk</i>
+tersebut. Contohnya, saya memiliki 2 buah IDE
+<i>hard disk</i>
+maka
+<i>hard disk</i>
+pertama adalah /dev/hda dan hard disk kedua adalah /dev/hdb. Jika masing-masing
+<i>hard disk</i>
+tersebut memiliki 2 buah partisi maka saya memiliki /dev/hda1, /dev/hda2, /dev/hdb1 dan /dev/hdb2.</p>
+<p>Di bawah ini isi dari direktori /dev di komputer saya. Perhatikan huruf
+<b>b</b>
+di bagian paling kiri, menunjukkan bahwa itu adalah
+<i>block device</i>
+sedangkan
+<i>character device</i>
+akan ditunjukkan dengan huruf
+<b>c.</b></p>
+<pre>
+[zakaria@linux zakaria]$ ls -l --sort=none /dev/hd[ab]{?,??}
+brw-rw----   1 root     disk       3,   1 May  6  1998 /dev/hda1
+brw-rw----   1 root     disk       3,   2 May  6  1998 /dev/hda2
+brw-rw----   1 root     disk       3,   3 May  6  1998 /dev/hda3
+brw-rw----   1 root     disk       3,   4 May  6  1998 /dev/hda4
+brw-rw----   1 root     disk       3,   5 May  6  1998 /dev/hda5
+brw-rw----   1 root     disk       3,   6 May  6  1998 /dev/hda6
+brw-rw----   1 root     disk       3,   7 May  6  1998 /dev/hda7
+brw-rw----   1 root     disk       3,   8 May  6  1998 /dev/hda8
+brw-rw----   1 root     disk       3,   9 May  6  1998 /dev/hda9
+brw-rw----   1 root     disk       3,  65 May  6  1998 /dev/hdb1
+brw-rw----   1 root     disk       3,  66 May  6  1998 /dev/hdb2
+brw-rw----   1 root     disk       3,  67 May  6  1998 /dev/hdb3
+brw-rw----   1 root     disk       3,  68 May  6  1998 /dev/hdb4
+brw-rw----   1 root     disk       3,  69 May  6  1998 /dev/hdb5
+brw-rw----   1 root     disk       3,  70 May  6  1998 /dev/hdb6
+brw-rw----   1 root     disk       3,  71 May  6  1998 /dev/hdb7
+brw-rw----   1 root     disk       3,  72 May  6  1998 /dev/hdb8
+brw-rw----   1 root     disk       3,  73 May  6  1998 /dev/hdb9
+brw-rw----   1 root     disk       3,  10 May  6  1998 /dev/hda10
+</pre>
+<h2>Filesystem</h2>
+<p>Untuk mengorganisasi file-file pada
+<i>device</i>
+diperlukan suatu metode yang disebut dengan
+<b><i>filesystem.</i></b>
+Jika Anda mengenal
+<b>FAT</b>
+selama ini di sistem operasi Windows maka Anda akan mengenal beberapa metode
+<i>filesystem</i>
+di Linux, seperti
+<b>ext fs, ext2 fs</b>
+atau
+<b>xia fs</b>
+dll. Saat ini
+<i>ext2 fs</i>
+adalah
+<i>filesystem</i>
+yang banyak digunakan untuk Linux karena terkenal sangat
+<b>efisien</b>. Meskipun demikian Red Hat Linux tetap menyediakan
+<a href="filesystem.html">dukungan terhadap
+<i>filesystem</i>
+lain</a>
+seperti msdos yang sudah
+<i>built in</i>
+di kernel atau dalam bentuk modul seperti
+<i>vfat</i>
+(Windows95
+<i>native fs</i>),
+<i>ext,umsdos</i>
+dan sebagainya.</p>
+<h2>Mount &amp; Umount Command</h2>
+<p>Untuk menggunakan
+<i>filesystem</i>
+tersebut kita lebih dahulu harus me-<i>mount</i>
+sebuah
+<i>block
+device</i>
+yang memiliki
+<i>filesystem.</i>
+Perintahnya adalah sebagai berikut:</p>
+<pre>
+ # mount [-t] [-o] device mount_point
+</pre>
+<p><i>device</i>
+berupa
+<i>block device</i>, mount_point berupa sebuah direktori untuk menampilkan
+<i>filesystem.</i>
+t adalah
+<i>type</i>
+atau jenis
+<i>filesystem</i>
+dan o adalah
+<i>option</i>, keduanya boleh saja tidak disertakan bila Anda sudah mengkonfigurasi file
+<b><a href="../admin/filesystem-manager.html">/etc/fstab</a></b>
+yang berisi keterangan detail mengenai
+<i>device</i>,jenis
+<i>filesystem</i>,
+<i>mount point</i>
+yang digunakan dan sebagainya.</p>
+<p>Misalnya saya akan mengakses sebuah file di disket di drive A: maka pertama kali saya harus me-<i>mount</i>
+dulu disk tersebut ke sebuah direktori yang sudah saya buat misalnya /mnt/floppy:</p>
+<pre>
+ # mount /dev/fd1 -t vfat /mnt/floppy
+</pre>
+&lt;enter&gt;
+<pre>
+  mount: block device /dev/fd1 is write-protected, mounting read-only
+</pre>
+<p>Setelah perintah itu barulah saya bisa membaca disket di drive A:
+tersebut di direktori /mnt/floppy. Misalnya dengan mengetikkan perintah ls maka akan ditampilkan isi disket di drive A:</p>
+<pre>
+ # ls /mnt/floppy
+</pre>
+<p>Untuk membatalkan perintah mount digunakan perintah
+<b>umount</b></p>
+<pre>
+ # umount /mnt/floppy
+</pre>
+<p>Setelah perintah tersebut dieksekusi, otomatis drive A: tidak bisa digunakan, cobalah dengan mengetikkan perintah ls lagi. Pesan kesalahan akan ditampilkan seperti dibawah ini.</p>
+<pre>
+ # ls /mnt/floppy
+ filesystem not mounted
+</pre>
+<h2>mtools</h2>
+<p>Bila Anda memiliki
+<i>filesystem DOS</i>dan ingin mengunakannya tanpa harus melakukan
+<i>mount</i>
+maka gunakan
+<b>mtools.</b>
+Dengan cara ini Anda tidak perlu lagi melakukan mount bila ingin mengakses
+<i>filesystem DOS</i>
+dan partisi yang belum diformat sekalipun. (Syafrudin,
+<a href="mailto:haydin@arjuna.csc.ui.ac.id">haydin@arjuna.csc.ui.ac.id</a>). Setelah menginstalasi mtools tersebut, Anda cukup menjalankan perintah-perintah seperti di DOS untuk mengakses
+<i>filesystem DOS</i>
+tersebut,
+misalnya
+<b>mdir</b>,
+<b>mcopy</b>
+dan sebagainnya.</p>
+<h2>Filesystem Support</h2>
+<p>Linux memiliki dukungan terhadap beberapa
+<i>filesystem</i>
+lain sehingga kita dapat menggunakan atau mengakses
+<i>filesystem</i>
+yang berbeda tanpa harus melakukan konversi lebih dulu. Berikut ini adalah beberapa
+<i>filesystem</i>
+yang bisa di dukung Linux sejak kernel 2.0.30 di keluarkan: (Anda dapat mengkonfigurasi dukungan
+<i>filesystem</i>
+ini saat
+<a href="kompile-kernel.html">konfigurasi kernel</a>
+)</p>
+<table border="0">
+<tr>
+<td valign="top"><b>Minix</b></td>
+<td valign="top">Merupakan
+<i>filesystem</i>
+Linux yang pertama dan saat ini masih banyak digunakan untuk
+<i>boot disk</i>
+dan beberapa format disket.</td>
+</tr>
+<tr>
+<td valign="top"><b>Extended fs</b></td>
+<td valign="top">Tidak banyak yang menggunakannya lagi dan sebaiknya tidak perlu di kompile dalam kernel.</td>
+</tr>
+<tr>
+<td valign="top"><b>Second Extended fs</b></td>
+<td valign="top">Saat ini merupakan
+<i>filesystem</i>
+default untuk
+Linux dan seharusnya di kompile dalam kernel karena
+<i>filesystem root</i>
+tidak bisa bekerja bila berupa modul.</td>
+</tr>
+<tr>
+<td valign="top"><b>xiafs filesystem</b></td>
+<td valign="top">Diperkenalkan bersamaan dengan second extended fs dan dimaksudkan untuk menggantikan extended fs. Saat ini jarang digunakan dan sebaiknya tidak di kompile dalam kernel kecuali Anda membutuhkannya.</td>
+</tr>
+<tr>
+<td valign="top"><b>DOS FAT fs</b></td>
+<td valign="top">Pada dasarnya bukan merupakan sebuah
+<i>filesystem</i>
+tapi merupakan dasar bagi
+<i>filesystem b</i>erbasis FAT lainnya seperti MS-DOS FAT, VFAT (Windows95) atau umsdos.</td>
+</tr>
+<tr>
+<td valign="top"><b>MS-DOS FAT fs</b></td>
+<td valign="top">Jika Anda menginginkan Linux dapat mengakses sistem berbasis DOS maka Anda dapat menkompilenya dalam kernel. Sangat berguna untuk komputer yang memiliki sistem
+<i>dual-boot.</i></td>
+</tr>
+<tr>
+<td valign="top"><b>VFAT (Windows95) fs</b></td>
+<td valign="top">Merupakan peningkatan dari MS-DOS FAT fs dan mendukung
+format
+<i>long filename</i>. Ini juga berguna untuk komputer yang memiliki sistem
+<i>dual-boot.</i></td>
+</tr>
+<tr>
+<td valign="top"><b>umsdos</b></td>
+<td valign="top">Dukungan ini dibutuhkan bila ingin menjalankan Linux diatas partisi DOS tapi sepertinya RedHat Linux tidak akan bisa berjalan pada sebuah
+<i>filesystem</i>
+umsdos.</td>
+</tr>
+<tr>
+<td valign="top"><b>/proc</b></td>
+<td valign="top"><i>Filesystem</i>
+ini dipakai oleh kernel untuk menyediakan informasi mengenai sistem kepada
+<i>user</i>
+program, seperti
+<b>ps, top, xload, free</b>
+atau
+<b>netstat</b>.
+<i>Filesystem</i>
+ini memang seharusnya selalu ada dan walaupun ada isinya tapi tidak akan mengisi spasi hard disk.</td>
+</tr>
+<tr>
+<td valign="top"><b>NFS</b></td>
+<td valign="top">Dibutuhkan bila Anda akan mengakses
+<i>remote filesystem</i>
+dan untuk sebuah
+<i>server</i>
+dukungan ini merupakan suatu keharusan.</td>
+</tr>
+<tr>
+<td valign="top"><b>SMB</b></td>
+<td valign="top">Sangat berguna bila Anda menginginkan memiliki akses langsung ke
+Windows95 atau NT.</td>
+</tr>
+<tr>
+<td valign="top"><b>NCP</b></td>
+<td valign="top">Dukungan terhadap NetWare melalui protokol NCP.</td>
+</tr>
+<tr>
+<td valign="top"><b>ISO9660</b></td>
+<td valign="top">Bila Anda memiliki CD-ROM sebaiknya memanfaatkan dukungan ini karena banyak sekali CD-ROM yang ada dipasaran menggunakan format ISO9660 ini.</td>
+</tr>
+<tr>
+<td valign="top"><b>OS/2 HPFS</b></td>
+<td valign="top">Mendukung
+<i>filesystem</i>
+OS/2 dan HPFS. Linux hanya dapat membaca
+<i>filesystem</i>
+tersebut
+(<i>read-only</i>).</td>
+</tr>
+<tr>
+<td valign="top"><b>System V &amp; Coherent</b></td>
+<td valign="top">Merupakan
+<i>filesystem</i>
+UNIX generasi lama dan dukungan ini hanya diperlukan bila Anda memiliki data-data lama dan ingin memindahkannya ke
+<i>filesystem</i>
+yang baru.</td>
+</tr>
+<tr>
+<td valign="top"><b>Amiga FFS</b></td>
+<td valign="top">Masih berupa
+<i>experimental code</i>
+dan sebaiknya gunakan dengan hati-hati.</td>
+</tr>
+<tr>
+<td valign="top"><b>UFS</b></td>
+<td valign="top"><i>Filesystem</i>
+ini digunakan oleh beberapa sistem UNIX, Solaris dan SunOS(4.2). Linux hanya dapat membaca
+<i>filesystem</i>
+ini.</td>
+</tr>
+</table>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Filesystem, Disk &amp; Device</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/filesystem.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/filesystem.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

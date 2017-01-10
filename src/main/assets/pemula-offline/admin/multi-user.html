@@ -1,0 +1,237 @@
+<head><title>Linux untuk Pemula: Multi User</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//IETF//DTD HTML 2.0//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="chgrp, chown, newgrp">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Multi User</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Multi User</h1>
+<h2>Bagaimana Tidak Menggunakan Root?</h2>
+<p>Bila Anda membaca beberapa bab yang lalu, pernah disinggung mengenai kerugian-kerugian apabila kita selalu bekerja sebagai
+<b>root</b>.
+Tapi kemudian saya memperoleh beberapa pertanyaan seperti ini: Apakah saya masih bisa menggunakan hak-hak khusus
+<i>root</i>
+setelah saya tidak memakainya? Mengapa saya tidak bisa lagi melakukan koneksi
+<i>dial-up</i>
+setelah saya
+<i>login</i>
+bukan sebagai
+<i>root</i>?</p>
+<p>Seperti yang telah kita ketahui, Linux termasuk sistem
+<i>multiuser</i>
+dimana suatu
+<i>resource</i>
+bisa digunakan oleh banyak
+<i>user</i>. Setiap
+<i>user</i>
+biasanya diberi ruangan atau
+<i>space</i>
+yang di simpan rapi dibawah
+direktori
+<b>/home</b>. Setiap
+<i>user</i>
+di
+<i>home</i>
+masing-masing memiliki hak mengakses, membaca atau menulis file-file di dalam
+<i>home</i>
+mereka sendiri tetapi mereka belum tentu bisa melakukan hal yang sama di
+<i>home</i>
+milik
+<i>user</i>
+lain atau direktori milik
+<i>root</i>. Masing-masing
+<i>user</i>
+bisa diberi hak-hak khusus yang berlainan untuk mengakses, membaca atau menulis ke sebuah file atau direktori oleh
+<i>root.</i>
+Oleh karena itu kita bisa saja meninggalkan
+<i>root</i>
+atau tidak lagi
+login sebagai<i>root</i>
+sepanjang hari dengan cara membuat
+<i>home</i>
+sendiri,
+<i>login</i>
+sebagai
+<i>user</i>
+biasa serta memberikan hak akses seperlunya saja agar tidak membahayakan sistem bila suatu saat kita melakukan kesalahan.</p>
+<h2>Membuat rumah untuk saya, mama, keponakan atau teman saya</h2>
+<p>Mudah saja, saat Anda login sebagai
+<i>root</i>, jalankan perintah sebagai berikut:</p>
+<pre>
+# adduser flory
+# passwd flory
+</pre>
+<p>Setelah mengetik perintah terkahir Anda akan ditanya
+<i>password</i>
+untuk membuka
+<i>home</i>
+Anda. Ketikkan saja
+<i>password</i>nya sebanyak dua kali dengan kata yang sama. Selanjutnya Anda telah memiliki 'rumah' baru dan siap untuk digunakan. Bila Anda menginginkan, Anda juga bisa memberikan
+<i>home</i>
+lain kepada mama, keponakan yang masih duduk TK atau kepada teman kuliah Anda yang sedang menumpang mengetik skripsinya di komputer Anda.</p>
+<h2>Group</h2>
+<p>Setiap
+<i>user</i>
+paling sedikit bergabung dengan sebuah
+<b>group.</b>
+<i>Group</i>
+bisa berisi kumpulan
+<i>use</i>r lain atau program yang mempunyai kesamaan tugas.
+<i>Group</i>
+memungkinkan sebuah file bisa dipergunakan secara bersama hanya oleh
+<i>user-user</i>
+yang tergabung didalamnya. Oleh karena itu cara mengelompokkan
+<i>user-user</i>
+dalam group ini adalah salah satu cara yang mudah bagi
+<i>root</i>
+untuk memberikan hak akses file-file miliknya kepada sekelompok
+<i>user.</i></p>
+<p>Untuk membuat group baru, Anda bisa menggunakan perintah
+<b>groupadd.</b>
+Misalnya, Anda ingin membuat group baru yang
+namanya
+<b>konek</b>
+maka perintahnya adalah sbb:</p>
+<pre>
+# groupadd konek
+</pre>
+<p>Untuk parameter yang lain seperti menentukan gid,
+<i>password</i>
+dan lain-lain silakan lihat manualnya. Berikutnya adalah menambahkan
+<i>user-user</i>
+yang akan bergabung ke dalam group konek ini. Informasi group disimpan dalam file /<b>etc/group</b>, bukalah dengan menggunakan editor kesayangan Anda, kemudian tambahkan nama-nama
+<i>user</i>
+yang akan bergabung dalam group konek.</p>
+<p>Setiap baris dalam file
+/etc/group terdiri dari empat segmen yang dipisahkan oleh tanda titik dua,</p>
+<pre>
+<i>nama group</i> <b>:</b> <i>password</i> <b>:</b> <i>group id(gid)</i> <b>:</b> <i>user</i>
+</pre>
+<p>Carilah baris group konek dan cukup tambahkan nama
+<i>user</i>
+yang akan bergabung dengan group konek ini di segmen terakhir. Pisahkan nama
+<i>user</i>
+dengan tanda koma bila
+<i>user</i>
+yang bergabung lebih dari satu, misalnya:</p>
+<pre>
+konek :  : 501 : flory, fryda
+</pre>
+<p>Password biasanya kosong atau * atau biarkan
+saja bila Anda tidak membuat
+<i>password</i>
+untuk group ini. Setelah file /etc/group ini di simpan maka tugas berikutnya adalah merubah
+<i>permission</i>
+dan
+<i>ownership</i>
+file-file yang bisa diakses oleh group konek.</p>
+<h2>Permission dan Ownership</h2>
+<p>Setiap file memiliki perijinan dan kepemilikan yang menentukan siapa saja yang boleh mengaksesnya. Lihatlah kembali bab mengenai
+<a href="../pengguna/command.html">command line</a>
+khusunya perintah
+<b>chgrp</b>,
+<b>chmod</b>
+dan
+<b>chown</b>
+atau
+lihat manual perintah-perintah tersebut untuk lebih memahami fungsi perijinan dan kepemilikan ini.</p>
+<p>Sebagai contoh, bila Anda menginginkan group konek yang telah dibuat beberapa saat lalu itu, semua anggotanya bisa melakukan
+<i>dial-up</i>
+sendiri maka Anda harus merubah perijinan atau kepemilikan dari beberapa file yang berhubungan dengan
+<i>dial-up</i>
+supaya bisa diakses oleh group konek.</p>
+<p>Bila Anda memakai kppp dari KDE sebagai
+<i>dial-up</i>
+maka Anda bisa merubah kepemilikan file kppp
+menjadi milik group konek seperti ini:</p>
+<pre>
+[root@cybernetics /root]# ls -l /usr/bin/kppp
+  -rwx------   1 root    root       365660 Apr 19 00:33 /usr/bin/kppp
+</pre>
+<a href="mailto:[root@cybernetics">[root@cybernetics</a>
+/root]# chown .konek /usr/bin/kppp
+<a href="mailto:[root@cybernetics">[root@cybernetics</a>
+/root]# ls -l /usr/bin/kppp -rwsrws--- 1 root konek 365660 Apr 19 00:33 /usr/bin/kppp
+<p>Lakukanlah hal yang sama pada file-file yang berhubungan dengan
+<i>dial-up</i>
+seperti /dev/modem,
+file-file di /etc/ppp/option dan sebagainya.</p>
+<p>Setelah itu
+<i>user-user</i>
+yang tergabung dalam group konek diharuskan
+<i>login</i>
+ke group konek dengan mengetikkan perintah
+<b>newgrp</b>
+apabila ingin dapat melakukan
+<i>dial-up</i>
+dengan kppp:</p>
+<pre>
+[fryda@cybernetics fryda]$ newgrp konek
+</pre>
+<p>Sekarang
+<i>user</i>
+fryda sudah dapat melakukan
+<i>dial-up</i>
+sendiri dengan kppp tanpa bantuan
+<i>root.</i></p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Multi User</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/multi-user.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/multi-user.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

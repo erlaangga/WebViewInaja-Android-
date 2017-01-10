@@ -1,0 +1,160 @@
+<head><title>Linux untuk Pemula: Organisasi File</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//w3c//dtd html 4.0 transitional//en">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="fsstnd, root, direktori, subdirektori">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Organisasi File</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Organisasi File</h1>
+<p>Disamping memiliki program instalasi yang baik, distribusi RedHat juga mengorganisasi file-file yang diinstalasi dengan baik pula. RedHat
+mengikuti standar pengorganisasian
+<i>filesystem</i>
+Linux atau
+<b>FSSTND</b>
+yang tersedia di
+<i>website</i>
+<a href="http://www.pathname.com/fhs/">http://www.pathname.com/fhs/</a></p>
+<p>Keterangan lebih lengkap tentu saja dapat diperoleh di
+<i>website</i>
+tersebut tapi secara sederhana organisasi file di RedHat dapat dijelaskan sebagai berikut:</p>
+<p>Pada tingkat tertinggi adalah
+<b>root direktori</b>, /, yang hanya mengandung sejumlah file penting seperti:</p>
+<p>bin/, boot/, dev/, etc/, home/, lib/,
+lost+found/, mnt/, proc/, sbin/, tmp/, usr/, dan var/.</p>
+<h3>/bin &amp; /sbin</h3>
+Direktori ini menyimpan program-program penting yang digunakan untuk pemeliharaan sistem. Sesuai dengan nama direktorinya, file-file program yang tersimpan didalamnya berupa file
+<i>binary</i>
+yang dapat dieksekusi (<i>executable</i>).<br>
+<br>
+<p>Isi direktori /bin umumnya adalah user program seperti:</p>
+<ul>
+<li>login</li>
+<li>Shell (bash, ksh, csh)</li>
+<li>File utility (cp, mv, rm. ln, tar)</li>
+<li>Editor (ed,
+vi)</li>
+<li>Filesystem utilty (dd, df, mount, umount, sync)</li>
+<li>System utility (uname, hostname, arch)</li>
+<li>GNU utility (gzip, gunzip)</li>
+</ul>
+<p>Isi direktori /sbin umumnya adalah program pemeliharaan atau sistem program. Program-program yang disimpan di direktori /sbin ini hanya dapat dieksekusi oleh
+<b>root</b>. Contohnya adalah sebagai berikut:</p>
+<ul>
+<li>fsck</li>
+<li>fdisk</li>
+<li>mkfs</li>
+<li>shutdown</li>
+<li>lilo</li>
+<li>init</li>
+</ul>
+<h3>/etc</h3>
+<p>Direktori ini
+menyimpan file-file konfigurasi
+<i>systemwide</i>
+yang dibutuhkan oleh program-program lainnya. Beberapa file penting di direktori ini misalnya:</p>
+<ul>
+<li>passwd</li>
+<li>shadow</li>
+<li>fstab</li>
+<li>hosts</li>
+<li>motd</li>
+<li>profile</li>
+<li>shells</li>
+<li>services</li>
+<li>lilo.conf</li>
+</ul>
+<h3>/home</h3>
+<p>Direktori ini menyimpan direktori masing-masing user yang ada di sistem termasuk HTTPD. Beberapa sistem Linux menyimpan home user root di direktori ini sebagai /home/root tapi ada
+juga yang menyimpan direktori home user root di direktori / atau root direktori.</p>
+<h3>/mnt</h3>
+<p>Umumnya direktori ini didalamnya mengandung subdirektori-subdirektori yang merupakan sebuah
+<i>mount point</i>
+untuk jenis
+<i>device</i>
+tertentu. Misalnya cdrom/, floppy/, atau zip/.</p>
+<h3>/tmp &amp; /var</h3>
+Direktori /tmp untuk menampung file-file sementara(temporary) dan /var menampung varying content atau macam-macam file.<br>
+<br>
+<p>Direktori /tmp biasanya juga dimanfaatkan oleh program
+instalasi saat kita mengintalasi program atau aplikasi. Isi direktori ini bisa saja dihapus setiap saat tanpa menimbulkan penagaruh apapun.</p>
+<p>Direktori /var memiliki isi yang lebih banyak dari /tmp dan biasanya isinya adalah seperti ini:</p>
+<p>catman/, lib/, local/, lock/, log/, nis/, preserve/, run/, spool/ dan tmp/.</p>
+<p>Direktori /var/log merupakan direktori yang sangat familiar bagi setiap user. Di dalamnya disimpan pesan-pesan yang dihasilkan oleh sistem. Berikut ini isi direktori /var/log di
+komputer saya:</p>
+<p>httpd/, boot.log, cron, dmesg, htmlaccess.log, lastlog, maillog, messages, netconf.log, secure, sendmail.st, spooler, wtmp. File-file pesan tersebut sangat berguna bagi kita untuk mendiagnosis masalah atau kesalahan sistem. Bagi yang tidak berpengalaman dalam menangani masalah sistem, isi file-file pesan tersebut bisa disertakan bila kita minta bantuan orang lain atau di forum milis.</p>
+<h3>/usr</h3>
+<p>Berisi semua program dan file yang secara langsung berhubungan dengan setiap
+user dalam sistem. Misalnya di komputer saya isinya adalah sebagai berikut:</p>
+<p>~X11, X11R6/, ~X386, bin/, dict/, doc/, etc/, games/, i386-redhat-linux/, i486-linux-libc5/, i486-linuxaout/, include/, info/, lib/, libexec/, local/, man/, sbin/, share/, src/, ~tmp.</p>
+<p>Direktori /usr/bin dan /usr/sbin menyimpan banyak sekali file
+<i>executable</i>. File-file
+<i>executable</i>
+yang disimpan di direktori ini memiliki kesamaan fungsi dan jenis dengan file-file di direktori /bin dan /sbin.</p>
+<p>Direktori
+/usr/X11 dan /usr/X11R6 dan subdirektori dibawahnya berisi semua file yang berhubungan dengan X Window seperti
+<i>man page</i>,
+<i>library</i>
+dan file
+<i>executable.</i></p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Organisasi File</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/organisasi-file.html
+">Komentari Halaman
+Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/organisasi-file.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

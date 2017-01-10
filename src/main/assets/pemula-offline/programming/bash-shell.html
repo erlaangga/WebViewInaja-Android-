@@ -1,0 +1,1903 @@
+<head><title>Linux untuk Pemula: Pengantar Pemrograman Bash Shell di Linux</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Programming</a>
+::
+<b>Pengantar Pemrograman Bash Shell di Linux</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/m-fajar.html">Moch Fajar</a>
+</strong></p>
+<p>Table of contents</p>
+<ol>
+<li><a href="#Pendahuluan">Pendahuluan</a></li>
+<li><a href="#Programshell">Pemrograman Shell</a></li>
+<li><a href="#Dasar">Kebutuhan Dasar</a></li>
+<li><a href="#Simple">Simple Bash Script</a></li>
+<li><a href="#Variabel">Variabel</a>
+<ol>
+<li><a href="#ENV">Environment
+variabel</a></li>
+<li><a href="#param">Positional parameter</a></li>
+<li><a href="#userdef">User defined variabel</a></li>
+</ol>
+</li>
+<li><a href="#IO">Simple I/O</a>
+<ol>
+<li><a href="#printf">printf</a></li>
+<li><a href="#read">read</a></li>
+<li><a href="#ansi">Output dengan konstanta ansi</a>
+<ol>
+<li><a href="#ansi">pengaturan warna</a></li>
+<li><a href="#ansikursor">pengaturan posisi kursor</a></li>
+</ol>
+</li>
+<li><a href="#tput">Output dengan tput</a></li>
+</ol>
+</li>
+<li><a href="#Seleksi">Seleksi &amp; Perulangan</a>
+<ol>
+<li><a href="#test">Test &amp; Operator</a>
+<ol>
+<li><a href="#opint">Operator untuk integer</a></li>
+<li><a href="#opstr">Operator untuk string</a></li>
+<li><a href="#opfile">Operator untuk file</a></li>
+<li><a href="#oplogika">Operator logika</a></li>
+</ol>
+</li>
+<li><a href="#seleksi">Seleksi</a>
+<ol>
+<li><a href="#if">if</a></li>
+<li><a href="#case">case</a></li>
+</ol>
+</li>
+<li><a href="#loop">Perulangan</a></li>
+</ol>
+</li>
+<li><a href="#array">Array</a></li>
+<li><a href="#Subrutin">Subrutin</a>
+<ol>
+<li><a href="#passarg">Mengirim argumen ke fungsi</a></li>
+<li><a href="#varscope">Cakupan variabel</a></li>
+</ol>
+</li>
+</ol>
+<h2><a name="Pendahuluan"></a>1. Pendahuluan</h2>
+<p>Apa itu shell ? shell adalah program (penterjemah perintah) yang menjembatani user dengan sistem operasi dalam hal ini kernel (inti sistem operasi), umumnya shell menyediakan prompt sebagai user interface, tempat dimana user mengetikkan perintah-perintah yang diinginkan baik
+berupa perintah internal shell (internal command), ataupun perintah eksekusi suatu file progam (eksternal command), selain itu shell memungkinkan user menyusun sekumpulan perintah pada sebuah atau beberapa file untuk dieksekusi sebagai program.</p>
+<h3>Macam - macam shell?</h3>
+<p>Tidak seperti sistem operasi lain yang hanya menyediakan satu atau 2 shell, sistem operasi dari keluarga unix misalnya linux sampai saat ini dilengkapi oleh banyak shell dengan kumpulan perintah yang sangat banyak, sehingga
+memungkinkan pemakai memilih shell mana yang paling baik untuk membantu menyelesaikan pekerjaannya, atau dapat pula berpindah-pindah dari shell yang satu ke shell yang lain dengan mudah, beberapa shell yang ada di linux antara lain:</p>
+<ul>
+<li>Bourne shell(sh),</li>
+<li>C shell(csh),</li>
+<li>Korn shell(ksh),</li>
+<li>Bourne again shell(bash),</li>
+<li>dsb.</li>
+</ul>
+<p>Masing - masing shell mempunyai kelebihan dan kekurangan yang mungkin lebih didasarkan pada kebutuhan pemakai yang makin hari makin
+meningkat, untuk dokumentasi ini shell yang digunakan adalah bash shell dari GNU, yang merupakan pengembangan dari Bourne shell dan mengambil beberapa feature (keistimewaan) dari C shell serta Korn shell, Bash shell merupakan shell yang cukup banyak digunakan pemakai linux karena kemudahan serta banyaknya fasilitas perintah yang disediakan.versi bash shell yang saya gunakan adalah 2.04</p>
+<pre>
+[fajar@linux$]echo $BASH_VERSION
+bash 2.04.12(1)-release
+</pre>
+<p>Mungkin saat anda membaca dokumentasi ini versi
+terbaru dari bash sudah dirilis dengan penambahan feature yang lain.</p>
+<h2><a name="Programshell"></a>2. Pemrograman Shell ?</h2>
+<p>Yaitu menyusun atau mengelompokkan beberapa perintah shell (internal atupun eksternal command) menjadi kumpulan perintah yang melakukan tugas tertentu sesuai tujuan penyusunnya. Kelebihan shell di linux dibanding sistem operasi lain adalah bahwa shell di linux memungkinkan kita untuk menyusun serangkaian perintah seperti halnya bahasa pemrograman (interpreter language),
+melakukan proses I/O, menyeleksi kondisi, looping, membuat fungsi, dsb. adalah proses - proses yang umumnya dilakukan oleh suatu bahasa pemrograman, jadi dengan shell di linux kita dapat membuat program seperti halnya bahasa pemrograman, untuk pemrograman shell pemakai unix atau linux menyebutnya sebagai script shell.</p>
+<h2><a name="Dasar"></a>3. Kebutuhan Dasar</h2>
+<p>Sebelum mempelajari pemrograman Bash shell di linux sebaiknya anda telah mengetahui dan menggunakan perintah - perintah dasar shell baik itu
+internal command yang telah disediakan shell maupun eksternal command atau utility, seperti</p>
+<ul>
+<li><code>cd, pwd, times, alias, umask, exit, logout, fg, bg, ls, mkdir, rmdir, mv, cp, rm, clear, ...</code></li>
+<li>utilitas seperti
+<code>cat, cut, paste, chmod, lpr,...</code></li>
+<li>redirection (cara mengirim output ke file atau menerima input dari file), menggunakan operator redirect
+<code>&gt;, &gt;&gt;, &lt;, &lt;&lt;,</code>
+contohnya:
+<p><code>ls &gt; data</code><br>
+hasil ls dikirim ke
+file data, jika file belum ada akan dibuat tetapi jika sudah ada isinya akan ditimpa.</p>
+<p><code>ls &gt;&gt; data</code><br>
+hampir sama, bedanya jika file sudah ada maka isinya akan ditambah di akhir file.</p>
+<p><code>cat &lt; data</code><br>
+file data dijadikan input oleh perintah
+<code>cat</code></p>
+</li>
+<li>pipa (output suatu perintah menjadi input perintah lain), operatornya :
+<code>|</code>
+, contoh:
+<p><code>ls -l | sort -s</code><br>
+ouput perintah ls -l (long) menjadi input perintah sort
+-s (urutkan secara descending), mending pake
+<code>ls -l -r</code>
+saja :-)</p>
+<p><code>ls -l | sort -s | more</code></p>
+<p><code>cat &lt;data | sort &gt; databaru</code></p>
+</li>
+<li>Wildcard dengan karakter
+<code>*, ?, [ ]</code>, contohnya:
+<p><code>ls i*</code><br>
+tampilkan semua file yang dimulai dengan i</p>
+<p><code>ls i?i</code><br>
+tampilkan file yang dimulai dengan i, kemudian sembarang karakter tunggal, dan diakhiri dengan i</p>
+<p><code>ls [ab]*</code><br>
+tampilkan file yang dimulai
+dengan salah satu karakter a atau b</p>
+</li>
+</ul>
+<h2><a name="Simple"></a>4. Simple Bash Script</h2>
+<p>Langkah awal sebaiknya periksa dulu shell aktif anda, gunakan perintah ps (report process status)</p>
+<pre>
+[fajar@linux$]ps
+ PID TTY          TIME CMD
+  219 tty1     00:00:00 bash
+  301 tty1     00:00:00 ps
+</pre>
+<p>bash adalah shell aktif di system saya, jika disystem anda berbeda misalnya
+<code>csh</code>
+atau
+<code>ksh</code>
+ubahlah dengan perintah
+<code>change shell</code></p>
+<pre>
+[fajar@linux$]chsh
+Password:
+New shell [/bin/csh]:/bin/bash
+Shell changed
+</pre>
+<p>atau dengan mengetikkan
+<code>bash</code></p>
+<pre>
+[fajar@linux$]bash
+</pre>
+<p>sekarang coba anda ketikkan perintah dibawah ini pada prompt shell</p>
+<p><code>echo "Script shell pertamaku di linux"</code></p>
+<pre>
+[fajar@linux$]echo "Script shell pertamaku di linux"
+Script shell pertamaku di linux
+</pre>
+<p>string yang diapit tanda kutip ganda (double quoted) akan ditampilkan pada layar anda,
+<code>echo</code>
+adalah
+statement (perintah) built-in bash yang berfungsi menampilkan informasi ke standard output yang defaultnya adalah layar. jika diinginkan mengulangi proses tersebut, anda akan mengetikkan kembali perintah tadi, tapi dengan fasilitas history cukup menggunakan tombol panah kita sudah dapat mengulangi perintah tersebut, bagaimana jika berupa kumpulan perintah yang cukup banyak, tentunya dengan fasilitas hirtory kita akan kerepotan juga mengulangi perintah yang diinginkan apalagi jika selang beberapa waktu mungkin
+perintah-perintah tadi sudah tertimpa oleh perintah lain karena history mempunyai kapasitas penyimpanan yang ditentukan. untuk itulah sebaiknya perintah-perintah tsb disimpan ke sebuah file yang dapat kita panggil kapanpun diinginkan.</p>
+<p>coba ikuti langkah - langkah berikut:</p>
+<ol>
+<li>Masuk ke editor anda, apakah memakai vi,pico,emacs,dsb...</li>
+<li>ketikkan perintah berikut
+<pre>
+#!/bin/bash
+echo "Hello, apa khabar"
+</pre>
+</li>
+<li>simpan dengan nama file tes</li>
+<li>ubah permission file tes
+menggunakan
+<code>chmod</code>
+<pre>
+[fajar@linux$]chmod 755 tes
+</pre>
+</li>
+<li>jalankan
+<pre>
+[fajar@linux$]./tes
+</pre>
+</li>
+</ol>
+<p>kapan saja anda mau mengeksekusinya tinggal memanggil file tes tersebut, jika diinginkan mengeset direktory kerja anda sehingga terdaftar pada search path ketikkan perintah berikut</p>
+<pre>
+PATH=$PATH:.
+</pre>
+<p>setelah itu script diatas dapat dijalankan dengan cara</p>
+<pre>
+[fajar@linux$]tes
+Hello, apa khabar
+</pre>
+<p>tanda
+<code>#!</code>
+pada
+<code>/bin/bash</code>
+dalam script tes adalah perintah yang diterjemahkan ke kernel linux untuk mengeksekusi path yang disertakan dalam hal ini program
+<code>bash</code>
+pada direktory
+<code>/bin</code>, sebenarnya tanpa mengikutkan baris tersebut anda tetap dapat mengeksekusi script bash, dengan catatan bash adalah shell aktif. atau dengan mengetikkan bash pada prompt shell.</p>
+<pre>
+[fajar@linux$]bash tes
+</pre>
+<p>tentunya cara ini kurang efisien, menyertakan path program bash diawal script kemudian merubah
+permission file sehingga dapat anda execusi merupakan cara yang paling efisien.</p>
+<p>Sekarang coba kita membuat script shell yang menampilkan informasi berikut:<br>
+</p>
+<ol>
+<li>Waktu system</li>
+<li>Info tentang anda</li>
+<li>jumlah pemakai yang sedang login di system</li>
+</ol>
+contoh scriptnya:
+<pre>
+#!/bin/bash
+#myinfo
+
+#membersihkan tampilan layar
+clear           
+
+#menampilkan informasi
+echo -n "Waktu system   :"; date
+echo -n "Anda           :"; whoami
+echo -n "Banyak pemakai :"; who | wc -l
+</pre>
+<p>sebelum dijalankan jangan lupa untuk merubah permission file myinfo sehingga dapat dieksekusi oleh anda</p>
+<pre>
+[fajar@linux$]chmod 755 myinfo
+[fajar@linux$]./myinfo
+Waktu system   : Sat Nov 25  22:57:15 BORT 2001
+Anda           : fajar
+Banyak pemakai : 2
+</pre>
+<p>tentunya layout diatas akan disesuaikan dengan system yang anda gunakan statement
+<code>echo</code>
+dengan opsi
+<code>-n</code>
+akan membuat posisi kursor untuk tidak berpindah ke baris baru karena secara default statement
+<code>echo</code>
+akan mengakhiri proses pencetakan ke standar output dengan karakter baris baru (newline), anda boleh mencoba tanpa menggunakan opsi
+<i>-n</i>, dan lihat perbedaannya. opsi lain yang dapat digunakan adalah
+<code>-e</code>
+(enable), memungkinkan penggunaan backslash karakter atau karakter sekuen seperti pada bahasa C atau perl, misalkan :<br>
+</p>
+<pre>
+echo -e "\abunyikan bell"
+</pre>
+<p>jika dijalankan akan mengeluarkan bunyi bell, informasi opsi pada statement
+<code>echo</code>
+dan backslash
+karakter selengkapnya dapat dilihat via man di prompt shell.</p>
+<pre>
+[fajar@linux$]man echo
+</pre>
+<h2><a name="Variabel"></a>5. Pemakaian Variabel</h2>
+<p>Secara sederhana variabel adalah pengenal (identifier) berupa satuan dasar penyimpanan yang isi atau nilainya sewaktu-waktu dapat berubah baik oleh eksekusi program (runtime program) ataupun proses lain yang dilakukan sistem operasi. dalam dokumentasi ini saya membagi variabel menjadi 3 kategori:</p>
+<ol>
+<li>Environment Variable</li>
+<li>Positional
+Parameter</li>
+<li>User Defined Variable</li>
+</ol>
+<h3><a name="ENV"></a>5.1. Environment Variable</h3>
+<p>atau variabel lingkungan yang digunakan khusus oleh shell atau system linux kita untuk proses kerja system seperti variabel
+<code>PS1, PS2, HOME, PATH, USER, SHELL,dsb...</code>jika digunakan akan berdampak pada system, misalkan variabel
+<code>PS1</code>
+yang digunakan untuk mengeset prompt shell pertama yaitu prompt tempat anda mengetikkan perintah - perintah shell (defaultnya
+<code>"\s-\v\$"</code>),
+<code>PS2</code>
+untuk prompt pelengkap perintah, prompt ini akan ditampilkan jika perintah yang dimasukkan dianggap belum lengkap oleh shell (defaultnya
+<code>"&gt;"</code>). anda dapat mengeset
+<code>PS1</code>
+dan
+<code>PS2</code>
+seperti berikut.</p>
+<p>simpan dahulu isi PS1 asli system anda, sehingga nanti dapat dengan mudah dikembalikan</p>
+<pre>
+[fajar@linux$]PS1LAMA=$PS1
+</pre>
+<p>sekarang masukkan string yang diinginkan pada variabel PS1</p>
+<pre>
+[fajar@linux$]PS1="Hi ini Promptku!"
+Hi ini Promptku!PS2="Lengkapi dong ? "
+</pre>
+<p>maka prompt pertama dan kedua akan berubah, untuk mengembalikan PS1 anda ke prompt semula ketikkan perintah</p>
+<pre>
+[fajar@linux$]PS1=$PS1LAMA
+</pre>
+<p>Jika anda ingin mengkonfigurasi prompt shell, bash telah menyediakan beberapa backslash karakter diantaranya adalah:</p>
+<table border="1">
+<tr>
+<td>\a</td>
+<td>ASCII bell character (07)</td>
+</tr>
+<tr>
+<td>\d</td>
+<td>date dengan format "Weekday Month Date" (misalnya "Tue May 26")</td>
+</tr>
+<tr>
+<td>\e</td>
+<td>ASCII escape character (033)</td>
+</tr>
+<tr>
+<td>\H</td>
+<td>hostname (namahost)</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>newline (karakter baru)</td>
+</tr>
+<tr>
+<td>\w</td>
+<td>Direktory aktif</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>time dalam 24 jam dengan format HH:MM:SS</td>
+</tr>
+<tr>
+<td>dll</td>
+<td><code>man bash</code>:-)</td>
+</tr>
+</table>
+<p>contoh pemakaiannya:</p>
+<pre>
+[fajar@linux$]PS1="[\t][\u@\h:\w]\$"
+</pre>
+<p>agar prompt shell hasil konfigurasi anda dapat tetap berlaku (permanen)
+sisipkan pada file
+<code>.bashrc</code>
+atau
+<code>.profile</code></p>
+<h3><a name="param"></a>5.2. Positional Parameter</h3>
+<p>atau parameter posisi yaitu variabel yang digunakan shell untuk menampung argumen yang diberikan terhadap shell baik berupa argumen waktu sebuah file dijalankan atau argumen yang dikirim ke subrutin. variabel yang dimaksud adalah
+<code>1,2,3,dst..</code>lebih jelasnya lihat contoh script berikut :</p>
+<pre>
+#!/bin/bash
+#argumen1
+
+echo $1 adalah salah satu $2 populer di $3
+</pre>
+<p>Hasilnya</p>
+<pre>
+[fajar@linux$]./argumen1 bash shell linux
+bash adalah salah satu shell populer di linux
+</pre>
+<p>ada 3 argumen yang disertakan pada script
+<code>argumen1</code>
+yaitu
+<code>bash, shell, linux,</code>
+masing2 argumen akan disimpan pada variabel
+<code>1,2,3</code>
+sesuai posisinya. variabel spesial lain yang dapat digunakan diperlihatkan pada script berikut:</p>
+<pre>
+#!/bin/bash
+#argumen2
+
+clear
+echo "Nama script anda : $0";
+echo "Banyak argumen   : $#";
+echo "Argumennya adalah: $*";
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./argumen 1 2 3 empat
+Nama script anda  : ./argumen
+Banyak argumen    : 4
+Argumennya adalah : 1 2 3 empat
+</pre>
+<h3><a name="userdef"></a>5.3. User Defined Variable</h3>
+<p>atau variabel yang didefinisikan sendiri oleh pembuat script sesuai dengan kebutuhannya, beberapa hal yang perlu diperhatikan dalam mendefenisikan variabel adalah:</p>
+<ul>
+<li>dimulai dengan huruf atau underscore</li>
+<li>hindari pemakaian spesial karakter seperti *,$,#,dll...</li>
+<li>bash bersifat case sensitive, maksudnya membedakan huruf besar dan kecil,
+<code>a</code>
+berbeda dengan
+<code>A</code>,
+<code>nama</code>
+berbeda dengan
+<code>Nama,NaMa,dsb..</code></li>
+</ul>
+<p>untuk mengeset nilai variabel gunakan operator assignment (pemberi nilai)<code>"="</code>, contohnya :</p>
+<pre>
+myos="linux"        #double-quoted
+nama='pinguin'      #single-quoted 
+hasil=`ls -l`;      #back-quoted
+angka=12
+</pre>
+<p>kalau anda perhatikan ada 3 tanda kutip yang kita gunakan untuk memberikan
+nilai string ke suatu variabel, adapun perbedaannya adalah:</p>
+<ul>
+<li>dengan kutip ganda (double-quoted), bash mengizinkan kita untuk menyisipkan variabel di dalamnya. contohnya:
+<pre>
+#!/bin/bash
+
+nama="pinguin"
+kata="Hi $nama, apa khabarmu"    #menyisipkan variabel nama
+echo $kata;
+</pre>
+<p>Hasilnya:</p>
+<pre>
+Hi pinguin, apa khabarmu
+</pre>
+</li>
+<li>dengan kutip tunggal (single-quoted), akan ditampilkan apa adanya. contohnya:
+<pre>
+#!/bin/bash
+
+nama="pinguin"
+kata='Hi $nama, apa khabarmu'    #menyisipkan variabel nama
+echo $kata;
+</pre>
+<p>Hasilnya:</p>
+<pre>
+Hi $nama, apa khabarmu
+</pre>
+</li>
+<li>dengan kutip terbalik (double-quoted), bash menerjemahkan sebagai perintah yang akan dieksekusi, contohnya:
+<pre>
+#!/bin/bash
+
+hapus=`clear`;
+isi=`ls -l`;        #hasil dari perintah ls -l disimpan di variabel isi
+
+#hapus layar
+echo $hapus
+
+#ls -l
+echo $isi;      
+</pre>
+<p>Hasilnya: silahkan dicoba sendiri</p>
+</li>
+</ul>
+<p>Untuk lebih jelasnya lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+#varuse
+
+nama="fajar"
+OS='linux'
+distro="macam-macam, bisa slackware,redhat,mandrake,debian,suse,dll"
+pc=1
+hasil=`ls -l $0`
+
+clear
+echo -e "Hi $nama,\npake $OS\nDistribusi, $distro\nkomputernya, $pc buah"
+echo "Hasil ls -l $0 adalah =$hasil"
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./varuse
+Hi fajar,
+pake linux Distribusi, macam-macam, bisa slackware,redhat,mandrake,debian,suse,dll
+komputernya, 1 buah
+Hasil ls -l ./varuse adalah -rwxr-xr-x 1 fajar users 299 Nov 21 06:24 ./varuse
+</pre>
+<p>untuk operasi
+matematika ada 3 cara yang dapat anda gunakan, dengan statement builtin
+<code>let</code>
+atau
+<code>expr</code>
+atau perintah
+<code>subtitusi</code>
+seperti contoh berikut:</p>
+<pre>
+#!/bin/bash
+#mat1
+
+a=10
+b=5
+#memakai let
+let jumlah=$a+$b
+let kurang=$a-$b
+let kali=$a*$b
+
+#memakai expr
+bagi=`expr $a / $b`
+
+#memakai perintah subtitusi $((ekspresi))
+modul =$(($a%$b))  #sisa pembagian
+
+echo "$a+$b=$jumlah"
+echo "$a-$b=$kurang"
+echo "$a*$b=$kali"
+echo "$a/$b=$bagi"
+echo "$a%$b=$mod"
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./mat1
+10+5=15
+10-5=5
+10*5=50
+10/5=2
+10%5=0
+</pre>
+<p>fungsi
+<code>expr</code>
+begitu berdaya guna baik untuk operasi matematika ataupun string contohnya:</p>
+<pre>
+[fajar@linux$]mystr="linux"
+[fajar@linux$]expr length $mystr
+5
+</pre>
+<p>Mungkin anda bertanya - tanya, apakah bisa variabel yang akan digunakan dideklarasikan secara eksplisit dengan tipe data tertentu?, mungkin seperti C atau pascal, untuk hal ini oleh Bash disediakan statement
+<code>declare</code>
+dengan opsi
+<code>-i</code>
+hanya untuk data integer (bilangan bulat). Contohnya:</p>
+<pre>
+#!/bin/bash
+
+declare -i angka
+angka=100;
+echo $angka;
+</pre>
+<p>apabila variabel yang dideklarasikan menggunakan
+<code>declare -i</code>
+ternyata anda beri nilai string (karakter), maka Bash akan mengubahnya ke nilai 0, tetapi jika anda tidak menggunakannya maka dianggap sebagai string.</p>
+<h2><a name="IO"></a>6. Simple I/O</h2>
+<p>I/O merupakan hal yang mendasar dari kerja komputer karena kapasitas inilah yang membuat komputer begitu
+berdayaguna. I/O yang dimaksud adalah device yang menangani masukan dan keluaran, baik itu berupa keyboard, floppy, layar monitor,dsb. sebenarnya kita telah menggunakan proses I/O ini pada contoh -contoh diatas seperti statement
+<code>echo</code>
+yang menampilkan teks atau informasi ke layar, atau operasi redirect ke ke file. selain
+<code>echo</code>, bash menyediakan perintah builtin
+<code>printf</code>
+untuk mengalihkan keluaran ke output standard, baik ke layar ataupun ke file dengan format tertentu,
+mirip statement
+<code>printf</code>
+kepunyaan bahasa
+<code>C</code>
+atau
+<code>perl</code>. berikut contohnya:</p>
+<h3><a name="printf"></a>6.1 Output dengan
+<code>printf</code></h3>
+<pre>
+#!/bin/bash
+#pr1
+
+url="pemula.linux.or.id";
+angka=32;
+
+printf "Hi, Pake printf ala C\n\t\a di bash\n";
+printf "My url %s\n %d decimal = %o octal\n" $url $angka $angka;
+printf "%d decimal dalam float = %.2f\n" $angka $angka
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./pr1
+Hi, Pake printf ala C
+    di bash
+My url  pemula.linux.or.id
+32 decimal = 40 octal
+32 decimal dalam float = 32.00
+</pre>
+<p>untuk menggunakan format kontrol sertakan simbol
+<code>%</code>, bash akan mensubtitusikan format tsb dengan isi variabel yang berada di posisi kanan sesuai dengan urutannya jika lebih dari satu variabel,
+<code>\n \t \a</code>
+adalah karakter sekuen lepas
+<code>newline,tab,</code>
+dan
+<code>bell,</code></p>
+<table border="1">
+<tr>
+<td>Format control</td>
+<td>keterangan</td>
+</tr>
+<tr>
+<td><code>%d</code></td>
+<td>untuk format
+data integer</td>
+</tr>
+<tr>
+<td><code>%o</code></td>
+<td>octal</td>
+</tr>
+<tr>
+<td><code>%f</code></td>
+<td>float atau decimal</td>
+</tr>
+<tr>
+<td><code>%x</code></td>
+<td>Hexadecimal</td>
+</tr>
+</table>
+<p>pada script diatas
+<code>%.2f</code>
+akan mencetak 2 angka dibelakang koma, defaultnya 6 angka, informasi lebih lanjut dapat dilihat via man
+<code>printf</code></p>
+<h3><a name="read"></a>6.2 Input dengan
+<code>read</code></h3>
+<p>Setelah
+<code>echo</code>
+dan
+<code>printf</code>
+untuk proses output
+telah anda ketahui, sekarang kita menggunakan statement
+<code>read</code>
+yang cukup ampuh untuk membaca atau menerima masukan dari input standar</p>
+<p>syntax :</p>
+<pre>
+read -opsi [nama_variabel...]
+</pre>
+<p>berikut contoh scriptnya:</p>
+<pre>
+#!/bin/bash
+#rd1
+
+echo -n "Nama anda :"
+read nama;
+
+echo    "Hi $nama,  apa khabarmu";
+echo    "Pesan dan kesan :";
+read 
+echo    "kata $nama, $REPLY";
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./rd1
+Nama anda : pinguin
+Hi pinguin, apa khabarmu
+Pesan &amp; kesan :
+ pake linux pasti asyk - asyk aja
+kata pinguin, pake linux pasti asyk - asyk aja
+</pre>
+<p>jika nama_variabel tidak disertakan, maka data yang diinput akan disimpan di variabel
+<code>REPLY</code>
+contoh lain
+<code>read</code>
+menggunakan opsi<br>
+<code>-t</code>(TIMEOUT),
+<code>-p</code>
+(PROMPT),
+<code>-s</code>(SILENT),
+<code>-n</code>
+(NCHAR) dan
+<code>-d</code>(DELIM)</p>
+<pre>
+#!/bin/bash
+
+read -p "User Name : " user
+echo -e "Password 10 karakter,\njika dalam 6 second tidak dimasukkan pengisian password diakhiri"
+read -s -n 10 -t 6 pass
+echo    "kesan anda selama pake linux, _underscore=&gt;selesai"
+read -d _ kesan
+
+echo    "User = $user"
+echo    "Password = $pass"
+echo    "Kesan selama pake linux = $kesan"
+</pre>
+<p>Hasilnya: silahkan dicoba sendiri :-)</p>
+<table border="1">
+<tr>
+<td>Opsi</td>
+<td>Keterangan</td>
+</tr>
+<tr>
+<td><code>-p</code></td>
+<td>memungkinkan kita membuat prompt sebagai informasi pengisian<br>
+</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td>membuat input yang
+dimasukkan tidak di echo ke layar (seperti layaknya password di linux)<br>
+</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>menentukan banyak karakter yang diinput</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>menentukan karakter pembatas masukan</td>
+</tr>
+</table>
+<p>informasi secara lengkap lihat
+<code>man bash</code></p>
+<h3><a name="ansi"></a>6.3. Output dengan konstanta ANSI</h3>
+<h4>6.3.1. Pengaturan Warna</h4>
+<p>Untuk pewarnaan tampilan dilayar anda dapat menggunakan konstanta ANSI (salah satu badan
+nasional amerika yang mengurus standarisasi).</p>
+<p>syntaxnya:</p>
+<pre>
+\033[warnam
+</pre>
+<p>Dimana:<br>
+<code>m</code>
+menandakan setting color</p>
+<p>contohnya:</p>
+<pre>
+[fajar@linux$]echo -e "\033[31m HELLO\033[0m"
+HELLO
+</pre>
+<p>konstanta
+<code>31m</code>
+adalah warna merah dan
+<code>0m</code>
+untuk mengembalikan ke warna normal (none), tentunya konstanta warna ansi ini dapat dimasukkan ke variabel
+<code>PS1</code>
+untuk mengatur tampilan prompt shell anda, contohnya:</p>
+<pre>
+[fajar@linux$]PS1="\033[34m"
+[fajar@linux$]
+</pre>
+<p>berikut daftar warna yang dapat anda gunakan:</p>
+<pre>
+foreground
+       None    0m 
+       Black       0;30     Dark Gray     1;30
+       Red         0;31     Light Red     1;31
+       Green       0;32     Light Green   1;32
+       Brown       0;33     Yellow        1;33
+       Blue        0;34     Light Blue    1;34
+       Purple      0;35     Light Purple  1;35
+       Cyan        0;36     Light Cyan    1;36
+       Light Gray  0;37     White         1;37
+background
+       dimulai dengan 40 untuk BLACK,41 RED,dst
+lain-lain
+       4 underscore,5 blink, 7 inverse
+</pre>
+<p>tentunya untuk mendapatkan tampilan yang menarik anda dapat menggabungkannya antara foreground dan background</p>
+<pre>
+[fajar@linux$]echo -e "\033[31;1;33m Bash and ansi color\033[0m"
+</pre>
+<table>
+<tr>
+<td bgcolor="red">Bash and ansi color</td>
+</tr>
+</table>
+<h4><a name="ansikursor"></a>6.3.2 Pengaturan posisi kursor</h4>
+<p>sedangkan untuk penempatan posisi kursor, dapat digunakan salah
+satu cara dibawah.</p>
+<ul>
+<li>Menentukan posisi baris dan kolom kursor:
+<pre>
+\033[baris;kolomH
+</pre>
+</li>
+<li>Pindahkan kursor keatas N baris:
+<pre>
+\033[NA
+</pre>
+</li>
+<li>Pindahkan kursor kebawah N baris:
+<pre>
+\033[NB
+</pre>
+</li>
+<li>Pindahkan kursor kedepan N kolom:
+<pre>
+\033[NC
+</pre>
+</li>
+<li>Pindahkan kursor kebelakang N kolom:
+<pre>
+ \033[ND
+</pre>
+</li>
+</ul>
+<p>Contohnya:</p>
+<pre>
+#!/bin/bash
+
+SETMYCOLOR="\033[42;1;37m"
+GOTOYX="\033[6;35H"
+clear
+echo -e "\033[3;20H INI DIBARIS 3, KOLOM 20"
+echo -e "\033[44;1;33;5m\033[5;35H HELLO\033[0m";
+echo -e "$SETMYCOLOR$GOTOYX ANDA LIHAT INI\033[0m"
+</pre>
+<p>Hasilnya: Silahkan dicoba sendiri</p>
+<h3><a name="tput"></a>Menggunakan utulity
+<code>tput</code>
+untuk penempatan posisi kursor</h3>
+<p>kita dapat pula mengatur penempatan posisi kursor di layar dengan memanfaatkan utility
+<code>tput</code>,</p>
+<p>syntaxnya:</p>
+<pre>
+tput cup baris kolom
+</pre>
+<p>contohnya:</p>
+<pre>
+#!/bin/bash
+
+clear
+tput cup 5 10
+echo  "HELLO"
+tput cup 6 10
+echo  "PAKE TPUT"
+</pre>
+<p>jika dijalankan anda akan mendapatkan string HELLO di koordinat baris 5 kolom 10, dan string PAKE TPUT dibaris 6 kolom 10. informasi selengkapnya tentang
+<code>tput</code>
+gunakan
+<code>man tput</code>, atau
+<code>info tput</code></p>
+<h2><a name="Seleksi"></a>7. Seleksi dan Perulangan</h2>
+<p>Bagian ini merupakan ciri yang paling khas dari suatu bahasa pemrograman dimana kita dapat mengeksekusi suatu pernyataan dengan kondisi terntentu dan mengulang beberapa
+pernyataan dengan kode script yang cukup singkat.</p>
+<h3><a name="test"></a>7.1 test dan operator</h3>
+<p>test adalah utility sh shell yang berguna untuk memeriksa informasi tentang suatu file dan berguna untuk melakukan perbandingan suatu nilai baik string ataupun numerik</p>
+<p>syntaxnya:
+<code>test ekspresi</code></p>
+<p>proses kerja
+<code>test</code>
+yaitu dengan mengembalikan sebuah informasi status yang dapat bernilai 0 (benar) atau 1 (salah) dimana nilai status ini dapat dibaca pada variabel spesial
+<code>$?</code>.</p>
+<pre>
+[fajar@linux$]test 5 -gt 3
+[fajar@linux$]echo $?
+0
+</pre>
+<p>pernyataan 5 -gt (lebih besar dari) 3 yang dievaluasi
+<code>test</code>
+menghasilkan 0 pada variabel status
+<code>$?</code>
+itu artinya pernyataan tersebut benar tetapi coba anda evaluasi dengan expresi berikut<br>
+</p>
+<pre>
+[fajar@linux$]test 3 -lt 1
+[fajar@linux$]echo $?
+1
+</pre>
+<p>status bernilai 1, berarti pernyataan salah.</p>
+<p>anda lihat simbol
+<code>-gt</code>
+dan
+<code>-lt</code>, itulah yang disebut sebagai
+operator, secara sederhana operator adalah karakter khusus (spesial) yang melakukan operasi terhadap sejumlah operand, misalkan
+<code>2+3</code>, "+" adalah operator sedangkan 2 dan 3 adalah operandnya, pada contoh
+<code>test</code>
+tadi yang bertindak sebagai oparatornya adalah
+<code>-lt</code>
+dan
+<code>-gt</code>, sedangkan bilangan disebelah kiri dan kanannya adalah operand. cukup banyak operator yang disediakan bash antara lain:</p>
+<h4><a name="opint"></a>7.1.1. Operator untuk integer</h4>
+<table border="1">
+<tr>
+<td>Operator</td>
+<td>Keterangan</td>
+</tr>
+<tr>
+<td>bil1 -eq bil2</td>
+<td>Mengembalikan Benar jika bil1 sama dengan bil2</td>
+</tr>
+<tr>
+<td>bil1 -ne bil2</td>
+<td>-||- Benar jika bil1 tidak sama dengan bil2</td>
+</tr>
+<tr>
+<td>bil1 -lt bil2</td>
+<td>-||- Benar jika bil1 lebih kecil dari bil2</td>
+</tr>
+<tr>
+<td>bil1 -le bil2</td>
+<td>-||- Benar jika bil1 lebih kecil atau sama dengan bil2</td>
+</tr>
+<tr>
+<td>bil1 -gt bil2</td>
+<td>-||- Benar jika bil1 lebih besar dari bil2</td>
+</tr>
+<tr>
+<td>bil1 -ge bil2</td>
+<td>-||- Benar jika bil1 lebih besar atau sama dengan bil2</td>
+</tr>
+</table>
+<h4><a name="opstr"></a>7.1.2. Operasi string</h4>
+<table border="1">
+<tr>
+<td>Operator</td>
+<td>Keterangan</td>
+</tr>
+<tr>
+<td>-z STRING</td>
+<td>Mengembalikan Benar jika panjang STRING adalah zero</td>
+</tr>
+<tr>
+<td>STRING1 == STRING2</td>
+<td>-||- Benar jika STRING1 sama dengan STRING2</td>
+</tr>
+</table>
+<h4><a name="opfile"></a>7.1.3 Operator file</h4>
+<table border="1">
+<tr>
+<td>Operator</td>
+<td>Keterangan</td>
+</tr>
+<tr>
+<td>-f FILE</td>
+<td>Mengembalikan Benar jika FILE ada dan merupakan file biasa</td>
+</tr>
+<tr>
+<td>-d FILE</td>
+<td>-||- Benar jika FILE ada dan meruapakan direktory</td>
+</tr>
+</table>
+<h4><a name="oplogika"></a>7.1.3 Operator logika</h4>
+<table border="1">
+<tr>
+<td>ekspr1 -o ekspr2</td>
+<td>Benar jika jika salah satu ekspresi benar (or,||)</td>
+</tr>
+<tr>
+<td>ekspr1 -a ekspr2</td>
+<td>Benar jika ekspresi1 dan ekspresi2 benar (and,&amp;&amp;)</td>
+</tr>
+<tr>
+<td>!
+ekspresi</td>
+<td>Mengembalikan Benar jika ekspresi tidak benar (not!)</td>
+</tr>
+</table>
+<p>untuk informasi lebih lengkap
+<code>man bash</code>
+atau
+<code>info bash</code>
+di prompt shell anda.</p>
+<h3><a name="seleksi"></a>7.2. Seleksi</h3>
+<h4><a name="if"></a>7.2.1 if</h4>
+<p>Statement builtin
+<code>if</code>
+berfungsi untuk melakukan seleksi berdasarkan suatu kondisi tertentu</p>
+<p>syntax:</p>
+<pre>
+if test-command1; 
+   then 
+      perintah1;
+elif test-command2;
+   then
+      perintah2;
+else
+      alternatif_perintah;
+fi
+</pre>
+<p>contoh script if1:</p>
+<pre>
+#!/bin/bash
+#if1
+
+clear;
+if [ $# -lt 1 ]; 
+   then 
+     echo "Usage : $0 [arg1 arg2 ...]"
+     exit 1;
+fi
+
+echo "Nama script anda : $0";
+echo "Banyak argumen   : $#";
+echo "Argumennya adalah: $*";
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./if1
+ 
+Usage : ./if1 [arg1 arg2 ...]
+</pre>
+<p>statement dalam blok
+<code>if...fi</code>
+akan dieksekusi apabila kondisi
+<code>if</code>
+terpenuhi, dalam hal ini jika script if1 dijalankan tanpa
+argumen. kita tinggal membaca apakah variabel
+<code>$#</code>
+lebih kecil (less than) dari 1, jika ya maka eksekusi perintah di dalam blok
+<code>if ..fi</code>
+tsb. perintah
+<code>exit 1</code>
+akan mengakhiri jalannya script, angka
+<code>1</code>
+pada exit adalah status yang menandakan terdapat kesalahan, status 0 berarti sukses, anda dapat melihat isi variabel
+<code>$?</code>
+yang menyimpan nilai status exit, tetapi jika anda memasukkan satu atau lebih argumen maka blok
+<code>if...fi</code>
+tidak akan
+dieksekusi, statement diluar blok
+<code>if..fi</code>lah yang akan dieksekusi.</p>
+<p>contoh script if2:</p>
+<pre>
+#!/bin/bash
+
+kunci="bash";
+read -s -p "Password anda : " pass
+if [ $pass==$kunci ]; then
+    echo "Sukses, anda layak dapat linux"
+else
+    echo "Wah sorry, gagal nih";
+fi
+</pre>
+<p>Hasilnya</p>
+<pre>
+[fajar@linux$]./if2
+Password anda : bash
+Sukses, anda layak dapat linux
+[fajar@linux$]./if2
+Password anda : Bash
+Wah sorry, gagal nih
+</pre>
+<p>klausa
+<code>else</code>
+akan dieksekusi jika
+<code>if</code>
+tidak terpenuhi, sebaliknya jika
+<code>if</code>
+terpenuhi maka
+<code>else</code>
+tidak akan dieksekusi</p>
+<p>contoh script if3: penyeleksian dengan kondisi majemuk</p>
+<pre>
+#!/bin/bash
+
+clear
+echo "MENU HARI INI";
+echo "-------------";
+echo "1. Bakso     ";
+echo "2. Gado-Gado ";
+echo "3. Exit      ";
+read -p "Pilihan anda [1-3] :" pil;
+
+if [ $pil -eq 1 ]; 
+then
+   echo "Banyak mangkuk =";
+   read jum
+   let bayar=jum*1500;
+elif [ $angka -eq 2 ]; 
+then
+   echo "Banyak porsi =";
+   read jum
+   let bayar=jum*2000;
+elif [ $angka -eq 3 ]; 
+then
+   exit 0
+else
+   echo "Sorry, tidak tersedia"
+   exit 1
+fi
+
+echo "Harga bayar = Rp. $bayar"
+echo "THX"
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./if3
+MENU HARI INI
+-------------
+1. Bakso    
+2. Gado-Gado 
+3. Exit    
+Pilihan anda :2
+
+Banyak porsi = 2
+
+Harga bayar = Rp. 4000
+THX
+</pre>
+<h4><a name="case"></a>7.2.2. statement builtin
+<code>case</code></h4>
+<p>seperti halnya
+<code>if</code>
+statement
+<code>case</code>
+digunakan untuk menyeleksi kondisi
+majemuk, dibanding
+<code>if</code>, pemakaian
+<code>case</code>
+terasa lebih efisien</p>
+<p>syntax:<br>
+</p>
+<pre>
+case WORD in [ [(] PATTERN [| PATTERN]...) COMMAND-LIST ;;]...
+esac
+</pre>
+<p>contoh script cs1</p>
+<pre>
+#!/bin/bash
+
+clear
+echo -n "Masukkan nama binatang :";
+read binatang;
+
+case $binatang in
+    pinguin | ayam | burung ) echo "$binatang berkaki 2"
+                  break   
+                              ;;
+    onta | kuda | anjing ) echo "$binatang berkaki 4"
+                  break
+                  ;;
+    *) echo "$binatang blom didaftarkan"
+                  break
+                  ;;
+esac
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./cs1
+Masukkan nama binatang : pinguin
+pinguin berkaki 2
+</pre>
+<h3><a name="loop"></a>7.3. Perulangan</h3>
+<h4><a name="for">7.3.1. statement for</a></h4>
+<pre>
+syntax:
+for NAME [in WORDS ...]; do perintah; done
+contoh script for1
+</pre>
+<pre>
+#!/bin/bash
+
+for angka in 1 2 3 4 5;
+do
+   echo "angka=$angka";
+done
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./for1
+angka=1
+angka=2
+angka=3
+angka=4
+angka=5
+</pre>
+<p>contoh script for2 berikut akan membaca argumen yang disertakan waktu script dijalankan</p>
+<pre>
+#!/bin/bash
+
+for var 
+do
+   echo $var
+done
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./for2 satu 2 tiga
+satu
+2
+tiga
+</pre>
+<p>atau variasi seperti berikut</p>
+<pre>
+#!/bin/bash
+
+for var in `cat /etc/passwd`
+do
+   echo $var
+done
+</pre>
+<p>Hasilnya: hasil dari perintah
+<code>cat</code>
+terhadap file
+<code>/etc/passwd</code>
+disimpan ke
+<code>var</code>
+dan ditampilkan menggunakan
+<code>echo $var</code>
+ke layar, mendingan gunakan
+<code>cat /etc/passwd</code>
+saja biar efisien. :-)</p>
+<h4><a name="while">7.3.2. statement while</a></h4>
+<p>selama kondisi bernilai benar atau zero perintah dalam blok
+<code>while</code>
+akan diulang terus</p>
+<p>syntax:</p>
+<pre>
+while KONDISI; do perintah; done;
+</pre>
+<p>contoh script wh1 mencetak bilangan ganjil antara 1-10</p>
+<pre>
+#!/bin/bash
+
+i=1;
+while [ $i -le 10 ];
+do
+  echo "$i,";
+  let i=$i+2;
+done
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./wh1
+1,3,5,7,9,
+</pre>
+<p>kondisi tidak terpenuhi pada saat nilai
+<code>i=11 (9+2)</code>, sehingga perintah dalam blok<code>while</code>
+tidak dieksekusi lagi<br>
+contoh script wh2 akan menghitung banyak bilangan genap dan ganjil yang ada.</p>
+<pre>
+#!/bin/bash
+
+i=0;
+bil_genap=0;
+bil_ganjil=0;
+
+echo -n "Batas loop :";
+read batas
+
+if [ -z $batas ] || [ $batas -lt 0 ]; then
+  echo "Ops, tidak boleh kosong atau Batas loop  harus &gt;= 0";
+  exit 0;
+fi
+
+while [ $i -le $batas ]; 
+do
+    echo -n "$i,";
+    if [ `expr  $i % 2` -eq 0 ]; then 
+       let bil_genap=$bil_genap+1;
+    else
+       let bil_ganjil=$bil_ganjil+1;
+    fi
+    let i=$i+1;    #counter untuk mencapai batas
+done
+
+echo 
+echo "banyak bilangan genap  = $bil_genap";
+echo "banyak bilangan ganjil = $bil_ganjil";
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./wh2
+Batas loop : 10
+0,1,2,3,4,5,6,7,8,9,10,
+banyak bilangan genap  = 6
+banyak bilangan ganjil = 5
+</pre>
+<p>untuk mengetahui apakah nilai
+<code>i</code>
+berupa bilangan genap kita cukup menggunakan operasi matematika
+<code>%</code>
+(mod), jika nilai
+<code>i</code>
+dibagi
+<code>2</code>
+menghasilkan sisa
+<code>0</code>
+berarti
+<code>i</code>
+adalah bilangan genap (semua bilangan genap yang dibagi dengan 2 mempunyai sisa 0) maka pencacah
+<code>(bil_genap)</code>
+dinaikkan 1, selain itu
+<code>i</code>
+bilangan ganjil yang dicatat oleh pencacah
+<code>bil_ganjil</code>proses ini dilakukan terus selama nilai
+<code>i</code>
+lebih kecil atau samadengan
+nilai
+<code>batas</code>
+yang dimasukkan. script juga akan memeriksa dahulu nilai
+<code>batas</code>
+yang dimasukkan apabila kosong atau lebih kecil dari
+<code>0</code>
+maka proses segera berakhir.tentunya dengan statement
+<code>while</code>
+kita sudah dapat membuat perulangan pada script
+<code>kedai</code>
+diatas agar dapat digunakan terus-menerus selama operator masih ingin melakukan proses perhitungan. lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+#kedai
+
+lagi='y'
+while  [ $lagi == 'y' ] || [ $lagi == 'Y' ];
+do
+   clear
+   echo "MENU HARI INI";
+   echo "-------------";
+   echo "1. Bakso      ";
+   echo "2. Gado-Gado  ";
+   echo "3. Exit       ";
+   read -p "Pilihan anda [1-3] :" pil;
+
+if [ $pil -eq 1 ]; 
+then
+   echo -n "Banyak mangkuk =";
+   read jum
+   let bayar=jum*1500;
+elif [ $pil -eq 2 ];
+then
+   echo -n "Banyak porsi =";
+   read jum
+   let bayar=jum*2000;
+elif [ $pil -eq 3 ];
+then
+   exit 0
+else
+   echo "Sorry, tidak tersedia"
+   exit 1
+fi
+
+echo "Harga bayar = Rp. $bayar"
+echo "THX"
+echo 
+echo -n "Hitung lagi (y/t) :";
+read lagi;
+
+    #untuk validasi input
+    while  [ $lagi != 'y' ] &amp;&amp; [ $lagi != 'Y' ] &amp;&amp; [ $lagi != 't' ] &amp;&amp; [ $lagi != 'T' ];
+    do
+       echo "Ops, isi lagi dengan (y/Y/t/Y)";
+       echo -n "Hitung lagi (y/t) :";
+       read lagi;
+    done
+
+done
+</pre>
+<p>proses pemilihan menu dan perhitungan biaya akan diulang terus selama anda memasukkan
+<code>y/Y</code>
+dan
+<code>t/T</code>
+untuk berhenti. dalam script terdapat validasi input menggunakan
+<code>while</code>, sehingga hanya
+<code>y/Y/t/T</code>
+saja yang dapat diterima soalnya saya belum mendapatkan fungsi yang lebih efisien :-)</p>
+<h4><a name="until">7.3.3. statement until</a></h4>
+<p>jika
+<code>while</code>
+akan mengulang selama kondisi benar, lain halnya dengan statement
+<code>until</code>
+yang akan mengulang selama kondisi salah.<br>
+berikut contoh script ut menggunakan
+<code>until</code></p>
+<pre>
+#!/bin/bash
+
+i=1;
+until [ $i -gt 10 ];
+do
+  echo $i;
+  let i=$i+1
+done
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./ut
+1,2,3,4,5,6,7,8,9,10,
+</pre>
+<p>perhatikan kodisi
+<code>until</code>
+yang salah
+<code>[ $i -gt 10]</code>, dimana nilai awal
+<code>i=1</code>
+dan akan berhenti apabila nilai
+<code>i = 11</code>
+(bernilai benar)
+<code>11 -gt 10</code>.</p>
+<h4><a name="select">7.3.4. statement select</a></h4>
+<p><code>select</code>
+berguna untuk pembuatan layout berbentuk menu pilihan, anda lihat contoh script pembuatan menu diatas kita hanya melakukannya dengan
+<code>echo</code>
+secara satu persatu,
+dengan
+<code>select</code>
+akan terlihat lebih efisien.</p>
+<p>syntax:</p>
+<pre>
+select varname in (&amp;ltitem list&gt;); do perintah; done
+</pre>
+<p>sewaktu dijalankan bash akan menampilkan daftar menu yang diambil dari item list, serta akan menampilkan prompt yang menunggu masukan dari keyboard, masukan tersebut oleh bash disimpan di variabel builtin
+<code>REPLY</code>, apabila daftar item list tidak dituliskan maka bash akan mengambil item list dari parameter posisi sewaktu script dijalankan. lebih
+jelasnya lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+#menu1
+
+clear
+select menu
+do
+  echo "Anda memilih $REPLY yaitu $menu"
+done
+</pre>
+<p>Hasilnya:</p>
+<pre>
+layout:
+[fajar@linux$]./menu1 Slackware Redhat Mandrake
+1) Slackware
+2) Redhat
+3) Mandrake
+ #? 1
+Anda memilih 1 yaitu Slackware
+</pre>
+<p>karena item list tidak disertakan dalam script, maka sewaktu script dijalankan kita menyertakan item list sebagai parameter posisi, coba gunakan statement
+<code>select</code>
+pada program kedai diatas.</p>
+<pre>
+#!/bin/bash
+#kedai
+
+lagi='y'
+while  [ $lagi == 'y' ] || [ $lagi == 'Y' ];
+do
+   clear
+   select menu in "Bakso" "Gado-Gado" "Exit";
+   case $REPLY in 
+        1) echo -n "Banyak mangkuk =";
+           read jum
+           let bayar=jum*1500;
+           ;;
+        2) echo -n "Banyak porsi =";
+           read jum
+           let bayar=jum*2000;
+           ;;
+        3) exit 0
+           ;;
+        *) echo "Sorry, tidak tersedia"
+           ;;
+  esac 
+do
+
+echo "Harga bayar = Rp. $bayar"
+echo "THX"
+echo 
+echo -n "Hitung lagi (y/t) :";
+read lagi;
+
+    #untuk validasi input
+    while  [ $lagi != 'y' ] &amp;&amp; [ $lagi != 'Y' ] &amp;&amp; [ $lagi != 't' ] &amp;&amp; [ $lagi != 'T' ];
+    do
+       echo "Ops, isi lagi dengan (y/Y/t/Y)";
+       echo -n "Hitung lagi (y/t) :";
+       read lagi;
+    done
+done
+</pre>
+<h2><a name="array"></a>8. Array</h2>
+<p>adalah kumpulan variabel dengan tipe sejenis, dimana array ini merupakan feature Bash yang cukup indah :-) dan salah satu hal yang cukup penting dalam bahasa
+pemrograman, anda bisa membayangkan array ini sebagai tumpukan buku - buku dimeja belajar. lebih jelasnya sebaiknya lihat dulu contoh script berikut:</p>
+<pre>
+#!/bin/bash
+#array1
+
+buah=(Melon,Apel,Durian);
+echo ${buah[*]};
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./array1.
+Melon,Apel,Durian
+</pre>
+<p>anda lihat bahwa membuat tipe array di Bash begitu mudah, secara otomatis array buah diciptakan dan string Melon menempati index pertama dari array buah, perlu diketahui bahwa array di Bash dimulai dari index 0,
+jadi array buah mempunyai struktur seperti berikut:</p>
+<pre>
+buah[0] berisi Melon
+buah[1] berisi Apel
+buah[2] berisi Durian
+</pre>
+<p><code>0,1,2</code>
+adalah index array, berarti ada 3 elemen pada array buah, untuk menampilkan isi semua elemen array gunakan perintah subtitusi seperti pada contoh diatas, dengan index berisi "*" atau "@". dengan adanya index array tentunya kita dapat mengisi array perindexnya dan menampilkan isi array sesuai dengan index yang diinginkan. anda lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+#array2
+
+bulan[0]=31
+bulan[1]=28
+bulan[2]=31
+bulan[3]=30
+bulan[4]=31
+bulan[5]=30
+bulan[6]=31
+bulan[7]=31
+bulan[8]=30
+bulan[9]=31
+bulan[10]=30
+bulan[11]=31
+echo "Banyak hari dalam bulan November adalah ${bulan[10]} hari"
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./array2
+Banyak hari dalam bulan November adalah 30 hari
+</pre>
+<p>sebenarnya kita dapat mendeklarasikan array secara eksplisit menggunakan statement
+<code>declare</code></p>
+<p>contohnya:</p>
+<pre>
+declare -a myarray
+</pre>
+<p>mendeklarasikan variabel myarray sebagai array dengan opsi
+<code>-a</code>, kemudian anda sudah dapat memberinya nilai baik untuk semua elemen atau hanya elemen tertentu saja dengan perulangan yang telah kita pelajari pengisian elemen array dapat lebih dipermudah, lihat contoh :</p>
+<pre>
+#!/bin/bash
+#array3
+
+#deklarasikan variabel array
+declare -a angka    
+
+#clear
+i=0;
+while [ $i -le 4 ];
+do
+let isi=$i*2;
+angka[$i]=$isi;
+let i=$i+1;
+done
+
+#tampilkan semua elemen array
+#dengan indexnya berisi "*" atau "@"
+echo ${angka[*]};  
+
+#destroy array angka (memory yang dipakai dibebaskan kembali)
+unset angka
+
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./array3
+0 2 4 6 8
+</pre>
+<h2><a name="Subrutin"></a>9. Subrutin atau Fungsi</h2>
+<p>merupakan bagian script atau program yang berisi kumpulan beberapa statement yang melaksanakan tugas tertentu. dengan subrutin kode script kita tentunya lebih sederhana dan terstruktur, karena sekali fungsi telah dibuat dan berhasil maka akan dapat digunakan kapan saja kita
+inginkan. beberapa hal mengenai fungsi ini adalah:</p>
+<ul>
+<li>Memungkinkan kita menyusun kode script ke dalam bentuk modul-modul kecil yang lebih efisien dengan tugasnya masing-masing.</li>
+<li>Mencegah penulisan kode yang berulang - ulang.</li>
+</ul>
+<p>untuk membuat subrutin shell telah menyediakan keyword
+<code>function</code>
+seperti pada bahasa C, akan tetapi ini bersifat optional (artinya boleh digunakan boleh tidak).</p>
+<p>syntax:</p>
+<pre>
+function nama_fungsi() { perintah; }
+</pre>
+<p>nama_fungsi adalah pengenal (identifier) yang aturan penamaannya sama seperti pemberian nama variabel, setelah fungsi dideklarasikan atau dibuat anda dapat memaggilnya dengan menyebutkan nama fungsinya. lebih jelasnya lihat contoh script fungsi1 berikut:</p>
+<pre>
+#!/bin/bash
+
+function say_hello() {
+    echo "Hello, apa kbabar"
+}
+
+
+#panggil fungsi 
+say_hello;
+
+#panggil sekali lagi
+say_hello;
+
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./fungsi1
+Hello, apa khabar
+ 
+Hello, apa khabar
+</pre>
+<p>jika keyword
+<code>function</code>
+disertakan maka kita boleh tidak menggunakan tanda kurung
+<code>()</code>, tetapi jika keyword
+<code>function</code>
+tidak disertakan maka tanda kurung harus digunakan, lihat contoh berikut:</p>
+<pre>
+#!/bin/bash 
+
+function say_hello{
+  echo "Hello,apa khabar"
+}
+
+balas(){
+  echo "Baik-baik saja";
+  echo "Bagaimana dengan anda ?";
+}
+
+
+#panggil fungsi say_hello
+say_hello;
+
+#panggil fungsi balas
+balas;
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./fungsi2
+Hello, apa khabar
+Baik-baik saja
+Bagaimana dengan anda ?
+</pre>
+<h3><a name="passarg"></a>9.1. Mengirim argumen sebagai parameter ke fungsi</h3>
+<p>tentunya suatu fungsi lebih berdaya guna apabila dapat menerima argumen yang dikirim oleh pemanggilnya dan memproses argumen tsb didalam fungsinya, fungsi yang kita buat pada bash shell tentunya dapat melakukan hal tsb, apabila pada pemanggilan fungsi kita menyertakan argumen untuk diproses fungsi tsb, maka bash akan menyimpan argumen - argumen tsb pada parameter posisi
+<code>1,2,3,dst...,</code>
+nah dengan memanfaatkan parameter posisi tsb tentunya kita dapat mengambil nilai yang dikirim. lebih jelasnya anda lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+
+function hello{
+   if [ -z $1 ]; then
+      echo "Hello, apa khabar anda"
+   else
+      echo "Hello $1, apa khabar";
+   fi
+}
+
+#masukkan nama anda disini
+echo -n "Nama anda :";
+read nama
+
+#panggil fungsi dan kirim isi variabel nama ke fungsi untuk dicetak
+hello $nama;
+</pre>
+<p>Hasilnya:</p>
+<pre>
+[fajar@linux$]./fungsi3
+Nama anda : pinguin
+Hello pinguin, apa khabar
+</pre>
+<p>lihat fungsi
+<code>hello</code>, sebelum mencetak pesan kita melakukan pemeriksaan dengan
+<code>if</code>
+terhadap parameter posisi
+<code>$1</code>
+apabila kosong maka pesan
+<code>"Hello, apa khabar anda"</code>
+yang akan ditampilkan, tetapi jika ada string yang kita input maka string tersebut akan dicetak di dalam blok
+<code>else</code>
+pada fungsi. argumen pertama diteruskan ke variabel 1, argumen kedua pada variabel 2, dst.. jika argumen yang dikirim lebih dari satu.</p>
+<h3><a name="varscope"></a>9.2. Cakupan Variabel</h3>
+<p>secara default variabel - variabel yang digunakan dalam script adalah variabel bersifat global, maksud global adalah bahwa variabel tsb dikenal dan dapat diakses oleh semua fungsi dalam script, tetapi bash menyediakan keyword
+<code>local</code>
+yang berfungsi membatasi cakupan (scope) suatu variabel agar dikenal hanya oleh fungsi yang mendeklarasikannya.coba lihat contoh berikut:</p>
+<pre>
+#!/bin/bash
+
+proses(){
+   echo "Isi variabel a=$a";
+}
+
+a=2;
+proses();
+proses $a
+
+</pre>
+<p>Hasilnya:</p>
+<pre>
+Isi variabel a=2
+Isi variabel a=2
+</pre>
+<p>coba anda tambahkan
+<code>local a</code>
+pada fungsi proses menjadi</p>
+<pre>
+proses(){
+   local a;
+   echo -e "a didalam fungsi, a=$a";
+}
+
+
+a=10;
+proses()
+
+echo "a diluar fungsi, a=$a"
+proses $a
+</pre>
+<p>Hasilnya:</p>
+<pre>
+a didalam fungsi, a= 
+a diluar fungsi,  a=10
+a didalam fungsi  a=
+</pre>
+<p>nah jelas perbedaannya jika mendeklarasikan variabel memakai keyword
+<code>local</code>
+menyebabkan variabel
+tersebut hanya berlaku pada fungsi yang mendekalarasikannya. pada contoh dalam fungsi proses variabel
+<code>a</code>
+dideklarasikan sebagai
+<code>variabel local</code>
+dan tidak diberi nilai.</p>
+<p>Diakhir dokumentasi ini saya menyertakan contoh script sederhana untuk melakukan entry data-data KPLI (Kelompok Pencinta Linux Indonesia) dan menyimpannya ke sebuah file. perintah-perintah shell dan beberapa utility yang digunakan adalah:</p>
+<ul>
+<li>apa yang telah anda pelajari diatas</li>
+<li>utility
+test, touch</li>
+<li>operator redirection "&gt;&gt;" untuk menambah data</li>
+<li>sleep, grep (global regular expression parser), cut, cat, | (pipa), sort dan more</li>
+<li>tput untuk menempatkan cursor pada koordinat tertentu (baris kolom)</li>
+</ul>
+<p>sebagai latihan silahkan mengembangkan sendiri script dibawah ini:</p>
+<pre>
+#!/bin/bash
+#------------------------------------------------------------------
+#(C) Moh.fajar Makassar 2001, contoh script buat para linuxer
+#file ini adalah public domain, silahkan mendistribusikan kembali
+#atau mengubahnya asalkan anda mengikuti aturan - aturan dari GPL
+#
+
+menu(){
+  clear  
+  tput cup 2 8;
+  echo "SIMPLE DATABASE KPLI"
+  tput cup 3 11; 
+  echo "1. Entry Data"
+  tput cup 4 11;
+  echo "2. Cari  Data"
+  tput cup 5 11;
+  echo "3. Cetak Data"
+  tput cup 6 11;
+  echo "4. Exit"
+  tput cup 7 9;
+  read -p "Pilihan anda [1-4] :" pil;
+  while [ -z $pil ] || [ $pil -lt 1 ] || [ $pil -gt 4 ];
+  do
+     tput cup 7 9 
+     read -p "Pilihan anda [1-4] :" pil;
+  done 
+
+}
+
+entry()
+{
+ 
+  tput cup 9 27 
+  echo "Enrty data"
+  tput cup 11 27
+  echo -n "Nama KPLI :";
+  read nama;
+         
+  while  [ -z $nama ] || grep  $nama $data -q -i;
+  do
+      tput cup 13 27
+      echo "Ops Tidak boleh kosong atau $nama sudah ada";
+      sleep 3 
+      clear
+      tput cup 11 27
+      echo -n "Nama KPLI :";
+      read nama;
+  done
+    
+   
+  tput cup 12 27
+  echo -n "Kota      :";
+  read kota;
+  tput cup 13 27
+  echo -n "Alamat    :";
+  read alamat;
+  tput cup 14 27
+  echo -n "Email     :";
+  read email;
+  tput cup 16 27
+  echo "Rekam data ke file"
+  if !(echo $nama:$kota:$alamat:$email&gt;&gt;$data); then
+       echo "Ops, gagal merekam ke file"
+       exit 1;
+  fi
+  sleep 3;
+}
+
+
+cari(){
+  tput cup 9 27 
+  echo "Cari data per record"  
+  tput cup 11 27
+  echo -n "Nama KPLI   :";
+  read nama;
+  while [ -z $nama ]; 
+  do
+    tput cup 13 27
+    echo "Ops, nama tidak boleh kosong"
+    sleep 3;
+    tput cup 11 27
+    echo -n "Nama KPLI   :";
+    read nama;
+  done
+
+      if found=`grep $nama $data -n -i`; then
+     tput cup 12 27 
+     echo -n "Kota        :"; 
+         echo "$found" | cut -d: -f3
+         tput cup 13 27 
+         echo -n "Alamat      :"; 
+         echo "$found" | cut -d: -f4
+     tput cup 14 27 
+         echo -n "Mail        :"; 
+         echo "$found" | cut -d: -f5
+         tput cup 16 27 
+         echo -n "Record ke- $found" | cut -d: -f1
+      else
+         tput cup 13 27 
+         echo "Ops, data tidak ditemukan";
+      fi
+
+}
+
+cetak()
+{
+  tput cup 12 27
+  echo "Tampilkan Data"
+  tput cup 13 27 
+  echo -n "1-&gt;Ascendig, 2-&gt;Descending :"
+  read mode
+  clear;
+  if [ -z $mode ] || [ $mode -eq 1 ]; then
+     cat $data | sort  | more -d
+  elif [ $mode -eq 2 ]; then
+     cat $data | sort -r | more -d
+  else 
+  cat $data | sort | more -d
+  fi  
+}
+
+
+#block utama
+
+  data="mydata"
+
+  if !(test -e $data); then
+    if !(touch $data); then
+       echo "gagal buat file database"
+       exit 1
+    fi
+  fi
+
+  lagi='y'
+  while [ $lagi == 'y' ] || [ $lagi == 'Y' ]
+  do
+  menu;
+    case $pil in
+       1) entry
+          ;; 
+       2) cari;
+          ;;
+       3) cetak
+          ;;
+       4) clear;
+          exit 0;
+          ;;
+       *) 
+          echo "$pil, tidak ada dalam pilihan"
+          ;;
+    esac
+
+  tput cup 18 27
+  echo -n "Ke Menu (y/t): ";
+  read lagi;
+  done      
+
+  clear      
+</pre>
+<p>tentunya kemampuan script ini dapat kita tambahkan dengan mudah sehingga mendekati program database sesungguhnya, utility seperti
+<code>tr, paste, egrep, lpr, dll..</code>
+cukup baik dan membantu untuk
+digunakan.</p>
+<hr>
+<p>sumber :<code>man bash,info bash,man tput,man terminfo</code><br>
+<small>saran &amp; kritikan kirim ke <a href="mailto:fajarmks@yahoo.com">fajarmks@yahoo.com</a></small></p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Programming</a>
+::
+<b>Pengantar Pemrograman Bash Shell di Linux</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/programming/bash-shell.html
+">Komentari
+Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/programming/bash-shell.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

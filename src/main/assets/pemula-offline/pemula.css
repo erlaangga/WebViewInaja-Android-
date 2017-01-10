@@ -1,0 +1,12 @@
+.navbar {
+  border-style: none none solid none;
+  border-width: thin;
+  padding: 2px;
+}
+OL, UL {
+  padding-left: 1em;
+}
+.overline {
+  font-family: Lucida,Verdana,Arial,Helvetica,Geneva,SunSans-Regular,sans-serif;
+  margin-bottom: -2ex ;
+}

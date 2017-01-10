@@ -1,0 +1,315 @@
+<head><title>Linux untuk Pemula: Kompilasi Kernel</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Kompilasi Kernel</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Kompilasi Kernel</h1>
+<p><i>Kernel</i>
+adalah program yang dimuat saat
+<i>boot</i>
+yang berfungsi sebagai
+<i>interface</i>
+antara
+<i>user-level program</i>
+dengan
+<i>hardware</i>. Fungsinya seperti layaknya sistem operasi, menangani
+<i>task switching</i>
+dalam
+<i>multitasking</i>, menangani permintaan membaca atau menulis peralatan disk, melakukan tugas-tugas
+<i>network</i>
+serta mengatur penggunaan memori.</p>
+<p>Secara teknis Linux hanyalah sebuah
+<i>kernel</i>. Program lain seperti kompiler,
+<i>editor</i>,
+<i>window manager</i>
+dsb yang disertakan dalam paket hanyalah sebuah distribusi (<a href="http://www.redhat.com">RedHat</a>, Slackware, SuSE dsb) yang melengkapi
+<i>kernel</i>
+menjadi sebuah sistem operasi yang lengkap.</p>
+<p>Kadang-kadang sebuah kernel memerlukan konfigurasi agar bisa bekerja optimal pada sebuah mesin.
+<i>Kernel</i>
+yang ada pada distribusi
+<a href="http://www.redhat.com">RedHat 5.1</a>
+adalah versi 2.0.34.
+<i>Kernel</i>
+ini pada umumnya sudah bisa langsung bekerja dibanyak komputer tanpa perlu konfigurasi ulang lagi karena didalamnya sudah dimuat dukukungan untuk beberapa device. Konfigurasi ulang bisa dilakukan bila ada tambahan
+<i>device</i>
+baru yang belum dimuat atau dianggap muatannya terlalu banyak sehingga memakan banyak memori.</p>
+<p>Setelah dilakukan konfigurasi, tahap berikut adalah melakukan kompilasi untuk mendapatkan
+<i>kernel</i>
+yang baru. Tahap ini memerlukan beberapa
+<i>tool</i>
+seperti kompiler dsb.
+<a href="http://www.redhat.com">RedHat</a>
+telah menyediakan
+<i>tool-tool</i>
+tersebut dalam distribusinya.</p>
+<p>Tahap kompilasi ini sangat potensial menimbulkan kesalahan dan kadang membuat frustrasi bila terus-menerus mengalami kegagalan. Sebelum mengalami musibah tersebut, mempersiapkan
+<i><a href="../5_crash.html#ebd">emergency boot disk</a></i>
+adalah langkah yang tepat karena pada umumnya kesalahan akan mengakibatkan
+sistem mogok.</p>
+<h2>Download Kernel</h2>
+<p><i>Source</i>
+kernel versi 2.0.34 RedHat 5.1 sudah disediakan dalam bentuk paket
+<a href="rpm.html">RPM</a>
+dalam setiap cd distribusinya. Tapi kita masih bisa mendapatkan versi yang lebih baru di
+<i>web site</i>
+RedHat atau dibeberapa sumber di
+<i>internet</i>
+seperti:</p>
+<p><a href="http://www.kernel.org">http://www.kernel.org</a><br>
+<a href="ftp://ftp.cdrom/pub/linux/sunsite/kernel">ftp://ftp.cdrom/pub/linux/sunsite/kernel</a><br>
+<a href="ftp://sunsite.unc.edu/pub/Linux/kernel">ftp://sunsite.unc.edu/pub/Linux/kernel</a><br>
+<a href="ftp://tsx-11.mit.edu/pub/linux/source/system">ftp://tsx-11.mit.edu/pub/linux/source/system</a><br>
+</p>
+<p><i>Source</i>
+kernel tersebut biasanya dalam format
+<i>linux-X.X.XX.tar.gz</i>
+dimana X.X.XX menunjukkan nomor versi kernel, misalnya 2.0.35. Nomor versi kernel tersebut terdiri dari 3 bagian:
+<i>major number,</i>
+<i>minor number</i>
+dan
+<i>revision number</i>
+yang masing-masing dipisah titik.</p>
+<p>Angka
+2 pada kernel 2.0.34 menunjukkan nomor
+<i>major</i>. Angka ini akan jarang berubah untuk waktu yang lama. Perubahan pada nomor ini menandakan adanya perubahan besar atau
+<i>upgrade</i>
+terhadap kernel.</p>
+<p>Angka 0 pada kernel 2.0.34 menunjukkan nomor
+<i>minor</i>
+atau stabilitas. Angka genap (misal 0, 2, 4 dst) menandakan kernel stabil sedangkan angka ganjil menandakan kernel dalam tahap pengembangan atau
+<i>development.</i>
+Kernel ganjil mengandung
+<i>experimental code</i>
+dan
+<i>feature</i>
+terbaru
+yang ditambahkan oleh
+<i>developer</i>-nya. Kernel genap pada saat di rilis sudah tidak lagi ada penambahan apapun dan dianggap sudah stabil. Kadang-kadang kernel ganjil ini malah stabil dan biasanya dipakai oleh mereka yang sedang melakukan percobaan terhadap
+<i>feature-feature</i>
+baru tersebut.</p>
+<p>Dua angka terakhir, 34 menunjukkan nomor revisi. Ini menandakan
+<i>current patch</i>
+versi tersebut. Selama tahap pengembangan, versi baru bisa di rilis hingga dua kali seminggu.</p>
+<h2>Konfigurasi Kernel</h2>
+<p>Source kernel yang sudah di download biasanya di unpack di direktori /usr/src/.</p>
+<pre>
+tar -zxvf linux-2.0.34.tar.gz
+</pre>
+<p>Perintah tersebut akan menguraikan file-file ke dalam direktori /usr/src/linux. Bila perlu sempatkan membaca file /usr/src/linux/README.</p>
+<p>Konfigurasi dimulai dari direktori /usr/src/linux. Ada tiga cara:</p>
+<ol>
+<li><b>make config,</b>
+berupa
+<i>text base interface</i>, cocok untuk user yang memiliki terminal model lama dan tidak memiliki seting termcap.</li>
+<li><b>make menuconfig</b>, berupa
+<i>text base</i>
+juga tapi memiliki
+<i>puldown</i>
+menu berwarna, digunakan untuk user yang memiliki standar c<i>onsole</i>.</li>
+<li><b>make xconfig</b>,
+<i>interface</i>
+menggunakan layar grafik penuh, untuk user yang sudah memiliki X Window.</li>
+</ol>
+<p>Bila berhasil layar
+<b>Linux Kernel Configuration</b>
+akan ditampilkan setelah perintah diatas dijalankan. Ada sekitar 14 menu pilihan dimulai dari
+<i>Code maturity level options</i>
+sampai
+<i>Kernel hacking</i>.
+Masing-masing memiliki sub-menu bila dipilih dan pilihan
+<b>yes(y), module(m)</b>
+atau
+<b>no(no)</b>. Setiap pilihan untuk dimuat/kompile ke dalam kernel atau y akan memperbesar ukuran kernel nantinya. Jadi pilih
+<i>feature-feature</i>
+yang sering di gunakan yang di muat ke dalam kernel atau jadikan
+<i>module</i>
+untuk
+<i>feature</i>
+yang tidak sering di gunakan, misalnya PPP
+<i>support.</i></p>
+<center>
+<p><img src="kompile-kernel-files/kernkonf.jpg" width="327" height="251" alt="kernkonf.jpg 327x251 (33 KB)"></p>
+</center>
+<center>
+<p><img src="kompile-kernel-files/codemat.jpg" width="394" height="116" alt="codemat.jpg 394x116 (24 KB)"></p>
+</center>
+<p>Setelah semua pilihan dianggap sesuai, konfigurasi di simpan dengan memilih
+<i>save</i>
+sebelum keluar dari layar menu konfigurasi. Konfigurasi akan disimpan dalam sebuah file. Langkah selanjutnya adalah kompilasi atau dikenal dengan
+<i>building the kernel.</i></p>
+<h2>Kompilasi Kernel</h2>
+<p>Siapkan kesabaran, terutama bagi user yang melakukan kompilasi kernel di mesin yang memiliki prosesor lambat dan sedikit memori. Kompilasi bisa memakan waktu 10 menit pada mesin
+dengan prosesor Pentium yang cepat hingga sampai 1,5 jam pada mesin Intel 386. Waktu kompilasi juga bertambah bila sistem digunakan untuk menjalankan proses lain pada saat itu.</p>
+<p>Tetap di direktori /usr/src/linux, jalankan perintah:</p>
+<pre>
+make dep; make clean; make zImage
+</pre>
+<p>Perintah pertama,
+<i>make dep</i>, membaca file konfigurasi dan membentuk
+<i>dependency tree</i>. Proses ini mengecek apa yang di kompile dan apa yang tidak di kompile. Selanjutnya,
+<i>make clean</i>, menghapus seluruh
+jejak kompilasi yang pernah dilakukan sebelumnya. Ini memastikan agar tidak ada
+<i>feature</i>
+versi lama yang tersisa. Terakhir,
+<i>make zImage,</i>
+adalah kompilasi sesungguhnya. Bila tidak ada pesan kesalahan, akan terbentuk kernel yang terkompresi dan siap di instalasi.</p>
+<h3>Kompile Modul</h3>
+<p>Sebelum instalasi kernel, modul-modul yang berhubungan perlu di kompile juga dengan:</p>
+<pre>
+make modules
+</pre>
+<p>Pastikan tidak ada kesalahan.</p>
+<h3>Instalasi Kernel</h3>
+<p>Cek lokasi kernel,
+biasanya nama kernel dimulai dengan
+<b>vmlinuz,</b>
+biasanya ada di direktori /boot. Atau buka file /etc/lilo.conf untuk memastikannya. Setelah itu copy file /usr/src/linux/arch/i386/boot/zImage ke direktori /boot dengan nama lain contohnya:</p>
+<pre>
+cp /usr/src/linux/arch/i386/boot/zImage /boot/vmlinuz-2.0.34-baru
+</pre>
+<p><b>Catatan</b>: bila tidak ditemukan file zImage, berarti masih ada kesalahan dalam kompilasi.</p>
+<p>Sebelum kernel modul di instalasi, sebaiknya
+<i>backup</i>
+dulu modul lama.
+Modul ada di direktori /lib/modules,
+<i>rename</i>
+modul dengan nama lain:</p>
+<pre>
+cd /lib/modules
+mv 2.0.34 2.0.34-backup
+</pre>
+<p>Keuntungan mem<i>backup</i>
+modul ini adalah bila ternyata nanti modul baru tidak berjalan baik, maka modul lama bisa digunakan lagi dengan menghapus modul baru dan me<i>rename</i>
+modul
+<i>backup</i>
+menjadi 2.0.34 kembali.</p>
+<p>Selanjutnya, kembali lagi ke /usr/src/linux dan jalankan perintah di bawah untuk menginstalasi modul ke kernel:</p>
+<pre>
+make modules_install
+</pre>
+<p>Akhirnya,
+<a href="../admin/lilo.html">edit /etc/lilo</a>
+untuk menentukan kernel yang akan di pakai dan
+<b>jangan lupa menjalankan lilo</b>:</p>
+<pre>
+lilo
+</pre>
+<p>Selesai,
+<i>reboot</i>
+sistem dan lihat hasilnya.</p>
+<h2>Patch Kernel</h2>
+<p>Setiap di keluarkannya kernel versi baru juga di keluarkan sebuah file
+<b><i>patch</i></b>. File
+<i>patch</i>
+ini jauh lebih kecil dari file
+<i>source kernel</i>
+sehingga jauh lebih cepat bila digunakan untuk
+<i>upgrade</i>
+kernel.</p>
+<p>File
+<i>patch</i>
+hanya bekerja untuk meng<i>upgrade</i>
+satu versi kernel dibawahnya. Misalnya, versi kernel 2.0.27 hanya bisa di<i>upgrade</i>
+dengan file
+<i>patch</i>
+2.0.28 menjadi kernel 2.0.28. Begitu pula bila kernel 2.0.27 tersebut ingin di<i>upgrade</i>
+menjadi kernel 2.0.30 maka diperlukan file
+<i>patch</i>
+2.0.28, 2.0.29 dan 2.0.30. Perhatikan, kernel 2.0.27 tidak bisa langsung di<i>patch</i>
+menjadi 2.0.30 tanpa melalui file
+<i>patch</i>
+2.0.28, 2.0.29 dan 2.0.30.</p>
+<p>File-file
+<i>patch</i>
+tersebut juga
+tersedia pada direktori yang sama di FTP dan Website yang biasa menyediakan
+<i>source kernel</i>.</p>
+<p>File-file
+<i>patch</i>
+tersedia dalam format .gz, setelah di
+<i>download,</i>
+pindahkan file
+<i>patch</i>
+ini ke direktori /usr/src. Pastikan
+<i>source kernel</i>
+versi lama sudah di instalasi juga. Pada direktori yang lama jalankan perintah:</p>
+<pre>
+gzip -cd patch-2.0.28.gz | patch -p0
+</pre>
+<p>Setelah itu periksa apakah ada file yang berakhiran
+<b>.rej</b>
+di direktori /usr/src/linux. Bila
+ditemukan file seperti itu maka
+<i>patch</i>
+yang dilakukan tidak berhasil, periksa kembali apakah file
+<i>patch</i>
+yang dipakai sudah benar. Beberapa file patch menurut berita kadang-kadang memang tidak sesuai untuk sebuah
+<i>source kernel,</i>
+terutama
+<i>source kernel</i>
+yang telah di modifikasi oleh
+<i>developer</i>
+untuk kepentingan distribusi Linux. Saya tidak tahu pasti mengenai hal ini.</p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux
+untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Kompilasi Kernel</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/kompile-kernel.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/kompile-kernel.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar
+tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

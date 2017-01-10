@@ -1,0 +1,1584 @@
+  PPP Script Tutorial
+  Zakaria, zak@telkom.net
+
+  v1.1.2, 29 Dec 1999
+
+  Dokumen ini mencoba menjelaskan langkah-langkah yang harus ditempuh
+  untuk membuat komputer linux anda berinternet-ria melalui PPP dengan
+  menggunakan script. Petunjuk ini dibuat pada RedHat  Linux 5.2, untuk
+  distribusi lain mungkin juga bisa, kalau ada masalah silakan  tanya
+  ahli distronya. Untuk troubleshooting silakan lihat PPP HOWTO atau
+  tanya  saya atau mailing list linux-setup@linux.or.id (tentu saja anda
+  harus subscribe dulu :)
+
+  ______________________________________________________________________
+
+  Table of Contents
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  1. Pendahuluan
+
+  2. Log Perubahan
+
+  3. Copyright & Disclaimer
+
+  4. Yang diperlukan
+
+  5. Persiapan
+
+     5.1 Setting Linux Agar Kenal Modem
+     5.2 Mengetest Modem
+     5.3 Testing Routing
+     5.4 Testing PAP/CHAP
+
+  6. Editing File
+
+     6.1 Sebelum Meng-edit
+     6.2 Setting Security
+        6.2.1 hosts.deny
+        6.2.2 hosts.allow
+     6.3 Setting DNS Server
+        6.3.1 DNS CBN
+        6.3.2 DNS IndosatNet
+     6.4 Script ppp-on
+        6.4.1 CBN
+        6.4.2 IndosatNet
+     6.5 Script ppp-redialer
+        6.5.1 CBN
+        6.5.2 IndosatNet
+     6.6 Setting Modem dan Script ppp-chat-init
+     6.7 Script ppp-chat-dial
+        6.7.1 CBN
+        6.7.2 IndosatNet
+     6.8 Setting Option PPP
+     6.9 PAP Secret (hanya PAP)
+        6.9.1 IndosatNet
+     6.10 File-file lain
+        6.10.1 File /etc/ppp/ppp-off
+        6.10.2 File /etc/ppp/ip-up
+        6.10.3 File /etc/ppp/ip-down
+     6.11 Perubahan Setting
+        6.11.1 Modem
+        6.11.2 No Telp.
+        6.11.3 User Name dan Password
+        6.11.4 ISP
+        6.11.5 MTU/MRU
+
+  7. Testing
+
+  8. Penggunaan Lebih Lanjut
+
+     8.1 Link ppp-on
+     8.2 Script see-ppp
+     8.3 Script ip-up.local dan ip-down.local
+        8.3.1 Contoh Script ip-up.local
+        8.3.2 Contoh Script ip-down.local
+     8.4 Dialing Secara Berkala
+
+  9. Masukan & Troubleshooting
+
+
+
+  ______________________________________________________________________
+
+
+  1.  Pendahuluan
+
+  Ada banyak cara untuk menghubungkan komputer linux anda dengan
+  internet melalui PPP. Petunjuk ini hanya akan menjelaskan langkah-
+  langkah yang diperlukan untuk memakai ppp melalui script. Mungkin agak
+  sedikit rumit tetapi memiliki beberapa keuntungan:
+
+
+  1. Tidak memerlukan software tambahan (cukup pppd)
+
+  2. Bisa berjalan pada modus text (tidak memerlukan X Window)
+
+  3. Bisa dijalankan melalui crontab untuk dial berkala (lihat bagian
+     ``'')
+
+  4. Scriptnya bisa mencari line telepon ISP yang kosong. Hal ini sangat
+     berguna bila telepon ISP anda selalu sibuk
+
+  Versi terakhir dokumen ini dalama berbagai format (html, dvi, ps,
+  text) berikut dengan sourcenya dapat anda dapatkan di
+  http://members.xoom.com/telorasin/pemula/
+
+  2.  Log Perubahan
+
+  versi 1.0
+
+
+  o  Direlease pertamakali di KPLI Jakarta mailing list
+
+  versi 1.1
+
+
+  o  Copyright diubah menjadi OPL (Open Content)
+
+  o  Menambah setting security
+
+  o  Menggabungkan setting modem dengan ppp-chat-init
+
+  o  Menambah saving routing dengan linuxconf
+
+  o  Mengubah ppp-redialer
+
+  o  Mengubah ppp-chat-dial
+
+  o  Perubahan Estetika
+
+  versi 1.1.1
+
+
+  o  Merubah tanggal :)
+
+  o  Ubah URL modem init
+
+  o  Ubah ppp-chat-init dan ppp-chat-dial
+
+  o  Perubahan Estetika
+
+  versi 1.1.2
+
+
+  o  Tambahan di Perubahan Setting -> User Name & Password (terimakasih
+     untuk dik Nur atas sarannya)
+
+
+
+
+  3.  Copyright & Disclaimer
+
+  Hak cipta dilindungi Undang-Undang. Izin diberikan untuk memperbanyak,
+  menyebarluaskan dan mengubah dokumen inii seperti diatur dalam
+  OpenContent License (OPL).
+
+  Secara singkat anda boleh memperbanyak dan meyebarluaskan selama
+  copyright dan disclaimer ini diikutsertakan. Anda juga boleh mengubah
+  isi dokumen ini selama anda menyatakan dengan jelas perubahannya dan
+  hasil perubahannya harus di-license dengan OPL juga. Selain itu anda
+  berhak meminta bayaran atas media atau pengiriman dokumen ini atau
+  bayaran atas jaminan dan dukungan teknis.
+
+
+  Walaupun penulis sudah berupaya untuk membuat dokumen ini bebas dari
+  kesalahan tetapi TIDAK ADA JAMINAN bahwa petunjuk ini akan bekerja dan
+  tidak MERUSAK sistem/komputer anda.
+
+  OpenContent License (OPL) secara lengkap dapat anda lihat di
+  http://www.opencontent.org/opl.shtml
+
+  4.  Yang diperlukan
+
+
+  1. Modem (kalau ada manualnya lebih baik
+
+  2. Informasi ISP (no telp dan IP DNS Primary & Secondary)
+
+  3. Password root (harus pakai root dong :)
+
+  5.  Persiapan
+
+  5.1.  Setting Linux Agar Kenal Modem
+
+  Untuk menggunakan modem anda harus mensetting linux anda agar linux
+  tahu dimana ia harus mencari modem. Untuk mensetting cukup jalankan
+  perintah
+
+
+  ______________________________________________________________________
+  ln -s /dev/cua0 /dev/modem
+
+  ______________________________________________________________________
+
+
+
+  Jika modem anda terhubung ke COM1 jika modem anda terhubung ke COM2
+  ganti /dev/cua0 dengan /dev/cua1, jika COM3 menjadi cua2 dan
+  seterusnya.
+
+  5.2.  Mengetest Modem
+
+  Untuk mengetest modem anda sudah terhubung dengan baik jalankan
+  langkah-langkah berikut:
+
+
+  1. Jalankan minicom
+
+
+
+
+
+
+
+
+
+     ___________________________________________________________________
+     # minicom
+     Welcome to minicom 1.82
+     OPTIONS: History Buffer, F-key Macros, Search History Buffer, I18n
+     Compiled on Oct 1 1998, 23:34:55.
+     Press CTRL-A Z for help on special keys
+
+     AT S7=45 S0=0 L1 V1 X4 &c1 E1 Q0
+     OK
+
+     ___________________________________________________________________
+
+
+
+  2. Kalau tampilannya seperti diatas berarti modem dan komputer anda
+     sudah terhubung. Jika belum cek apakah modemnya sudah dinyalakan
+     atau kabel serialnya sudah terhubung.
+
+  3. Untuk mengetest line telepon anda ketikkan ATDT<no telepon ISP>
+
+     ___________________________________________________________________
+     ATDT9,5759000
+     CONNECT 26400/V42BIS
+
+     Welcome to 3Com Total Control HiPer ARC (TM)
+     Networks That Go The Distance (TM)
+
+     login: xxxxx
+     Password:
+
+     ___________________________________________________________________
+
+
+
+  4. Kalau modem anda sudah berbunyi toet totet dan tampilannya seperti
+     diatas berarti koneksi line telepon anda sudah baik. Catatan:
+     Contoh diatas memakai line telepon dibelakan PABX jadi perlu 9,
+     dulu untuk dial ke luar. Jika line telepon anda langsung (misalnya
+     di rumah) tidak perlu pakai 9, cukup ATDT5759000
+
+
+  5. Jika line telepon anda belum terkoneksi dengan baik periksa kabel
+     telepon (coba dengan telepon biasa) atau line telepon anda memakai
+     PABX 4 Kabel (untuk yang ini saya nggak tahu bagaimana cara
+     menanganinya :< )
+
+  6. Jika sudah OK semua tekan Ctrl + A + X terus tekan Enter pada Yes.
+
+  5.3.  Testing Routing
+
+  Jika linux anda mempunyai network card anda harus mengeset route table
+  anda agar tidak ada default route. Jika anda harus mempunya default
+  route silakan lihat Net 2/3 HOWTO. Untuk mengecek routing lakukan
+  langkah-langkah berikut:
+
+
+
+  1. Lihat daftar routing kernel
+
+
+
+
+
+
+
+
+     ___________________________________________________________________
+     # route -n
+     Kernel IP routing table
+     Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+     192.168.1.0     0.0.0.0         255.255.255.0   U     0      0       12 eth0
+     127.0.0.0       0.0.0.0         255.0.0.0       U     0      0       10 lo
+
+     ___________________________________________________________________
+
+
+
+  2. Jika tampilannya seperti diatas berarti routing table anda sudah
+     OK. Silahkan lanjutkan ke langkah persiapan berikutnya.
+
+  3. Jika tampilan anda seperti dibawah ini berarti anda mempunya
+     default route
+
+
+     ___________________________________________________________________
+     # route -n
+     Kernel IP routing table
+     Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+     192.168.1.0     0.0.0.0         255.255.255.0   U     0      0       12 eth0
+     127.0.0.0       0.0.0.0         255.0.0.0       U     0      0       10 lo
+     0.0.0.0         192.168.1.1     0.0.0.0         UG    0      0        0 eth0
+
+     ___________________________________________________________________
+
+
+
+  4. Untuk menghapus default route jalankan perintah
+
+     ___________________________________________________________________
+     # route del default
+
+     ___________________________________________________________________
+
+
+
+  5. Untuk menyimpan perubahan jalankan ikuti langkah-langkah berikut:
+
+     a. Jalankan linuxconf
+
+        ________________________________________________________________
+        # linuxconf
+
+        ________________________________________________________________
+
+
+
+     b. Pilih Config -> Networking -> Client tasks -> Routing and
+        gateways -> Defaults
+
+     c. Kosongkan kotak default gateway dan kosongkan checkbox Enable
+        Routing
+
+  5.4.  Testing PAP/CHAP
+
+  Beberapa ISP di Indonesia menggunakan PAP atau CHAP untuk otorisasi
+  pengguna yaitu mereka tidak menggunakan Login: & Password: prompt
+  untuk mengotorisasi.  Tetapi beberapa ISP menggunakan PAP dengan
+  login: dan password: prompt, IndosatNet misalnya. Untuk memastikan
+  hubungi Customer Services ISP anda. Kalau mereka tidak tahu anda bisa
+  menganggap ISP anda memakai otorisasi biasa atau melakukan testing
+  berikut:
+
+  1. Dial no telepon ISP anda (caranya seperti testing modem)
+
+  2. Jika mereka menampilkan login: dan password: berarti mereka
+     menggunakan otorisasi biasa
+
+  3. Jika yang tampil adalah sampah seperti dibawah ini dan terus datang
+     berarti mereka menggunakan PAP/CHAP
+
+     ___________________________________________________________________
+     y}#.!}!}!} }8}!}$}%U}"}&} } } } }%}& ...}'}"}(}"} .y}
+
+     ___________________________________________________________________
+
+
+
+  4. Tetapi seperti saya bilang diatas beberapa server menggunakan PAP
+     dengan login: dan password: salah satu petunjuknya adalah prompt
+     sebelum login misalnya "Indosat PAP server"
+
+  6.  Editing File
+
+  6.1.  Sebelum Meng-edit
+
+  Setting berikut dibuat dengan user name: user dan password: pass. Jika
+  ISP anda CBN atau IndosatNet anda bisa langsung meng-copy setting di
+  bawah ini dengan mengubah user name dan passwordnya. Untuk perubahan
+  setting lihat Bagian ``''.
+
+  Disamping nama file terdapat keterangan seperti (root, root 700) ini
+  berarti file itu dimiliki oleh user root, group root dan modenya 644
+  (rw-r--r--) jika tidak sesuai ubah dengan chown, chgrp dan chmod
+  (lihat masing-masing man untuk lebih detail).
+
+  6.2.  Setting Security
+
+  Untuk mengamankan linux anda dari cracker di internet anda harus
+  mengatur akses ke komputer anda. Petunjuk berikut hanya menjelaskan
+  langkah-langkah dasar untuk mengamankan komputer anda untuk lebih
+  mengamankan komputer anda silakan baca Security-HOWTO
+
+  6.2.1.  hosts.deny
+
+  Edit file /etc/hosts.deny (root, root 644)untuk menolak semua akses ke
+  komputer anda
+
+
+  ______________________________________________________________________
+  #
+  # hosts.deny This file describes the names of the hosts which are
+  # *not* allowed to use the local INET services, as decided
+  # by the '/usr/sbin/tcpd' server.
+  #
+  # The portmap line is redundant, but it is left to remind you that
+  # the new secure portmap uses hosts.deny and hosts.allow. In particular
+  # you should know that NFS uses portmap!
+  ALL:ALL
+
+  ______________________________________________________________________
+
+
+
+  6.2.2.  hosts.allow
+
+  Edit file /etc/hosts.allow (root,root 644) untuk mengizinkan akses ke
+  komputer anda selain yang ditolak oleh /etc/hosts.deny. Minimal anda
+  harus mengizinkan komputer anda (127.0.0.1) untuk mengakses dirinya
+  sendiri !
+
+
+  ______________________________________________________________________
+  #
+  # hosts.allow This file describes the names of the hosts which are
+  # allowed to use the local INET services, as decided
+  # by the '/usr/sbin/tcpd' server.
+  #
+  ALL:127.0.0.1
+
+  ______________________________________________________________________
+
+
+
+  Jika komputer anda berada dalam jaringan (LAN) anda harus menambah
+  entry di hosts.allow dengan IP LAN anda atau komputer anda tidak dapat
+  diakses dari komputer lainnya di LAN. Untuk komputer yang berada di
+  LAN dengan range IP subclass C unregistered (192.168.1.x) file
+  /etc/hosts.deny-nya adalah:
+
+
+  ______________________________________________________________________
+  #
+  # hosts.allow   This file describes the names of the hosts which are
+  #               allowed to use the local INET services, as decided
+  #               by the '/usr/sbin/tcpd' server.
+  #
+  ALL:127.0.0.1
+  ALL:192.168.1.0/255.255.255.0
+
+  ______________________________________________________________________
+
+
+
+  6.3.  Setting DNS Server
+
+  Edit file /etc/resolv.conf (root, root 644) untuk menunjukkan DNS
+  server ISP anda
+
+  6.3.1.  DNS CBN
+
+
+  ______________________________________________________________________
+  # CBN
+  search cbn.net.id
+  nameserver 202.158.3.6
+  nameserver 202.158.3.7
+
+  ______________________________________________________________________
+
+
+
+  6.3.2.  DNS IndosatNet
+
+
+  ______________________________________________________________________
+  # IndosatNet
+  search indosat.net.id
+  nameserver 202.155.0.10
+  nameserver 202.155.0.15
+
+  ______________________________________________________________________
+
+
+
+  6.4.  Script ppp-on
+
+  Buat file /etc/ppp/ppp-on (root, root 700) untuk menjalankan pppd
+
+  6.4.1.  CBN
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  #
+  # script to connect to ISP
+  #
+  # CBN
+  exec /usr/sbin/pppd debug /dev/ttyS0 115200 \
+         connect /etc/ppp/ppp-redialer
+
+  ______________________________________________________________________
+
+
+
+  6.4.2.  IndosatNet
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  #
+  # script to connect to ISP
+  #
+  # IndosatNet
+  exec /usr/sbin/pppd debug name user /dev/ttyS0 115200 \
+        connect /etc/ppp/ppp-redialer
+
+  ______________________________________________________________________
+
+
+
+  6.5.  Script ppp-redialer
+
+  Buata file /etc/ppp/ppp-redialer (root, root 700) untuk mendial ke ISP
+
+  6.5.1.  CBN
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  # Script untuk mendial ISP dengan mencari line telepon yang kosong
+  # Copyright (c) Zakaria 1999 licensed in GPL
+  #
+
+  ###################################################################
+  #
+  # Parameter ini mengatur urutan dial
+  #
+  # Berapa kali nomor telepon yang sama di dial
+  MAX_ATTEMPTS=5
+
+  # Waktu antara setiap dial. Parameter ini digunakan oleh sleep
+  # jadi gunakan "15s" untuk 15 second (detik), "1m" untuk 1 menit, dst
+  SLEEP_DELAY=1s
+
+  ###################################################################
+  #
+  # No awal di dial untuk telepon keluar, gunakan bila anda memakai PABX
+  PHONEPRE=""
+
+  # Daftar nomor telepon. Tambahkan no telepon baru dan
+  # ubah function callall supaya sesuai dengan daftar no telepon
+  #
+  #PHONE1=5759000
+  PHONE1=57989000
+  #PHONE2=52994999
+  #PHONE3=25537500
+  PHONE2=25507500
+  PHONE3=25655000
+
+
+  ###################################################################
+  #
+  # Function untuk mengeset modem untuk memastikan modem siap dipakai
+
+  function initialize
+  {
+      /usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+      return
+  }
+
+  ###################################################################
+  #
+  # Function untuk mendial no telepon
+  #
+  function callnumber
+  {
+  # initialize setiap dial untuk menghindarkan modem hang pada saat chat
+  /usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+
+  # Jika koneksi berhasil maka kita akhiri script
+  # dengan return value 0 (tanpa error)
+  #
+      if [ "$?" = "0" ]; then
+         exit 0
+      else
+         initialize
+      fi
+
+      return
+  }
+
+  ###################################################################
+  #
+  # Function untuk mendial semua no telepon
+  #
+  function callall
+  {
+  #    echo "dialing attempt number: $1" >/dev/console
+     callnumber $PHONEPRE$PHONE1
+     callnumber $PHONEPRE$PHONE2
+     callnumber $PHONEPRE$PHONE3
+  }
+
+  ###################################################################
+  #
+  # Set modem jika tidak berhasil exit dengan return value = 1 (ada error)
+
+  initialize
+  if [ ! "$?" = "0" ]; then
+     exit 1
+  fi
+
+  #
+  # Dial no telepon sampai salah satu nyambung atau MAX_ATTEMPTS tercapai
+  #
+  attempt=0
+  while : ; do
+      attempt=`expr $attempt + 1`
+      callall $attempt
+      if [ "$attempt" = "$MAX_ATTEMPTS" ]; then
+          exit 1
+      fi
+      sleep "$SLEEP_DELAY"
+  done
+
+  ______________________________________________________________________
+
+
+
+  6.5.2.  IndosatNet
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  # Script untuk mendial ISP dengan mencari line telepon yang kosong
+
+  # Copyright (c) Zakaria 1999 licensed in GPL
+  #
+
+  ###################################################################
+  #
+  # Parameter ini mengatur urutan dial
+  #
+  # Berapa kali nomor telepon yang sama di dial
+  MAX_ATTEMPTS=5
+
+  # Waktu antara setiap dial. Parameter ini digunakan oleh sleep
+  # jadi gunakan "15s" untuk 15 second (detik), "1m" untuk 1 menit, dst
+  SLEEP_DELAY=1s
+
+  ###################################################################
+  #
+  # No awal di dial untuk telepon keluar, gunakan bila anda memakai PABX
+  PHONEPRE=""
+
+  # Daftar nomor telepon. Tambahkan no telepon baru dan
+  # ubah function callall supaya sesuai dengan daftar no telepon
+  #
+  PHONE1=3825001
+  PHONE2=3825200
+  PHONE3=34354000
+  PHONE4=7507977
+  PHONE5=3524001
+  PHONE6=3520550
+  PHONE7=3864901
+
+  ###################################################################
+  #
+  # Function untuk mengeset modem untuk memastikan modem siap dipakai
+
+  function initialize
+  {
+      /usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+      return
+  }
+
+  ###################################################################
+  #
+  # Function untuk mendial no telepon
+  #
+  function callnumber
+  {
+  # initialize setiap dial untuk menghindarkan modem hang pada saat chat
+  initialize
+  /usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+
+  # Jika koneksi berhasil maka kita akhiri script
+  # dengan return value 0 (tanpa error)
+  #
+      if [ "$?" = "0" ]; then
+         exit 0
+      fi
+
+      return
+  }
+
+  ###################################################################
+  #
+  # Function untuk mendial semua no telepon
+  #
+  function callall
+  {
+  #    echo "dialing attempt number: $1" >/dev/console
+     callnumber $PHONEPRE$PHONE1
+     callnumber $PHONEPRE$PHONE2
+     callnumber $PHONEPRE$PHONE3
+     callnumber $PHONEPRE$PHONE4
+     callnumber $PHONEPRE$PHONE5
+     callnumber $PHONEPRE$PHONE6
+     callnumber $PHONEPRE$PHONE7
+  }
+
+  ###################################################################
+  #
+  # Set modem jika tidak berhasil exit dengan return value = 1 (ada error)
+
+  initialize
+  if [ ! "$?" = "0" ]; then
+     exit 1
+  fi
+
+  #
+  # Dial no telepon sampai salah satu nyambung atau MAX_ATTEMPTS tercapai
+  #
+  attempt=0
+  while : ; do
+      attempt=`expr $attempt + 1`
+      callall $attempt
+      if [ "$attempt" = "$MAX_ATTEMPTS" ]; then
+          exit 1
+      fi
+      sleep "$SLEEP_DELAY"
+  done
+
+  ______________________________________________________________________
+
+
+
+  6.6.  Setting Modem dan Script ppp-chat-init
+
+  Untuk bekerja dengan baik, modem harus diset dengan menggunakan modem
+  init string. Modem init string adalah suatu kumpulan perintah untuk
+  menginisialisasi modem supaya bekerja pada modus yang sesuai.
+  Perintah-perintah ini biasanya dimulai dengan huruf AT sehingga sering
+  disebut perintah AT atau AT command.  Jika anda mempunya manual book
+  modem anda dapat melihat daftar AT command di manual book tersebut.
+  Jika anda tidak mempunyai manual book modem anda bisa mencoba init
+  string standar atau anda dapat mencari init string untuk modem anda di
+  http://www.spy.net/~dustin/modem/ <http://www.spy.net/~dustin/modem/>.
+
+  Jika anda mempunyai manual modem menurut PPP-HOWTO minimal yang anda
+  harus perhatikan adalah
+
+
+  o  Hardware flow control (RTS/CTS) (&K3 on many Hayes modems)
+
+  Setting lain yang patut diselidiki
+
+
+  o  E1 Command/usr/src/linux-2.0.27/include/linux/serial.h Echo ON
+     (required for chat to operate)
+
+  o  Q0 Report result codes (required for chat to operate)
+
+  o  S0=0 Auto Answer OFF (unless you want your modem to answer the
+     phone)
+
+  o  &C1 Carrier Detect ON only after connect
+
+  o  &S0 Data Set Ready (DSR) always ON
+
+  o  (depends) Data Terminal Ready
+
+  Tetapi biasanya AT&F dan/atau AT&Z sudah mencukupi. Jika anda sudah
+  mengetahui perintah AT Command yang sesuai dengan modem anda atau anda
+  yakin modem anda cukup standar buat file /etc/ppp/ppp-chat-init (root,
+  root 600) untuk chat script inisialisasi modem
+
+
+  ______________________________________________________________________
+  TIMEOUT         3
+  'OK-+++\c-OK'   ATH
+  OK              AT&F
+
+  ______________________________________________________________________
+
+
+
+  6.7.  Script ppp-chat-dial
+
+  Buat file /etc/ppp/ppp-chat-dial (root, root 600) untuk chat script
+  dial
+
+  6.7.1.  CBN
+
+
+  ______________________________________________________________________
+  TIMEOUT         3
+  OK-\rAT-OK      ATDT\T
+  TIMEOUT         60
+  ABORT           '\nBUSY\r'
+  ABORT           '\nNO ANSWER\r'
+  ABORT           '\nNO DIALTONE\r'
+  ABORT           '\nNO CARRIER\r'
+  ABORT           '\nRINGING\r\n\r\nRINGING\r'
+  SAY "Dialing CBN ..\n"
+  ECHO ON
+  TIMEOUT         20
+  ogin:--ogin:    user
+  ECHO OFF
+  SAY "Sending Login\n"
+  assword:        pass
+  SAY "Sending Password\n"
+  \~              ''
+  SAY "Connected\n"
+
+  ______________________________________________________________________
+
+
+
+  6.7.2.  IndosatNet
+
+
+
+
+
+
+
+
+
+  ______________________________________________________________________
+  TIMEOUT         3
+  OK-\rAT-OK      ATDT\T
+  TIMEOUT         60
+  ABORT           '\nBUSY\r'
+  ABORT           '\nNO ANSWER\r'
+  ABORT           '\nNO DIALTONE\r'
+  ABORT           '\nNO CARRIER\r'
+  ABORT           '\nRINGING\r\n\r\nRINGING\r'
+  SAY "Dialing IndosatNet ..\n"
+  SAY "Connected\n"
+
+  ______________________________________________________________________
+
+
+
+  6.8.  Setting Option PPP
+
+  edit file /etc/ppp/options (root, root 600)
+
+
+  ______________________________________________________________________
+  # Prevent pppd from forking into the background
+  -detach
+  #
+  # use the modem control lines
+  modem
+  # use uucp style locks to ensure exclusive access to the serial device
+  lock
+  # use hardware flow control
+  crtscts
+  # create a default route for this connection in the routing table
+  defaultroute
+  # do NOT set up any "escaped" control sequences
+  asyncmap 0
+  # use a maximum transmission packet size of 552 bytes
+  # Put values 2*N*128 + 40 (40 header)
+  #mtu 1064
+  mtu 552
+  #mtu 296
+  # use a maximum receive packet size of 552 bytes
+  #mru 1064
+  mru 552
+  #mru 296
+  #
+  # Set the maximum number of LCP configure-request transmissions to <n>
+  # (default 10).
+  # Some PPP servers are slow to start up. You may need to increase this
+  # if you keep getting 'serial line looped back' errors and your are SURE
+  # that you have logged in correctly and PPP should be starting on the server.
+  # lcp-max-configure 25
+  # How many second we tolerate idle ? Useful for cron dialing
+  # idle 60
+
+  ______________________________________________________________________
+
+
+
+  6.9.  PAP Secret (hanya PAP)
+
+  edit file /etc/ppp/pap-secrets (root, root 600) untuk menyimpan
+  password anda
+
+
+
+
+  6.9.1.  IndosatNet
+
+
+  ______________________________________________________________________
+  # Secrets for authentication using PAP
+  # client        server  secret                  IP addresses
+  user              *       pass
+
+  ______________________________________________________________________
+
+
+
+  6.10.  File-file lain
+
+  File-file ini secara default sudah ada di linux anda tetapi untuk
+  kelengkapan saya sertakan disini. Biasanya file ini terletak di
+  /etc/ppp atau /usr/doc/ppp-*/scripts
+
+  6.10.1.  File /etc/ppp/ppp-off
+
+  Script untuk memutuskan koneksi (root, root 700)
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  ######################################################################
+  #
+  # Determine the device to be terminated.
+  #
+  if [ "$1" = "" ]; then
+          DEVICE=ppp0
+  else
+          DEVICE=$1
+  fi
+
+  ######################################################################
+  #
+  # If the ppp0 pid file is present then the program is running. Stop it.
+  if [ -r /var/run/$DEVICE.pid ]; then
+          kill -INT `cat /var/run/$DEVICE.pid`
+  #
+  # If the kill did not work then there is no process running for this
+  # pid. It may also mean that the lock file will be left. You may wish
+  # to delete the lock file at the same time.
+          if [ ! "$?" = "0" ]; then
+                  rm -f /var/run/$DEVICE.pid
+                  echo "ERROR: Removed stale pid file"
+                  exit 1
+          fi
+  #
+  # Success. Let pppd clean up its own junk.
+          echo "PPP link to $DEVICE terminated."
+          exit 0
+  fi
+  #
+  # The ppp process is not running for ppp0
+  echo "ERROR: PPP link is not active on $DEVICE"
+  exit 1
+
+  ______________________________________________________________________
+
+
+
+
+
+
+  6.10.2.  File /etc/ppp/ip-up
+
+  Script yang dieksekusi pada saat koneksi PPP terhubung (root, root
+  700)
+
+
+  ______________________________________________________________________
+  #!/bin/bash
+
+  # This file should not be modified -- make local changes to
+  # /etc/ppp/ip-up.local instead
+
+  LOGDEVICE=$6
+  REALDEVICE=$1
+
+  export PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
+
+  echo "$REALDEVICE" > /var/run/ppp-$LOGDEVICE.dev
+  [ -x /etc/ppp/ip-up.local ] && /etc/ppp/ip-up.local $*
+
+  /etc/sysconfig/network-scripts/ifup-post ifcfg-${LOGDEVICE}
+
+  exit 0
+
+  ______________________________________________________________________
+
+
+
+  6.10.3.  File /etc/ppp/ip-down
+
+  Script yang dieksekusi pada saat koneksi PPP teputus (root, root 700)
+
+
+  ______________________________________________________________________
+  #!/bin/bash
+
+  # This file should not be modified -- make local changes to
+  # /etc/ppp/ip-down.local instead
+
+  LOGDEVICE=$6
+  REALDEVICE=$1
+
+  [ -x /etc/ppp/ip-down.local ] && /etc/ppp/ip-down.local $*
+  /etc/sysconfig/network-scripts/ifdown-post ifcfg-${LOGDEVICE}
+
+  exit 0
+
+  ______________________________________________________________________
+
+
+
+  6.11.  Perubahan Setting
+
+  Jika ISP anda CBN/IndosatNet perubahan minimal adalah User Name,
+  Password dan No Telp.
+
+  6.11.1.  Modem
+
+
+  o  Ubah ppp-chat-init jika modem anda tidak cukup diinisialisasi
+     dengan ATZ (lihat man chat untuk lebih detail)
+
+  o  Ubah ppp-chat-dial jika modem anda mempunyai response yang berbeda
+     dari yang sudah ada (lihat man chat untuk lebih detail)
+
+
+  6.11.2.  No Telp.
+
+
+  o  Ubah ppp-chat-redialer edit bagian PHONE... dan function callall
+
+  o  Ubah ppp-chat-redialer edit bagian PHONEPRE jika untuk menelepon
+     anda harus menekan angka khusus misalnya 9 hal ini biasanya
+     diperlukan jika anda men-dial dari jaringan PABX
+
+  6.11.3.  User Name dan Password
+
+
+  o  Ubah ppp-chat-dial untuk ISP dengan login biasa (tanpa PAP/CHAP)
+     seperti CBN
+
+  o  Ubah pap-secrets untuk ISP memakai PAP dan chap-secrets untuk ISP
+     memakai CHAP (format chap-secrets dan pap-secrets sama)
+
+  o  Ubah ppp-on ganti user dengan nama user anda jika ISP anda memakai
+     PAP atau CHAP
+
+  6.11.4.  ISP
+
+  Pilih dasar setting untuk ISP anda sesuai dengan jenis ISP. Login
+  biasa dasar settingnya CBN dan login PAP dasar settingnya IndosatNet
+  untuk CHAP saya belum pernah coba :(
+
+
+  o  Ubah resolv.conf sesuai dengan IP DNS Server ISP anda
+
+  o  Ubah No Telp
+
+  o  Ubah User Name dan Passwordnya juga dong :)
+
+  6.11.5.  MTU/MRU
+
+  MTU (Maximum Transfer Unit) dan MRU (Maximum Receive Unit) menentukan
+  besar paket yang dikirim dan diterima jika modem dan line telepon anda
+  bagus naikkan MTU & MRU jika jelek turunkan MTU & MRU. Jika MTU & MRU
+  besar maka paket TCP yang dikirimkan akan besar sehingga menguntungkan
+  transfer file (FTP) tetapi jika linenya jelek maka paket yang besar
+  itu harus dikirimkan ulang.  Jika MTU & MRU kecil maka paket TCP yang
+  dikirimkan akan kecil sehingga menguntungkan untuk line yang jelek
+  (pake yang dikirim ulang tidak terlalu besar). Untuk mengetahui MTU &
+  MRU yang ideal anda harus ber-experimen sendiri.
+
+  Rumus untuk mengubah MTU & MRU adalah:
+
+
+  ______________________________________________________________________
+  2 * N * 128 + 40
+
+  ______________________________________________________________________
+
+
+
+  Jadi tinggal ganti N dengan angka yang diinginkan.
+
+  7.  Testing
+
+  Untuk mencoba setting anda lakukan langkah berikut
+
+
+  1. Buka dua console atau xterm jika anda di X
+
+
+  2. Pada console kedua jalankan perintah:
+
+     tail -f /var/log/messages
+
+
+
+
+  3. Pada console pertama jalankan perintah:
+
+     /etc/ppp/ppp-on
+
+
+
+
+  4. Jika koneksi berjalan baik status koneksi akan terlihat pada
+     console kedua seperti dibawah ini
+
+     ___________________________________________________________________
+     Jun 16 12:19:08 linux pppd[841]: Serial connection established.
+     Jun 16 12:19:09 linux pppd[841]: Using interface ppp0
+     Jun 16 12:19:09 linux pppd[841]: Connect: ppp0 <--> /dev/ttyS0
+     Jun 16 12:19:15 linux pppd[841]: Remote message: Login Succeeded
+     Jun 16 12:19:16 linux pppd[841]: local  IP address 202.155.28.33
+     Jun 16 12:19:16 linux pppd[841]: remote IP address 202.155.30.35
+
+     ___________________________________________________________________
+
+
+
+  5. Tekan Ctrl + C pada console kedua dan jalankan ifconfig untuk
+     mengecek koneksi, hasilnya harus terlihat seperti dibawah ini
+
+     ___________________________________________________________________
+     [root@linux /root]# ifconfig
+     lo        Link encap:Local Loopback
+               inet addr:127.0.0.1  Bcast:127.255.255.255  Mask:255.0.0.0
+               UP BROADCAST LOOPBACK RUNNING  MTU:3584  Metric:1
+               RX packets:172 errors:0 dropped:0 overruns:0 frame:0
+               TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
+               collisions:0
+
+     eth0      Link encap:Ethernet  HWaddr 00:00:E8:68:C1:6B
+               inet addr:192.168.1.100  Bcast:192.168.1.255  Mask:255.255.255.0
+               UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+               RX packets:15841 errors:0 dropped:0 overruns:0 frame:19
+               TX packets:191 errors:0 dropped:0 overruns:0 carrier:0
+               collisions:3
+               Interrupt:9 Base address:0x300
+
+     ppp0      Link encap:Point-to-Point Protocol
+               inet addr:202.155.28.33  P-t-P:202.155.30.35  Mask:255.255.255.0
+               UP POINTOPOINT RUNNING  MTU:552  Metric:1
+               RX packets:18 errors:1 dropped:1 overruns:0 frame:0
+               TX packets:32 errors:0 dropped:0 overruns:0 carrier:0
+               collisions:0
+               Memory:1f2e038-1f2e49c
+
+     ___________________________________________________________________
+
+
+
+  6. Jalankan route -n untuk melihat routing, outputnya harus terlihat
+     seperti dibawah ini
+
+
+
+     ___________________________________________________________________
+     [root@linux /root]# route -n
+     Kernel IP routing table
+     Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+     202.155.30.35   0.0.0.0         255.255.255.255 UH    0      0        0 ppp0
+     192.168.1.0     0.0.0.0         255.255.255.0   U     0      0        2 eth0
+     127.0.0.0       0.0.0.0         255.0.0.0       U     0      0        4 lo
+     0.0.0.0         202.155.30.35   0.0.0.0         UG    0      0        3 ppp0
+
+     ___________________________________________________________________
+
+
+
+  7. Testing DNS dengan ping ke alamat internet misalnya ping ke
+     jakarta.linux.or.id.  Tekan Ctrl+C untuk menghentikan ping
+
+     ___________________________________________________________________
+     [root@linux /root]# ping jakarta.linux.or.id
+     PING jakarta.linux.or.id (207.106.122.73): 56 data bytes
+     64 bytes from 207.106.122.73: icmp_seq=0 ttl=54 time=618.5 ms
+     64 bytes from 207.106.122.73: icmp_seq=1 ttl=54 time=730.1 ms
+     64 bytes from 207.106.122.73: icmp_seq=2 ttl=54 time=1670.0 ms
+     64 bytes from 207.106.122.73: icmp_seq=3 ttl=54 time=700.0 ms
+
+     --- jakarta.linux.or.id ping statistics ---
+     5 packets transmitted, 4 packets received, 20% packet loss
+     round-trip min/avg/max = 618.5/929.6/1670.0 ms
+
+     ___________________________________________________________________
+
+
+
+  8. Untuk disconnect ada beberapa cara yaitu:
+
+     a. Tekan Ctrl+C pada console pertama
+
+     b. Jalankan perintah /etc/ppp/ppp-off
+
+     c. Matiin modemnya :)
+
+  9. Jika sudah OK anda dapat mengedit file /etc/ppp/ppp-redialer dan
+     menghapus option -v dari perintah chat sehingga dari
+
+     ___________________________________________________________________
+     /usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+
+     ___________________________________________________________________
+
+
+
+  di function initialize dan
+
+
+  ______________________________________________________________________
+  /usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+
+  ______________________________________________________________________
+
+
+
+  di function callnumber
+
+  Menjadi:
+
+
+
+  ______________________________________________________________________
+  /usr/sbin/chat -f /etc/ppp/ppp-chat-init
+
+  ______________________________________________________________________
+
+
+
+  di function initialize dan
+
+
+  ______________________________________________________________________
+  /usr/sbin/chat -T $1 -f /etc/ppp/ppp-chat-dial
+
+  ______________________________________________________________________
+
+
+
+  di function callnumber sehingga anda bisa melihat output dari perintah
+  SAY di chat script.
+
+  8.  Penggunaan Lebih Lanjut
+
+  8.1.  Link ppp-on
+
+  Untuk memudahkan penggunaan ada baik anda link script ppp-on dan ppp-
+  off ke direktory /sbin
+
+
+  ______________________________________________________________________
+  [root@linux /root]# ln -s /etc/ppp/ppp-on /sbin/ppp-on
+  [root@linux /root]# ln -s /etc/ppp/ppp-off /sbin/ppp-off
+
+  ______________________________________________________________________
+
+
+
+  Sehingga anda tinggal mengetikkan ppp-on untuk connect ke internet.
+
+  8.2.  Script see-ppp
+
+  Untuk memantau proses dialing ada baiknya anda buat script
+  /root/bin/see-ppp (root, root 700)
+
+
+  ______________________________________________________________________
+  #!/bin/sh
+  tail -f /var/log/messages
+
+  ______________________________________________________________________
+
+
+
+  Sehingga anda tinggal jalankan see-ppp untuk melihat perkembangan
+  proses dialing.
+
+  8.3.  Script ip-up.local dan ip-down.local
+
+  Pada saat koneksi ppp terhubung dan terputus pppd akan menjalankan dua
+  buah script yaitu
+
+
+  1. /etc/ppp/ip-up pada saat koneksi terhubung
+
+  2. /etc/ppp/ip-down pada saat koneksi terputus
+
+
+  Tetapi pada redhat linux kedua script itu sudah berisi dengan statndar
+  distribusi sehingga tidak disarankan mengedit file tersebut tetapi
+  mengedit/membuat script
+
+
+  1. /etc/ppp/ip-up.local yang dijalankan pada saat koneksi terhubung
+
+  2. /etc/ppp/ip-down.local yang dijalankan pada saat koneksi terputus
+
+  Pada kedua script ini anda bisa mencatat log koneksi, mengambil mail
+  dan lain sebagainya. Sebagai contoh saya tampilkan isi file
+  /etc/ppp/ip-up.local dan /etc/ppp/ip-down.local saya.
+
+  8.3.1.  Contoh Script ip-up.local
+
+  Script /etc/ppp/ip-up.local (root, root 700)ini berfungsi untuk
+  mencatat waktu memulai koneksi, start masquerade, start cache DNS,
+  mengirim e-mail dengan serialmail-nya qmail dan mengambil e-mail
+  dengan fetchmail.
+
+
+  ______________________________________________________________________
+  #!/bin/bash
+  #
+  # When the ppp link comes up, this script is called with the following
+  # parameters
+  #       $1      the interface name used by pppd (e.g. ppp3)
+  #       $2      the tty device name
+  #       $3      the tty device speed
+  #       $4      the local IP address for the interface
+  #       $5      the remote IP address
+  #       $6      the parameter specified by the 'ipparam' option to pppd
+  #
+  # Catat semua output pada file /root/spool-mail-log
+  exec >>/root/spool-mail-log
+  exec 2>&1
+  #
+  # Catat waktu mulai koneksi pada file /root/ppp-log
+  echo Start: `date`>>/root/ppp-log
+  echo Start: `date`
+  # Start cache only dns
+  /usr/sbin/ndc start
+  # Start Masquerade service
+  /etc/ppp/masq start
+  # Lihat berapa besar e-mail yang akan dikirim
+  du -b /var/qmail/alias/pppdir/new
+  # send batched mail to smarthost
+
+  /usr/local/bin/maildirsmtp ~alias/pppdir alias-ppp- mail.indosat.net.id $4
+  echo Fetch: `date`
+  # fetch pop mail
+  /usr/bin/fetchmail
+  echo End: `date`
+
+  ______________________________________________________________________
+
+
+
+  8.3.2.  Contoh Script ip-down.local
+
+  Script /etc/ppp/ip-down.local (root, root 700)ini berfungsi untuk
+  mencatat waktu akhir koneksi, stop masquerade dan stop cache DNS.
+
+
+
+
+  ______________________________________________________________________
+  echo Stop: `date`>>/root/ppp-log
+  /etc/ppp/masq stop
+  /usr/sbin/ndc stop
+
+  ______________________________________________________________________
+
+
+
+  8.4.  Dialing Secara Berkala
+
+  Apabila anda memerlukan koneksi secara berkala, untuk mengambil mail
+  misalnya anda bisa menjalankan script /etc/ppp/ppp-on melalui crontab.
+  Apabila anda menjalankan ini anda sebaiknya mengaktipkan option idle
+  di file /etc/ppp/options cukup tambahkan/uncomment baris
+
+
+  ______________________________________________________________________
+  idle 60
+
+  ______________________________________________________________________
+
+
+
+  Sehingga bila tidak ada lalulintas data melalui ppp selama 60 detik
+  maka pppd akan memutuskan hubungan secara otomatis.
+
+  Tambahkan /etc/ppp/ppp-on pada crontab anda dengan cara:
+
+
+  1. List crontab anda:
+
+     ___________________________________________________________________
+     # crontab -l>cron.txt
+
+     ___________________________________________________________________
+
+
+
+  2. Edit cron.txt tambahkan baris berikut:
+
+     ___________________________________________________________________
+     # use /bin/sh to run commands, no matter what /etc/passwd says
+     SHELL=/bin/sh
+     #
+     # spool mail at 8,10,12,14,16,18 at works day
+     0 8,10,12,14,16,18 * * 1-5 /etc/ppp/ppp-on
+
+     ___________________________________________________________________
+
+
+
+  Jika anda ingin mendial pada jam 8,10,12,14,16,18 pada hari kerja
+  (senin-jum'at).
+
+  3. Jalankan perintah berikut untuk mengupdate crontab
+
+     ___________________________________________________________________
+     # crontab cron.txt
+
+     ___________________________________________________________________
+
+
+
+
+
+  9.  Masukan & Troubleshooting
+
+  Jika anda punya komentar, kritik dan saran silahkan e-mail saya di
+  zak@telkom.net. Jika anda mempunyai masalah dengan setting PPP periksa
+  lagi apakah settingnya sudah sesuai terutama perhatikan output dari
+  /var/log/messages. Jika masih belum berhasil juga silahkan tanya ke
+  saya atau bergabung dengan mailing list linux-setup@linux.or.id.
+  Tetapi karena kesibukan saya lebih disarankan untuk bertanya ke
+  mailing list.
+
+  Untuk bergabung dengan mailing list linux-setup kirim e-mail kosong
+  ke: linux-setup-subscribe@linux.or.id
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

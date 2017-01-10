@@ -1,0 +1,826 @@
+<head><title>Linux untuk Pemula: Command Line</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="cli, command line">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Command Line</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Command Line</h1>
+<p>Seperti halnya bila kita mengetikkan perintah di DOS,
+<i>command line</i>
+atau baris perintah di Linux juga diketikkan di
+<i>prompt</i>
+dan diakhiri
+<i>enter</i>
+untuk mengeksekusi
+perintah tersebut. Baris perintah merupakan cara yang lebih efisien untuk melakukan sesuatu pekerjaan oleh karena itu pemakai Linux tetap mengandalkan cara ini untuk bekerja. Sebaiknya pemula juga harus mengetahui dan sedikitnya pernah menggunanakan perintah baris ini karena suatu saat pengetahuan akan perintah-perintah ini bisa sangat diperlukan.</p>
+<p>Saya mengumpulkan beberapa perintah dasar yang mungkin kelak akan sering digunakan terutama oleh para pemula. Perhatian: pengetahuan akan perintah-perintah yang
+lain akan segera bertambah seiring dengan kemajuan Anda menguasai sistem operasi Linux ini.</p>
+<p>Penjelasan masing-masing perintah akan dipersingkat saja dan untuk mengetahui lebih detail lagi fungsi-fungsi suatu perintah, Anda dapat melihat manualnya, misalnya dengan mengetikkan perintah
+<b><a href="#man">man</a></b>:</p>
+<pre>
+$ man ls
+</pre>
+<p>Manual tersebut akan menampilkan bagaimana cara penggunaan perintah
+<a href="#ls"><b>ls</b></a>itu secara lengkap.</p>
+<table align="center" cellpadding="2" bgcolor="#eeeeee">
+<tr>
+<td bgcolor="#eeeeee" colspan="9"><a name="index"></a>
+<center><b>Daftar Perintah Menurut Alfabet</b></center>
+</td>
+</tr>
+<tr>
+<td><b><a href="#&amp;">&amp;</a></b></td>
+<td><b><a href="#adduser">adduser</a></b></td>
+<td><b><a href="#alias">alias</a></b></td>
+<td><b><a href="#bg">bg</a></b></td>
+<td><b><a href="#cat">cat</a></b></td>
+<td><b><a href="#cd">cd</a></b></td>
+<td><b><a href="#chgrp">chgrp</a></b></td>
+<td><b><a href="#chmod">chmod</a></b></td>
+<td><b><a href="#chown">chown</a></b></td>
+</tr>
+<tr>
+<td><b><a href="#cp">cp</a></b></td>
+<td><b><a href="#fg">fg</a></b></td>
+<td><b><a href="#find">find</a></b></td>
+<td><b><a href="#grep">grep</a></b></td>
+<td><b><a href="#gzip">gzip</a></b></td>
+<td><b><a href="#halt">halt</a></b></td>
+<td><b><a href="#hostname">hostname</a></b></td>
+<td><b><a href="#kill">kill</a></b></td>
+<td><b><a href="#less">less</a></b></td>
+</tr>
+<tr>
+<td><b><a href="#login">login</a></b></td>
+<td><b><a href="#logout">logout</a></b></td>
+<td><b><a href="#ls">ls</a></b></td>
+<td><b><a href="#man">man</a></b></td>
+<td><b><a href="#mesg">mesg</a></b></td>
+<td><b><a href="#mkdir">mkdir</a></b></td>
+<td><b><a href="#more">more</a></b></td>
+<td><b><a href="#mount">mount</a></b></td>
+<td><b><a href="#mv">mv</a></b></td>
+</tr>
+<tr>
+<td><b><a href="#passwd">passwd</a></b></td>
+<td><b><a href="#pwd">pwd</a></b></td>
+<td><b><a href="#rm">rm</a></b></td>
+<td><b><a href="#rmdir">rmdir</a></b></td>
+<td><b><a href="#shutdown">shutdown</a></b></td>
+<td><b><a href="#su">su</a></b></td>
+<td><b><a href="#tail">tail</a></b></td>
+<td><b><a href="#talk">talk</a></b></td>
+<td><b><a href="#tar">tar</a></b></td>
+</tr>
+<tr>
+<td><b><a href="#tar">umount</a></b></td>
+<td><b><a href="#unalias">unalias</a></b></td>
+<td><b><a href="#unzip">unzip</a></b></td>
+<td><b><a href="#wall">wall</a></b></td>
+<td><b><a href="#who">who</a></b></td>
+<td><b><a href="#xhost +">xhost +</a></b></td>
+<td><b><a href="#xset">xset</a></b></td>
+<td><b><a href="#zip">zip</a></b></td>
+</tr>
+</table>
+<table width="90%">
+<tr bgcolor="#eeeeee">
+<td><a name="&amp;"></a><b>&amp;</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah
+<b>&amp;</b>
+dipakai dibelakang perintah lain dan menjalankannya di
+<i>background</i>. Tujuannya adalah untuk membebaskan
+<i>shell</i>
+agar bisa dipergunakan menjalankan proses-proses yang lain. Lihat juga perintah
+<b><a href="#bg">bg</a></b>
+dan
+<b><a href="#fg">fg</a></b>.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="adduser"></a><b>adduser</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Biasanya hanya dilakukan oleh root untuk menambahkan
+<i>user</i>
+atau
+<i>account</i>
+yg baru. Setelah perintah ini bisa dilanjutkan dengan perintah
+<b><a href="#passwd">passwd</a>,</b>
+yaitu perintah untuk membuat
+<i>password</i>
+bagi user tersebut.
+<pre>
+# adduser udin
+# passwd udin
+</pre>
+<p>Selanjutnya Anda akan diminta memasukkan
+<i>password</i>
+untuk
+<i>user</i>
+udin. Isikan
+<i>password</i>
+untuk udin dua
+kali dengan kata yang sama.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="alias"></a><b>alias</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Digunakan untuk memberi nama lain dari sebuah perintah. Misalnya bila Anda ingin perintah
+<b><a href="#ls">ls</a></b>
+dapat juga dijalankandengan mengetikkan perintah
+<b>dir,</b>
+maka buatlah aliasnya sbb:</p>
+<pre>
+$ alias dir=ls
+</pre>
+<p>Untuk melihat perintah-perintah apa saja yang mempunyai nama lain saat itu,
+cukup ketikkan alias. Lihat juga perintah unalias.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="bg"></a><b>bg</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Untuk memaksa sebuah proses yang dihentikan sementara(<i>suspend</i>) agar berjalan di
+<i>background</i>. Misalnya Anda sedang menjalankan sebuah perintah di
+<i>foreground</i>
+(tanpa diakhiri perintah
+<b><a href="#&amp;">&amp;</a></b>) dan suatu saat Anda membutuhkan
+<i>shell</i>
+tersebut maka Anda dapat
+memberhentikan sementara perintah tersebut dengan
+<b>Ctrl-Z</b>
+kemudian ketikan perintah
+<b>bg</b>
+untuk menjalakannya di
+<i>background.</i>
+Dengan cara ini Anda telah membebaskan<i>shell</i>
+tapi tetap mempertahankan perintah lama berjalan di
+<i>background.</i>
+Lihat juga perintah
+<b><a href="#fg">fg</a>.</b></p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="cat"></a><b>cat</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Menampilkan isi dari sebuah file di
+layar.</p>
+<pre>
+$ cat namafile
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="cd"></a><b>cd</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2"><i>Change Directory</i>
+atau untuk berpindah direktori dan saya kira Anda tidak akan menemui kesulitan menggunakan perintah ini karena cara penggunaanya mirip dengan perintah
+<b>cd</b>
+di DOS.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="chgrp"></a><b>chgrp</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Perintah ini digunakan untuk merubah kepemilikan kelompok file atau direktori. Misalnya untuk memberi ijin pada kelompok atau grup agar dapat mengakses suatu file. Sintaks penulisannya adalah sbb:</p>
+<p># chgrp &lt;grup baru&gt; &lt;file&gt;</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="chmod"></a><b>chmod</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Digunakan untuk menambah dan mengurangi ijin pemakai untuk mengakses file
+atau direktori. Anda dapat menggunakan sistem
+<b>numeric coding</b>
+atau sistem
+<b>letter coding</b>. Ada tiga jenis
+<i>permission</i>/perijinan yang dapat dirubah yaitu
+<b>r</b>
+untuk
+<b>read,</b>
+<b>w</b>
+untuk
+<b>write</b>
+dan
+<b>x</b>
+untuk
+<b>execute</b>.</p>
+<p>Dengan menggunakan
+<i>letter coding</i>, Anda dapat merubah
+<i>permission</i>
+diatas untuk masing-masing
+<b>u (user)</b>,
+<b>g (group)</b>,
+<b>o (other)</b>
+dan
+<b>a (all)</b>
+dengan hanya memberi tanda
+<b>plus (+)</b>
+untuk menambah ijin dan
+tanda
+<b>minus (-)</b>
+untuk mencabut ijin.</p>
+<p>Misalnya untuk memberikan ijin baca dan eksekusi file coba1 kepada
+<i>owner</i>
+dan
+<i>group</i>, perintahnya adalah:</p>
+<p>$ chmod ug+rx coba1</p>
+<p>Untuk mencabut ijin-ijin tersebut:</p>
+<p>$ chmod ug-rx coba1</p>
+<p>Dengan menggunakan sitem
+<i>numeric coding, permission</i>
+untuk<i>user, group</i>
+dan
+<i>other</i>
+ditentukan dengan menggunakan kombinasi angka-angka, 4, 2 dan 1 dimana
+<b>4 (read)</b>,
+<b>2 (write)</b>
+dan
+<b>1 (execute)</b>.</p>
+<p>Misalnya untuk memberikan ijin baca(4), tulis(2) dan eksekusi(1) file coba2 kepada owner, perintahnya adalah:</p>
+<p>$ chmod 700 coba2</p>
+<p>Contoh lain, untuk memberi ijin baca(4) dan tulis(2) file coba3 kepada user, baca(4) saja kepada group dan other, perintahnya adalah:</p>
+<p>$ chmod 644 coba3</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="chown"></a><b>chown</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Merubah user ID (owner) sebuah file atau
+direktori</p>
+<pre>
+$ chown &lt;user id&gt; &lt;file&gt;
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="cp"></a><b>cp</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Untuk menyalin file atau
+<i>copy.</i>
+Misalnya untuk menyalin file1 menjadi file2:</p>
+<pre>
+ $ cp &lt;file1&gt; &lt;file2&gt;
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="fg"></a><b>fg</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Mengembalikan suatu proses yang dihentikan sementar(<i>suspend</i>) agar berjalan kembali di
+<i>foreground</i>. Lihat juga perintah
+<b><a href="#bg">bg</a></b>
+diatas.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="find"></a><b>find</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Untuk menemukan dimana letak sebuah file. Perintah ini akan mencari file sesuai dengan kriteria yang Anda tentukan. Sintaksnya adalah perintah itu sendiri diikuti dengan nama direktori awal
+pencarian, kemudian nama file (bisa menggunakan
+<i>wildcard</i>,
+<i>metacharacters</i>) dan terakhir menentukan bagaimana hasil pencarian itu akan ditampilkan. Misalnya akan dicari semua file yang berakhiran .doc di
+<i>current</i>
+direktori serta tampilkan hasilnya di layar:</p>
+<pre>
+$ find . -name *.doc -print
+. /public/docs/account.doc
+. /public/docs/balance.doc
+. /public/docs/statistik/prospek.doc
+./public/docs/statistik/presconf.doc
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="grep"></a><b>grep</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p><i>Global regular expresion parse</i>
+atau grep adalah perintah untuk mencari file-file yang mengandung teks dengan kriteria yang telah Anda tentukan.</p>
+<pre>
+$ grep &lt;teks&gt; &lt;file&gt;
+</pre>
+<p>Misalnya akan dicari file-file yang mengandung teks
+<b>marginal</b>
+di
+<i>current</i>
+direktori:</p>
+<pre>
+$ grep marginal &lt;file&gt;
+diferent.doc: Catatan: perkataan marginal luas dipergunakan di dalam ilmu ekonomi
+prob.rtf: oleh fungsi hasil marginal dan fungsi biaya marginal jika fungsi
+prob.rtf: jika biaya marginal dan hasil marginal diketahui maka biaya total
+  
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="gzip"></a><b>gzip</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">
+<p>Ini adalah software kompresi
+<b><a href="#zip">zip</a></b>
+versi GNU, fungsinya untuk mengkompresi sebuah file. Sintaksnya sangat sederhana:</p>
+<pre>
+ $ gzip &lt;namafile&gt;
+</pre>
+<p>Walaupun demikian Anda bisa memberikan parameter tertentu bila memerlukan kompresi file yang lebih baik, silakan melihat
+<i>manual page</i>-nya. Lihat juga file
+<a href="#tar">tar</a>,
+<a href="#unzip">unzip</a>
+dan
+<a href="#zip">zip</a>.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="halt"></a><b>halt</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini hanya bisa dijalankan oleh
+<b><a href="#su">super user</a></b>atau Anda harus
+<b><a href="#login">login</a></b>
+sebagai
+<i>root</i><b>.</b>
+Perintah ini untuk memberitahu kernel supaya mematikan sistem atau
+<b><a href="#shutdown">shutdown</a></b>.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="hostname"></a><b>hostname</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk menampilkan host atau domain name sistem dan bisa pula digunakan untuk mengesset nama host sistem.
+<pre>
+[flory@localhost docs] $ hostname
+localhost.localdomain
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="kill"></a><b>kill</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini akan mengirimkan sinyal ke sebuah proses yang kita tentukan. Tujuannya adalah menghentikan proses.
+<p>$ kill &lt;sinyal&gt; &lt;pid&gt;</p>
+<p>PID adalah nomor proses yang akan di hentikan.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="less"></a><b>less</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Fungsinya seperti
+perintah
+<b><a href="#more">more</a></b>.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="login"></a><b>login</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk masuk ke sistem dengan memasukkan
+<i>login</i>
+ID atau dapat juga digunakan untuk berpindah dari
+<i>user</i>
+satu ke
+<i>user</i>
+lainnya.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="logout"></a><b>logout</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk keluar dari
+sistem.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="ls"></a><b>ls</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Menampilkan isi dari sebuah direktori seperti perintah
+<b>dir</b>
+di DOS. Anda dapat menggunakan beberapa option yang disediakan untuk mengatur tampilannya di layar. Bila Anda menjalankan perintah ini tanpa option maka akan ditampilkan seluruh file
+<i>nonhidden</i>(file tanpa awalan tanda titik) secara alfabet dan secara melebar mengisi kolom layar.
+Option -la artinya menampilkan seluruh file/all termasuk file
+<i>hidden</i>(file dengan awalan tanda titik) dengan format panjang.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="man"></a><b>man</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk menampilkan
+<i>manual page</i>
+atau teks yang menjelaskan secara detail bagaimana cara penggunaan sebuah perintah. Perintah ini berguna sekali bila sewaktu-waktu Anda lupa atau tidak mengetahui fungsi dan cara menggunakan sebuah
+perintah.
+<p>$ man &lt;perintah&gt;</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="mesg"></a><b>mesg</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini digunakan oleh user untuk memberikan ijin user lain menampilkan pesan dilayar terminal. Misalnya mesg Anda dalam posisi y maka user lain bisa menampilkan pesan di layar Anda dengan
+<b>write</b>
+atau
+<b>talk.</b>
+<p>$ mesg y atau mesg n</p>
+<p>Gunakan mesg n bila Anda tidak ingin diganggu dengan
+tampilan pesan-pesan dari
+<i>user</i>
+lain.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="mkdir"></a><b>mkdir</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Membuat direktori baru, sama dengan perintah
+<b>md</b>
+di DOS.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="more"></a><b>more</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Mempaging halaman, seperti halnya
+<b><a href="#less">less</a></b></td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="mount"></a><b>mount</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini akan me-<i>mount filesystem</i>
+ke suatu direktori atau
+<i>mount-point</i>
+yang telah ditentukan. Hanya
+<i>superuser</i>
+yang bisa menjalankan perintah ini. Untuk melihat
+<i>filesystem</i>
+apa saja beserta
+<i>mount-point</i>nya saat itu, ketikkan perintah
+<i>mount</i>. Perintah ini dapat Anda pelajari di bab mengenai
+<a href="pengguna/filesystem.html">filesystem</a>.
+Lihat juga perintah
+<a href="#umount">umount</a>.
+<pre>
+$ mount
+/dev/hda3 on / type ext2 (rw)
+none on /proc type proc (rw)
+/dev/hda1 on /dos type vfat (rw)
+/dev/hda4 on /usr type ext2 (rw)
+none on /dev/pts type devpts (rw,mode=0622)
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="mv"></a><b>mv</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk memindahkan file dari satu lokasi ke lokasi yang lain. Bila argumen yang kedua berupa sebuah direktori maka mv akan
+memindahkan file ke direktori tersebut. Bila kedua argumen berupa file maka nama file pertama akan menimpa file kedua. Akan terjadi kesalahan bila Anda memasukkan lebih dari dua argumen kecuali argumen terakhir berupa sebuah direktori.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="passwd"></a><b>passwd</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Digunakan untuk mengganti
+<i>password</i>. Anda akan selalu diminta mengisikan
+<i>password</i>
+lama dan selanjutnya
+akan diminta mengisikan
+<i>password</i>
+baru sebanyak dua kali.
+<i>Password</i>
+sedikitnya terdiri dari enam karakter dan sedikitnya mengandung sebuah karakter.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="pwd"></a><b>pwd</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Menampilkan nama direktori dimana Anda saat itu sedang berada.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="rm"></a><b>rm</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk menghapus file dan secara default rm tidak menghapus direktori. Gunakan secara hati-hati perintah ini terutama dengan option -r yang secara rekursif dapat mengapus seluruh file.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="rmdir"></a><b>rmdir</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk menghapus direktori kosong.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="shutdown"></a><b>shutdown</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini untuk mematikan sistem, seperti perintah
+<b><a href="#halt">halt</a>.</b>
+Pada beberapa sistem anda bisa menghentikan komputer dengan perintah
+<b>shutdown -h now</b>
+dan me<i>restart</i>
+sistem dengan perintah
+<b>shutdown -r now</b>
+atau dengan kombinasi tombol
+<b>Ctr-Alt-Del</b>.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="su"></a><b>su</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk
+<i>login</i>
+sementara sebagai
+<i>user</i>
+lain. Bila
+<i>user</i>
+ID tidak disertakan maka komputer menganggap Anda ingin
+<i>login</i>
+sementara sebagai
+<i>super user</i>
+atau
+<i>root</i>. Bila Anda bukan
+<i>root</i>
+dan
+<i>user</i>
+lain itu memiliki
+<i>password</i>
+maka Anda harus memasukkan
+<i>passwordnya</i>
+dengan benar. Tapi bila Anda adalah
+<i>root</i>
+maka Anda dapat
+<i>login</i>
+sebagai
+<i>user</i>
+lain tanpa perlu mengetahui
+<i>password user</i>
+tersebut.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="tail"></a><b>tail</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Menampilkan 10 baris terakhir dari suatu file. Default baris yang ditampilkan adalah 10 tapi Anda bisa menentukan sendiri berapa baris yang ingin ditampilkan:
+<p>$ tail &lt;jumlah baris&gt; &lt;file file ....&gt;</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="talk"></a><b>talk</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk mengadakan percakapan melalui terminal. Input dari
+terminal Anda akan disalin di terminal
+<i>user</i>
+lain, begitu sebaliknya.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="tar"></a><b>tar</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Menyimpan dan mengekstrak file dari media seperti tape drive atau hard disk. File arsip tersebut sering disebut sebagai file tar. Sintaknya sebagai berikut:
+<p>$ tar &lt;aksi&gt; &lt;option&gt; &lt;file atau direktori&gt;</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="umount"></a><b>umount</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Adalah kebalikan dari perintah
+<b><a href="#mount">mount</a></b>, yaitu untuk meng-<i>unmount</i>
+<i>filesystem</i>
+dari
+<i>mount-point</i>nya. Setelah perintah ini dijalankan direktori yang menjadi
+<i>mount-point</i>
+tidak lagi bisa digunakan.
+<p># umount &lt;filesystem&gt;</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="unalias"></a><b>unalias</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Kebalikan dari perintah
+<b><a href="#alias">alias</a></b>, perintah ini akan membatalkan sebuah alias. Jadi untuk membatalkan alias dir seperti telah dicontohkan
+<a href="#alias">diatas</a>, gunakan perintah:
+<p>$ unalias dir</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="unzip"></a><b>unzip</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Digunakan untuk mengekstrak atau menguraikan file yang dikompres dengan
+<a href="#zip">zip</a>. Sintaknya sederhana dan akan mengekstrak file yang anda tentukan:
+<pre>
+$ unzip &lt;namafile&gt;
+</pre>
+<p>Lihat juga perintah-perintah
+<a href="#gzip">gzip</a>
+dan
+<a href="#unzip">unzip</a>.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="wall"></a><b>wall</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Mengirimkan pesan dan menampilkannya di terminal tiap user yang sedang login. Perintah ini berguna bagi
+<i>superuser</i>
+atau
+<i>root</i>
+untuk memberikan
+peringatan ke seluruh
+<i>user</i>, misalnya pemberitahuan bahwa
+<i>server</i>
+sesaat lagi akan dimatikan.
+<p># who Dear, everyone..... segera simpan pekerjaan kalian, server akan saya matikan 10 menit lagi.</p>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="who"></a><b>who</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Untuk menampilkan siapa saja yang sedang
+<i>login.</i>
+Perintah ini akan menampilkan informasi mengenai
+<i>login name</i>, jenis terminal, waktu
+<i>login</i>
+dan
+<i>remote hostname</i>
+untuk setiap
+<i>user</i>
+yang saat itu sedang
+<i>login</i>. Misalnya:
+<pre>
+$ who
+root ttyp0 May 22 11:44
+flory ttyp2 May 22 11:59
+pooh ttyp3 May 22 12:08
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="xhost +"></a><b>xhost +</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini digunakan untuk memberi akses atau menghapus akses(xhost -) host atau user ke sebuah
+<i>server</i>
+X.</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="xset"></a><b>xset</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini untuk mengeset beberapa option di X Window seperti bunyi bel, kecepatan
+<i>mouse</i>,
+<i>font,</i>
+parameter
+<i>screen saver</i>
+dan sebagainya. Misalnya bunyi bel dan kecepatan
+<i>mouse</i>
+dapat Anda set menggunakan perintah ini:
+<pre>
+$ xset b &lt;volume&gt; &lt;frekuensi&gt; &lt;durasi dalam milidetik&gt;
+</pre>
+<pre>
+$ xset m &lt;akselerasi&gt; &lt;threshold&gt;
+</pre>
+</td>
+</tr>
+<tr bgcolor="#e0e0e0">
+<td><a name="zip"></a><b>zip</b></td>
+<td align="right"><a href="#index">index</a></td>
+</tr>
+<tr>
+<td colspan="2">Perintah ini akan membuat dan menambahkan file ke dalam file arsip zip. Lihat juga perintah
+<a href="#gzip">gzip</a>
+dan
+<a href="#unzip">unzip</a>.</td>
+</tr>
+</table>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Penggunaan</a>
+::
+<b>Command Line</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/pengguna/command.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/pengguna/command.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

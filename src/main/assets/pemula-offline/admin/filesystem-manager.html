@@ -1,0 +1,164 @@
+<head><title>Linux untuk Pemula: Filesystem Manager</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="filesystem, block device, disk">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Filesystem Manager</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Filesystem Manager</h1>
+<p>Pada saat
+<i>boot</i>, kernel akan me-<i>mount root filesystem</i>
+dari
+<i>device</i>
+yang telah ditentukan dalam LILO. Selama proses
+<i>boot</i>
+tersebut semua
+<i>filesystem</i>
+yang ada dalam tabel
+<i>filesystem</i>
+atau dalam file
+<b>/etc/fstab</b>
+juga akan diperiksa apakah perlu di
+<i>mount</i>
+atau tidak.</p>
+<p>Red Hat telah menyediakan program yang sangat mudah digunakan untuk mengkonfigurasi
+<i>filesystem</i>
+tersebut. Program ini berjalan di X dan dapat dipanggil melalui
+<b>control panel</b>
+atau cukup mengeksekusinya dengan perintah
+<b>fstool</b>. Selanjutnya hasil konfigurasinya juga akan disimpan dalam file /etc/fstab.</p>
+<p>Bila Anda tidak menginstalasi X dan tidak bisa menjalankan fstool, jangan kuatir file /etc/fstab juga dapat di
+<a href="#fstabedit">edit secara manual</a>
+dengan program teks editor favorit Anda.</p>
+<center><img src="filesystem-manager-files/fstab.jpg" border="0" alt="fstab" width="468" height="207"></center>
+<p><i>Filesystem manager</i>
+menampilkan informasi mengenai nama
+<i>device,mount point</i>, jenis
+<i>filesystem,</i>
+ukuran dan sisa spasi yang masih tersedia. (Informasi ini seperti ini juga bisa diperoleh dengan
+perintah
+<b>df</b>).</p>
+<p>Filesystem dapat di
+<i>mount</i>
+atau di
+<i>unmount</i>
+dengan tombol
+<b>Mount</b>
+dan
+<b>Unmount.</b>
+Tanda asterik (*) didepan jenis
+<i>filesystem</i>
+menandakan
+<i>filesystem</i>
+tersebut sudah atau sedang di
+<i>mount</i>.</p>
+<p>Tombol
+<b>Format</b>
+hanya berfungsi untuk
+<i>partisi hard disk</i>. Tombol ini akan menjalankan program
+<b>mkfs</b>
+yaitu program untuk membuat
+<i>filesystem</i>.</p>
+<p>Tombol
+<b>Check</b>
+hanya berfungsi untuk
+<i>filesystem ext2</i>
+dan
+<i>minix.</i>
+Tombol ini akan menjalakan program
+<b>fsck</b>
+dan membutuhkan waktu beberapa saat untuk menampilkan hasil pemeriksaan. Bila
+<i>filesystem</i>
+digunakan secara normal dan
+<i>fsck</i>
+selalu dijalankan pada saat
+<i>boot</i>
+maka hasil
+<i>check</i>
+seringkali tidak menunjukkan kesalahan apapun.</p>
+<h2><a name="fstabedit"></a>Mengedit file /etc/fstab</h2>
+<p>File /etc/fstab berupa file teks biasa, bisa dibaca dan mudah di edit dengan program editor teks favorit kita. Lakukan secara hati-hati karena
+kesalahan dalam memasukkan atau menghapus sesuatu menyebabkan sistim tidak bisa me-<i>mount filesystem</i>
+saat
+<i>boot</i>
+nanti.</p>
+<p>Mirip dengan tampilan program fstool diatas, saat dibuka file /etc/fstab menampilkan kolom-kolom yang berisi informasi nama
+<i>device,</i>
+<i>mount point</i>, jenis
+<i>filesystem</i>, option, dump dan fsckorder. Kolom-kolom tersebut masing-masing dipisahkan dengan tabs atau spasi.</p>
+<center><img src="filesystem-manager-files/fstedit.jpg" border="0" alt="fstedit" width="415" height="160"></center>
+<p>Kolom dump berhubungan dengan program
+<b>dump</b>, lihat manual page program dumb. Kolom terakhir fsckorder berhubungan dengan program
+<b>fsck</b>. Urutan pengecekan
+<i>filesystem</i>
+saat
+<i>boot</i>
+ditunjukkan oleh nomor dikolom ini. Pengecekan
+<i>filesystem</i>
+dapat dilakukan secara paralel dengan memberikan nomor urut yang sama tapi
+<i>filesystem root</i>
+selalu harus nomor 1.
+<i>Filesystem</i>
+dengan fsckorder 0 tidak akan dicek saat
+<i>boot.</i></p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Filesystem Manager</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/filesystem-manager.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/filesystem-manager.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

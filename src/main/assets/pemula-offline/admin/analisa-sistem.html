@@ -1,0 +1,187 @@
+<head><title>Linux untuk Pemula: Menganalisis Sistem</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="Author" content="Flory Katriena">
+<meta name="Keywords" content="fsstnd, root, direktori, subdirektori">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Menganalisis Sistem</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Menganalisis Sistem</h1>
+<p>Menganalisis sistem biasanya dilakukan oleh seorang administrator sistem untuk mendeteksi adanya gejala-gejala yang dapat menyebabkan
+kerusakan atau masalah pada sistem kelak. RedHat sudah menyediakan
+<i>tool-tool</i>
+untuk melakukan hal itu, diantaranya adalah dua buah program
+<i>tool</i>
+yang sangat berguna yaitu
+<b>vmstat</b>
+dan
+<b>top</b>, dengan menggunakan kedua program tersebut administrator memperoleh informasi mengenai sistem seperti penggunaan CPU, memori atau proses-proses yang sedang berjalan dan dengan bantuan informasi ini administrator sistem bisa mendeteksi secara cepat apakah sistemnya mengalami gangguan atau tidak.</p>
+<p>Dengan menggunakan kedua program tersebut, Anda sendiri bisa mencoba dan melihat apakah sistem yang dipakai saat ini berjalan dengan baik atau tidak. Lihatlah informasi yang ditampilkan program-program tersebut dan bila Anda memperkirakan ada masalah, silakan menghubungi administrator sistem untuk mendapatkan bantuan.</p>
+<h2>vmstat</h2>
+<p>Program atau perintah ini akan melakukan test dan menampilkan informasi penggunaan CPU, memori, proses-proses yang sedang berjalan serta operasi I/O. Sintaks penulisan
+perintahnya adalah sebagai berikut:</p>
+<pre>
+$ vmstat [<i>interval</i>] [<i>count</i>]
+</pre>
+<p><i>Interval</i>
+adalah waktu jeda test dalam detik dan
+<i>count</i>
+adalah jumlah test yang kita kehendaki. Misalnya akan dilakukan test sebanyak 5 kali dengan waktu jeda setiap 5 detik maka perintah dan hasilnya adalah seperti dibawah ini:</p>
+<center>
+<pre>
+[zakaria@linux source]$ vmstat 5 5                                             
+   procs                      memory    swap          io     system         cpu
+ r  b  w   swpd   free   buff  cache  si  so    bi    bo   in    cs  us  sy  id
+ 0  0  0  37924    824    840  13280  54  14    30     9  522   271  21   6  73
+ 3  0  0  37924   1080    816  13060   0   0     1     0  110   329  20  16  64
+ 1  0  0  37924   1036    824  13084   0   0     2     1  130   331  18  18  64
+ 1  0  0  37924   1036    824  13084   0   0     0     0  107   329  19  16  65
+ 2  0  0  37924   1036    828  13084   0   0     0     1  112   326  21  14  65
+</pre>
+</center>
+<p>Tiga kolom pertama menunjukkan proses-proses yang sedang dikerjakan, yaitu
+<i>waiting for runtime</i>(<b>r</b>),
+<i>uninterupted sleep</i>(<b>b</b>) dan
+<i>swapped out</i>(<b>w</b>). Banyaknya proses yang mengalami
+<i>waiting for runtime</i>(<b>r</b>) dapat merupakan indikasi terjadinya suatu masalah misalnya telah terjadi
+<i>bottleneck</i>
+yaitu penumpukan proses-proses disuatu tempat.</p>
+<p>Kolom
+<i>memory</i>
+dan
+<i>swap</i>
+digunakan untuk mendeteksi adanya kesalahan yang ditimbulkan oleh manajemen
+memori. Kolom-kolom
+<b><i>swpd, free, buff</i></b>
+dan
+<b><i>cache</i></b>
+berturut-turut menjelaskan jumlah memori
+<i>virtual</i>
+yang digunakan, jumlah memori
+<i>idle</i>, jumlah memori yang dipakai sebagai
+<i>buffer</i>
+dan jumlah memori yang tersisa dalam
+<i>cache</i>, semuanya dalam KB. Perhatikan kolom
+<i>swap in</i>(<b>si</b>), merupakan jumlah memori yang di-<i>paging</i>
+dari disk dalam satuan KB/detik sedangkan
+<i>swap out</i>(<b>so</b>) adalah kebalikannya.</p>
+<p>Tiga kolom terakhir adalah
+persentasi penggunaan CPU yaitu persentasi penggunaan CPU untuk tugas-tugas
+<i>user</i>(<b>us</b>), persentasi penggunaan CPU untuk tugas-tugas sistem termasuk waktu tunggu I/O, pelaksanaan fungsi-fungsi sistem operasi secara umum(<b>sy</b>) dan persentasi CPU
+<i>idle</i>
+atau saat tidak digunakan(<b>id</b>). Untuk mendeteksi suatu kesalahan yang diakibatkan oleh masalah CPU sebaiknya dengan melihat persentasinya secara signifikan dalam satu periode waktu. Misalnya pada saat komputer
+<i>idle</i>
+dalam satu periode
+waktu, perhatikan kolom
+<b>us</b>
+dan
+<b>sy</b>
+seharusnya menunjukkan angka yang rendah sedangkan kolom
+<b>id</b>
+menunjukkan angka yang tinggi. Bila tidak seperti itu maka dipastikan ada masalah yang berkaitan dengan CPU.</p>
+<h2>top</h2>
+<p>Menampilkan informasi proses yang sedang dilakukan CPU secara real time. Kelebihan dari top ini adalah kita dapat memanipulasi proses-proses tersebut secara interaktif dengan menekan tombol-tombol menu. Misalnya untuk meng-<i>kill</i>
+sebuah proses, kita cukup
+menekan tombol K dan mengisi nomor proses(PID) yang ingin di-<i>kill.</i></p>
+<p>Untuk menjalankannya cukup dengan mengetikkan perintah top dan segera ditampilkan daftar proses-proses yang sedang berjalan saat itu berikut informasi-informasi lainnya. Informasi-informasi yang ditampilkan tersebut secara default akan diperbarui atau diupdate setiap 5 detik. Berikut ini tampilan sebagian dari daftar proses-proses yang ditunjukkan oleh top:</p>
+<center><img src="analisa-sistem-files/topcap.gif" alt="top" border="1" width="459" height="288"></center>
+<p>Baris-baris
+<i>header</i>
+menampilkan informasi mengenai waktu, jumlah
+<i>user</i>, banyaknya proses, penggunaan CPU serta memori secara jelas. Misalnya saat itu sistem memiliki 35 buah proses, dimana 4 proses sedang berjalan, 30 proses
+<i>sleeping</i>
+dan ada sebuah proses menjadi
+<i>zombie.</i>
+Porses
+<i>zombie</i>
+ini adalah sebuah proses yang
+<i>hang</i>
+atau hidup segan, mati tak mau (Ronny Haryanto,
+<a href="mailto:giant@canada.com">giant@canada.com</a>) dan apabila Anda tidak bisa
+mem-<i>kill</i>
+proses
+<i>zombie</i>
+ini maka
+<b><i>parent process</i></b>-nya harus di-<i>kill</i>
+lebih dahulu. Gunakan perintah
+<b>pstree</b>
+atau
+<b>ps ufx</b>
+untuk mengurut proses mana yang menjadi
+<i>parent</i>
+dari
+<i>zombie</i>
+tersebut.</p>
+<p>Daftar menu untuk mengoperasikan top dapat dilihat dengan menekan tombol
+<b>?,</b>
+atau
+<b>h.</b>
+Dengan menggunakan tombol-tombol dalam daftar menu tersebut, kita dapat melakukan manipulasi semua proses dalam sistem. Misalnya, tombol
+<b>k</b>
+untuk meng-<i>kill</i>
+sebuah proses, tombol
+<b>r</b>
+untuk me-<i>renice</i>
+proses dan
+<b>q</b>
+untuk keluar atau mengakhiri progam top.</p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Admin &amp; Setting</a>
+::
+<b>Menganalisis Sistem</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/admin/analisa-sistem.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/admin/analisa-sistem.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

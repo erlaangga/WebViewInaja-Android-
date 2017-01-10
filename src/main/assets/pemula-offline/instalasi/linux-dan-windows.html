@@ -1,0 +1,189 @@
+<head><title>Linux untuk Pemula: Berbagi Partisi dengan Windows</title>
+<style type="text/css">
+<!--
+BODY {margin: 0 0 0 0;
+color: black;
+background: #fff}
+
+BODY, H1, H2, H3, H4, H5, H6, TD, TH, DIV, SPAN, P, OL, UL, DL, DT, DD, LI, BLOCKQUOTE {font-family: Helvetica, Arial, sans-serif}
+-->
+</style>
+<link type="text/css" rel="STYLESHEET" href="../all.css">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<meta name="generator" content="HTML Tidy, see www.w3.org">
+</head><body bgcolor="#FFFFFF">
+<table bgcolor="#FFFF66" width="100%" class="navbar">
+<tr><td><small>
+<a href="../index.html">Linux untuk Pemula</a>
+::
+<a href="index.html">Instalasi</a>
+::
+<b>Berbagi Partisi dengan Windows</b>
+</small></td></tr>
+</table>
+<table width="120" align="right">
+<tr>
+<td align="center">
+<font face="Lucida,Verdana, Lucida Sans, Arial, Helvetica, Geneva, sans-serif">
+<small>Hosting by:<br>
+<a href="http://indoglobal.com">
+<img src="../indog-icon.gif" alt="IndoGlobal" border="0" width="88" height="32"></a><br>
+<a href="http://indoglobal.com">indoglobal.com</a>
+</small></font>
+</table>
+<p class="overline"><strong>
+<a href="../pengarang/flory-k.html">Flory Katriena</a>
+</strong></p>
+<h1>Berbagi Partisi dengan Windows</h1>
+<h2>Apakah Perlu Menghapus Partisi Windows?</h2>
+<p>Jawabannya menjadi favorit saya karena saya selalu menjawabnya, "Tidak perlu, bila Anda masih ingin bermain game di Windows". Saya yakin Anda pemakai Windows akan lega mendengarnya karena mungkin Anda masih ragu-ragu atau hanya ingin sekedar mencoba Linux
+setelah mendengar dari teman-teman Anda. Bila demikian silakan meneruskan membaca tulisan ini, saya akan menunjukkan bagaimana cara menginstalasi Linux di hard disk
+<b>tanpa merusak</b>
+sistem operasi Windows. Diakhir tulisan akan saya tunjukkan pula bagaimana mudahnya menghapus Linux yang telah Anda instalasi.</p>
+<h2>Mengapa dibuat Partisi?</h2>
+<p>Pada dasarnya Linux dapat bekerja hanya dengan dua partisi saja, yaitu partisi
+<i>root</i>
+dan partisi
+<i>swap</i>
+tapi karena alasan-alasan tertentu
+beberapa orang merasa lebih senang membagi-bagi hard disk menjadi beberapa partisi supaya memudahkan perbaikan, misalnya bila suatu saat ada partisi yang rusak maka cukup memformat atau memperbaiki partisi yang rusak itu saja tanpa mengganggu partisi lainnya. Ada juga orang yang memilih menggunakan partisi-partisi yang lebih kecil ini untuk mempercepat akses hard disk serta untuk membatasi membengkaknya file yang tidak terkendali, seperti misalnya file-file yang menyimpan pesan-pesan dari
+<i>newsgroup</i>.</p>
+<p>Tentu saja Anda harus merencanakan secara cermat berapa ukuran untuk partisi-partisi tertentu serta jumlah yang dibutuhkan kelak. Perencanaan yang cermat akan menghindari Anda dari masalah-masalah di waktu yang akan datang. Beberapa kesalahan perencanaan yang sering terjadi adalah ditemukannya partisi-partisi yang setelah beberapa waktu cepat sekali penuh sedangkan ada partisi lain malah menyisakan banyak sekali spasi kosong. Sudah pasti situasi demikian membuat pemakaian hard disk tidak efektif dan tidak
+efisien lagi (Ihsan, <a href="mailto:ishobr@haltek.telkom.net.id">ishobr@haltek.telkom.net.id</a>).</p>
+<p>Saat ini Linux memang belum mampu melakukan
+<i>resize partition on the fly</i>
+seperti halnya pada AIX/6000 sehingga kesalahan perencanaan seperti itu hanya bisa ditebus dengan memformat dan mempartisi ulang hard disk (Andy, <a href="mailto:chandy@indo.net.id">chandy@indo.net.id</a> ).</p>
+<p>Anda tidak perlu memikirkan berapa ukuran serta jumlah partisi saat ini, semua itu hanya ilustrasi saja bila kelak Anda benar-benar serius menggunakan Linux. Tujuan utama bab ini adalah menunjukkan
+bagaimana membuat partisi Linux berdampingan dengan Windows yang sudah lebih dulu diinstalasi.</p>
+<h2>Mempersiapkan Hard Disk</h2>
+<p>Seandainya hard disk Anda sebesar 1.2GB dan saat itu seluruhnya dipakai untuk partisi Windows, pastikanlah Anda masih memiliki sisa spasi di hard disk. Gunakan
+<b>chkdsk</b>
+untuk mengecek sisa spasi di hard disk Anda. Bersyukurlah bila Anda memiliki spasi sedikititnya 500MB karena dengan sisa yang cukup besar ini, kelak Anda bisa menginstalasi aplikasi Linux lebih banyak
+serta mencoba X Window.</p>
+<p>Sisa spasi yang sebesar 500MB itu nanti akan dipisahkan dari partisi Windows dengan menggunakan program
+<i>splitting partition</i>
+atau pembagi partisi,
+<b>FIPS</b>. Program kecil ini cukup ampuh dan aman melakukan tugas pembagian partisi tanpa merusak data di partisi Windows. Walupun demikian sebaiknya Anda mulai melakukan
+<i>backup</i>
+bila Anda memiliki data penting di hard disk karena tidak ada yang berani menjamin program ini selalu bekerja dengan baik. Suatu saat Anda
+akan mengenal pula beberapa program
+<i>splitting partition</i>
+versi komersial yang mungkin akan memberikan jaminan keselamatan data yang lebih baik.</p>
+<p>Siapkan juga sebuah disket
+<i>boot</i>
+yang berisi sistem
+<i>boot</i>
+DOS/Windows. Salinlah file-file
+<b>fips.exe, restorrb.exe</b>
+dan
+<b>errors.txt</b>
+dari direktori
+<b>\dosutils</b>
+di CD distribusi ke disket
+<i>boot</i>
+tersebut. File-file itu semua dapat dijalankan dari DOS/Windows
+<i>prompt</i>. Disket
+<i>boot</i>
+tersebut kelak juga akan
+digunakan untuk menyimpan/mem<i>backup</i>
+informasi partisi asli atau partisi awal sebelum dilakukan pembagian partisi.</p>
+<center><img src="linux-dan-windows-files/defrag1.gif" border="0" width="365" height="165" alt="defrag1.gif 365x165 (4 KB)"></center>
+<p>Pastikan juga tidak ada data yang terfragmentasi di hard disk dengan cara menjalankan program
+<b>fragmentasi</b>
+milik Windows. Pastikan pula Anda menghapus dahulu file
+<i>swap</i>
+milik Windows karena file ini sering tidak bisa dipindahkan oleh program fragmentasi. Bila Anda menggunakan IMAGE atau MIRROR maka
+Anda harus menghapus dulu file-file
+<i>mirror</i>
+yang tersembunyi atau
+<i>hidden file</i>
+seperti
+<b>image.idx</b>
+atau
+<b>mirorsav.fil</b>.</p>
+<center><img src="linux-dan-windows-files/defrag2.gif" border="0" width="356" height="137" alt="defrag2.gif 356x137 (5 KB)"></center>
+<h2>Mempartisi dengan FIPS</h2>
+<p>Setelah semua persiapan diatas diatas telah Anda lakukan dengan baik, selanjutnya jalankan program pembagi partisi, FIPS.
+<i>Boot</i>
+program dengan menggunakan disket yang telah Anda buat tadi, bila tidak berjalan, lihatlah pesan kesalahan yang
+ditampilkan dan coba periksa lagi persiapan diatas mungkin ada yang terlewat. Program FIPS juga menolak bila Anda masih mengaktifkan program-program semacam
+<i>disk cache(Smartdrive dsb.)</i>, matikanlah dulu program-program tersebut.</p>
+<p>Bila semuanya berjalan normal, FIPS akan mendeteksi semua hard disk yang terdapat dalam komputer Anda. Pilihlah hard disk mana yang akan dibagi partisinya. FIPS selanjutnya akan menampilkan
+<i>root sector</i>
+dan tabel partisi hard disk yang Anda pilih. Abaikan saja
+angka-angka pada tabel tersebut bila Anda tidak mengetahui artinya, perhatikan saja jumlah Megabyte setiap partisi di kolom paling kanan.</p>
+<p>FIPS selanjutnya akan mendeteksi keabsahan paritisi yang ada. Bila terdapat lebih dari satu partisi, Anda akan di tanya partisi mana yang akan dibagi. Bila tidak ada kesalahan, FIPS akan menampilkan sisa spasi hard disk di akhir partisi. Anda dapat menggunakan sisa spasi itu seluruhnya atau sebagian dengan cara mengerakkan kursor dengan panah kanan atau panah kiri.
+Tentukan besarnya, misalnya kurang lebih sebesar 500MB. Jika Anda telah yakin dengan besar partisinya, segera tekan Enter untuk melanjutkan.</p>
+<p>FIPS akan memeriksa kembali apakah masih ada sisa spasi yang bisa dibuat partisi baru lagi. Bila sudah tidak ada spasi yang tersisa, FIPS akan menampilkan tabel partisi yang baru. Periksalah apakah pembagian partisi yang telah Anda lakukan itu sudah sesuai dengan keinginan. Lanjutkan dengan menekan 'c' untuk melanjutkan dan pastikan Anda menjawab 'y' bila ditanyakan
+apakah akan mem<i>backup</i>
+partisi awal di disket
+<i>boot</i>.</p>
+<p>Langkah terakhir adalah menyimpan perubahan partisi kedalam tabel partisi dan keluar dari program. Setelah itu lakukan
+<i>reboot</i>
+dan JANGAN PERNAH MENULISKAN SESUATU PADA HARD DISK SEBELUM ANDA MELAKUKAN REBOOT. Setelah
+<i>reboot,</i>
+gunakan
+<b>chkdsk</b>
+atau
+<b>Norton Disk Doctor(NDD</b>) untuk memastikan partisi DOS/Window beserta data milik Anda dalam keadaan baik. Partisi tersebut tentu saja berkurang sebanyak 500MB(atau
+sesuai jumlah yang Anda buat menggunakan FIPS) dan partisi baru ini tidak terdeteksi oleh DOS/Windows, biarkanlah dan lanjutkan dengan menginstalasi Linux di partisi baru itu.</p>
+<h2>Instalasi Linux</h2>
+<p>Pada saat instalasi Linux, Anda akan diberi kesempatan memilih partisi yang akan di format dengan menggunakan
+<b>fdisk</b>
+atau
+<b>diskdruid.</b>
+Jangan melakukan sesuatu apapun pada partisi DOS/Windows karena akibatnya Anda akan kehilangan seluruh isi DOS/Windows. Bekerjalah pada partisi baru sebesar
+500MB yang baru saja Anda buat tadi dan lakukanlah perubahan-perubahan atau membagi-baginya menjadi beberapa partisi lagi sebelum Anda memformatnya.</p>
+<p>Biasanya dalam satu hard disk hanya diijinkan membuat maksimal empat buah partisi
+<i>primer</i>
+saja dan selanjutnya hanya bisa dibuat partisi
+<i>logical</i>
+di masing-masing partisi
+<i>primer</i>
+selama spasi hard disk masih mencukupi. Oleh karena hard disk Anda sudah memiliki partisi Windows sebesar +/-700MB maka sebenarnya Anda bisa membuat tiga buah
+partisi
+<i>primer</i>
+lagi pada spasi sebesar 500MB itu. Dengan menggunakan perintah yang ada dalam program
+<b>fdisk</b>, hapuslah partisi 500MB itu, kemudian buatlah tiga partisi baru, misalnya untuk /, swap dan usr yang besarnya berturut-turut 100MB, 32MB dan +/-468MB.</p>
+<p>Selajutnya program instalasi akan memformat ketiga partisi itu dan meneruskan proses instalasi Linux berikutnya.</p>
+<h2>Menghapus Partisi Linux</h2>
+<p>Saya tidak mengharapkan Anda secepat ini memutuskan menghapus Linux tapi bila
+memang itu yang Anda kehendaki ambilah disket
+<i>boot</i>
+yang berisi
+<i>backup</i>
+partisi awal dari hard disk Anda, kemudian
+<i>boot</i>
+komputer dengan disket tersebut serta jalankan
+<b>restorrb.exe</b>. Pilihlah file
+<i>backup</i>-nya, dalam sekejap partisi Linux sebesar 500MB(yang terdiri dari partisi-partisi /, swap dan usr) akan dihapus dan hard disk Anda akan kembali seperti sedia kala.</p>
+<hr noshade="noshade" size="2">
+<table width="100%">
+<tr valign="top">
+<td><small>
+<a href="../index.html">Linux
+untuk Pemula</a>
+::
+<a href="index.html">Instalasi</a>
+::
+<b>Berbagi Partisi dengan Windows</b>
+</small></td>
+<td align="right"><small>
+<b><a href="
+http://greenspun.com/com/pemula/instalasi/linux-dan-windows.html
+">Komentari Halaman Ini</a><br>
+<a href="
+http://greenspun.com/com/pemula/instalasi/linux-dan-windows.html
+" target="_blank">(di Window Baru)</a>
+</b>
+</small></td></tr>
+</table>
+<hr noshade="noshade" size="2">
+<center>
+<small>
+Site didesain oleh
+<a href="../pengarang/zakaria.html">Zakaria</a>
+menggunakan GAKR. Isi diluar tanggung jawab Linux untuk Pemula
+</small>
+</center>
+</body>

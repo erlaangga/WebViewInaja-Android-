@@ -1,0 +1,3926 @@
+#This file was created by <zakaria> Wed Dec 29 09:12:15 1999
+#LyX 1.0 (C) 1995-1999 Matthias Ettrich and the LyX Team
+\lyxformat 2.15
+\textclass linuxdoc
+\language default
+\inputencoding default
+\fontscheme default
+\graphics default
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 1
+\papersides 1
+\paperpagestyle fancy
+
+\layout Title
+\added_space_top vfill \added_space_bottom vfill 
+PPP Script Tutorial
+\layout Author
+
+Zakaria, zak@telkom.net
+\layout Date
+
+v1.1.2, 29 Dec 1999
+\layout Abstract
+
+Dokumen ini mencoba menjelaskan langkah-langkah yang harus ditempuh untuk
+  membuat komputer linux anda berinternet-ria melalui PPP dengan menggunakan
+ script.
+ Petunjuk ini dibuat pada RedHat  Linux 5.2, untuk distribusi lain mungkin
+ juga bisa, kalau ada masalah silakan  tanya ahli distronya.
+ Untuk troubleshooting silakan lihat PPP HOWTO atau tanya  saya atau mailing
+ list 
+\begin_inset LatexCommand \htmlurl[linux-setup@linux.or.id]{mailto:linux-setup@linux.or.id}
+
+\end_inset 
+
+ (tentu saja anda harus subscribe dulu :)
+\layout Standard
+
+
+\begin_inset LatexCommand \tableofcontents{}
+
+\end_inset 
+
+
+\layout Section
+
+Pendahuluan
+\layout Standard
+
+Ada banyak cara untuk menghubungkan komputer linux anda dengan internet
+ melalui PPP.
+ Petunjuk ini hanya akan menjelaskan langkah-langkah yang diperlukan untuk
+ memakai ppp melalui script.
+ Mungkin agak sedikit rumit tetapi memiliki beberapa keuntungan:
+\layout Enumerate
+
+Tidak memerlukan software tambahan (cukup pppd)
+\layout Enumerate
+
+Bisa berjalan pada modus text (tidak memerlukan X Window)
+\layout Enumerate
+
+Bisa dijalankan melalui crontab untuk dial berkala (lihat bagian 
+\begin_inset LatexCommand \ref{advance}
+
+\end_inset 
+
+)
+\layout Enumerate
+
+Scriptnya bisa mencari line telepon ISP yang kosong.
+ Hal ini sangat berguna bila telepon ISP anda selalu sibuk
+\layout Standard
+
+Versi terakhir dokumen ini dalama berbagai format (html, dvi, ps, text)
+ berikut dengan sourcenya dapat anda dapatkan di 
+\begin_inset LatexCommand \htmlurl[http://members.xoom.com/telorasin/pemula/]{http://members.xoom.com/telorasin/pemula/}
+
+\end_inset 
+
+
+\layout Section
+
+Log Perubahan
+\layout Standard
+
+versi 1.0
+\layout Itemize
+
+Direlease pertamakali di KPLI Jakarta mailing list
+\layout Standard
+
+versi 1.1
+\layout Itemize
+
+Copyright diubah menjadi OPL (Open Content)
+\layout Itemize
+
+Menambah setting security
+\layout Itemize
+
+Menggabungkan setting modem dengan ppp-chat-init
+\layout Itemize
+
+Menambah saving routing dengan linuxconf
+\layout Itemize
+
+Mengubah ppp-redialer
+\layout Itemize
+
+Mengubah ppp-chat-dial
+\layout Itemize
+
+Perubahan Estetika
+\layout Standard
+
+versi 1.1.1
+\layout Itemize
+
+Merubah tanggal :)
+\layout Itemize
+
+Ubah URL modem init
+\layout Itemize
+
+Ubah ppp-chat-init dan ppp-chat-dial
+\layout Itemize
+
+Perubahan Estetika
+\layout Standard
+
+versi 1.1.2
+\layout Itemize
+
+Tambahan di Perubahan Setting -> User Name & Password (terimakasih untuk
+ dik Nur atas sarannya)
+\layout Section
+
+Copyright & Disclaimer  
+\layout Standard
+
+Hak cipta dilindungi Undang-Undang.
+ Izin diberikan untuk memperbanyak, menyebarluaskan dan mengubah dokumen
+ inii seperti diatur dalam OpenContent License (OPL).
+ 
+\layout Standard
+
+Secara singkat anda boleh memperbanyak dan meyebarluaskan selama copyright
+ dan disclaimer ini diikutsertakan.
+ Anda juga boleh mengubah isi dokumen ini selama anda menyatakan dengan
+ jelas perubahannya dan hasil perubahannya harus di-license dengan OPL juga.
+ Selain itu anda berhak meminta bayaran atas media atau pengiriman dokumen
+ ini atau bayaran atas jaminan dan dukungan teknis.
+ 
+\layout Standard
+
+Walaupun penulis sudah berupaya untuk membuat dokumen ini bebas dari kesalahan
+ tetapi TIDAK ADA JAMINAN bahwa petunjuk ini akan bekerja dan tidak MERUSAK
+ sistem/komputer anda.
+\layout Standard
+
+OpenContent License (OPL) secara lengkap dapat anda lihat di 
+\begin_inset LatexCommand \htmlurl[http://www.opencontent.org/opl.shtml ]{http://www.opencontent.org/opl.shtml }
+
+\end_inset 
+
+
+\layout Section
+
+Yang diperlukan  
+\layout Enumerate
+
+Modem (kalau ada manualnya lebih baik
+\layout Enumerate
+
+Informasi ISP (no telp dan IP DNS Primary & Secondary) 
+\layout Enumerate
+
+Password root (harus pakai root dong :) 
+\layout Section
+
+Persiapan  
+\layout Subsection
+
+Setting Linux Agar Kenal Modem  
+\layout Standard
+
+Untuk menggunakan modem anda harus mensetting linux anda agar linux tahu
+ dimana ia harus mencari modem.
+ Untuk mensetting cukup jalankan perintah  
+\layout Code
+
+ln -s /dev/cua0 /dev/modem  
+\layout Standard
+
+Jika modem anda terhubung ke COM1 jika modem anda terhubung ke COM2 ganti
+ /dev/cua0 dengan /dev/cua1, jika COM3 menjadi cua2 dan seterusnya.
+ 
+\layout Subsection
+
+Mengetest Modem  
+\layout Standard
+
+Untuk mengetest modem anda sudah terhubung dengan baik jalankan langkah-langkah
+ berikut: 
+\layout Enumerate
+
+Jalankan minicom 
+\begin_deeper 
+\layout Code
+
+# minicom 
+\newline 
+Welcome to minicom 1.82 
+\newline 
+OPTIONS: History Buffer, F-key Macros, Search History Buffer, I18n 
+\newline 
+Compiled on Oct 1 1998, 23:34:55.
+ 
+\newline 
+Press CTRL-A Z for help on special keys 
+\newline 
+
+\newline 
+AT S7=45 S0=0 L1 V1 X4 &c1 E1 Q0  
+\newline 
+OK    
+\end_deeper 
+\layout Enumerate
+
+Kalau tampilannya seperti diatas berarti modem dan komputer anda sudah terhubung.
+ Jika belum cek apakah modemnya sudah dinyalakan atau kabel serialnya sudah
+ terhubung.
+ 
+\layout Enumerate
+
+Untuk mengetest line telepon anda ketikkan ATDT<no telepon ISP> 
+\begin_deeper 
+\layout Code
+
+ATDT9,5759000 
+\newline 
+CONNECT 26400/V42BIS 
+\newline 
+
+\newline 
+Welcome to 3Com Total Control HiPer ARC (TM) 
+\newline 
+Networks That Go The Distance (TM) 
+\newline 
+
+\newline 
+login: xxxxx 
+\newline 
+Password:     
+\end_deeper 
+\layout Enumerate
+
+Kalau modem anda sudah berbunyi toet totet dan tampilannya seperti diatas
+ berarti koneksi line telepon anda sudah baik.
+ Catatan: Contoh diatas memakai line telepon dibelakan PABX jadi perlu 9,
+ dulu untuk dial ke luar.
+ Jika line telepon anda langsung (misalnya di rumah) tidak perlu pakai 9,
+ cukup ATDT5759000 
+\layout Enumerate
+
+Jika line telepon anda belum terkoneksi dengan baik periksa kabel telepon
+ (coba dengan telepon biasa) atau line telepon anda memakai PABX 4 Kabel
+ (untuk yang ini saya nggak tahu bagaimana cara menanganinya :< ) 
+\layout Enumerate
+
+Jika sudah OK semua tekan Ctrl + A + X terus tekan Enter pada Yes.
+ 
+\layout Subsection
+
+Testing Routing  
+\layout Standard
+
+Jika linux anda mempunyai network card anda harus mengeset route table anda
+ agar tidak ada default route.
+ Jika anda 
+\series bold 
+harus
+\series default 
+ mempunya default route silakan lihat Net 2/3 HOWTO.
+ Untuk mengecek routing lakukan langkah-langkah berikut: 
+\layout Enumerate
+
+Lihat daftar routing kernel 
+\begin_deeper 
+\layout Code
+
+# route -n 
+\newline 
+Kernel IP routing table
+\newline 
+Destination     Gateway         Genmask         Flags Metric Ref    Use
+ Iface 
+\newline 
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0       12 eth0 
+\newline 
+127.0.0.0       0.0.0.0         255.0.0.0       U     0      0       10 lo    
+\end_deeper 
+\layout Enumerate
+
+Jika tampilannya seperti diatas berarti routing table anda sudah OK.
+ Silahkan lanjutkan ke langkah persiapan berikutnya.
+ 
+\layout Enumerate
+
+Jika tampilan anda seperti dibawah ini berarti anda mempunya default route
+ 
+\begin_deeper 
+\layout Code
+
+# route -n 
+\newline 
+Kernel IP routing table
+\newline 
+Destination     Gateway         Genmask         Flags Metric Ref    Use
+ Iface 
+\newline 
+192.168.1.0     0.0.0.0         255.255.255.0   U     0      0       12 eth0 
+\newline 
+127.0.0.0       0.0.0.0         255.0.0.0       U     0      0       10 lo 
+\newline 
+0.0.0.0         192.168.1.1     0.0.0.0         UG    0      0        0 eth0    
+\end_deeper 
+\layout Enumerate
+
+Untuk menghapus default route jalankan perintah
+\begin_deeper 
+\layout Code
+
+# route del default
+\end_deeper 
+\layout Enumerate
+
+Untuk menyimpan perubahan jalankan ikuti langkah-langkah berikut:
+\begin_deeper 
+\layout Enumerate
+
+Jalankan linuxconf
+\begin_deeper 
+\layout Code
+
+# linuxconf
+\end_deeper 
+\layout Enumerate
+
+Pilih Config -> Networking -> Client tasks -> Routing and gateways -> Defaults
+\layout Enumerate
+
+Kosongkan kotak default gateway dan kosongkan checkbox Enable Routing
+\end_deeper 
+\layout Subsection
+
+Testing PAP/CHAP  
+\layout Standard
+
+Beberapa ISP di Indonesia menggunakan PAP atau CHAP untuk otorisasi pengguna
+ yaitu mereka tidak menggunakan Login: & Password: prompt untuk mengotorisasi.
+ Tetapi beberapa ISP menggunakan PAP dengan login: dan password: prompt,
+ IndosatNet misalnya.
+ Untuk memastikan hubungi Customer Services ISP anda.
+ Kalau mereka tidak tahu anda bisa menganggap ISP anda memakai otorisasi
+ biasa atau melakukan testing berikut: 
+\layout Enumerate
+
+Dial no telepon ISP anda (caranya seperti testing modem) 
+\layout Enumerate
+
+Jika mereka menampilkan login: dan password: berarti mereka menggunakan
+ otorisasi biasa 
+\layout Enumerate
+
+Jika yang tampil adalah sampah seperti dibawah ini dan terus datang berarti
+ mereka menggunakan PAP/CHAP 
+\begin_deeper 
+\layout Code
+
+y}#.!}!}!} }8}!}$}%U}"}&} } } } }%}& ...}'}"}(}"} .y}    
+\end_deeper 
+\layout Enumerate
+
+Tetapi seperti saya bilang diatas beberapa server menggunakan PAP dengan
+ login: dan password: salah satu petunjuknya adalah prompt sebelum login
+ misalnya "Indosat PAP server" 
+\layout Section
+
+Editing File  
+\layout Subsection
+
+Sebelum Meng-edit
+\layout Standard
+
+Setting berikut dibuat dengan user name: 
+\series bold 
+user
+\series default 
+ dan password: 
+\series bold 
+pass.
+
+\series default 
+ Jika ISP anda CBN atau IndosatNet anda bisa langsung meng-copy setting
+ di bawah ini dengan mengubah user name dan passwordnya.
+ Untuk perubahan setting lihat Bagian 
+\begin_inset LatexCommand \ref{customize}
+
+\end_inset 
+
+.
+\layout Standard
+
+Disamping nama file terdapat keterangan seperti (root, root 700) ini berarti
+ file itu dimiliki oleh user root, group root dan modenya 644 (rw-r--r--)
+ jika tidak sesuai ubah dengan chown, chgrp dan chmod (lihat masing-masing
+ man untuk lebih detail).
+\layout Subsection
+
+Setting Security
+\layout Standard
+
+Untuk mengamankan linux anda dari 
+\emph on 
+cracker
+\emph default 
+ di internet anda harus mengatur akses ke komputer anda.
+ Petunjuk berikut hanya menjelaskan langkah-langkah dasar untuk mengamankan
+ komputer anda untuk lebih mengamankan komputer anda silakan baca Security-HOWTO
+\layout Subsubsection
+
+hosts.deny
+\layout Standard
+
+Edit file /etc/hosts.deny (root, root 644)untuk menolak 
+\series bold 
+semua
+\series default 
+ akses ke komputer anda
+\layout Code
+
+# 
+\newline 
+# hosts.deny This file describes the names of the hosts which are 
+\newline 
+# *not* allowed to use the local INET services, as decided 
+\newline 
+# by the '/usr/sbin/tcpd' server.
+ 
+\newline 
+# 
+\newline 
+# The portmap line is redundant, but it is left to remind you that 
+\newline 
+# the new secure portmap uses hosts.deny and hosts.allow.
+ In particular 
+\newline 
+# you should know that NFS uses portmap! 
+\newline 
+ALL:ALL
+\layout Subsubsection
+
+hosts.allow
+\layout Standard
+
+Edit file /etc/hosts.allow (root,root 644) untuk mengizinkan akses ke komputer
+ anda selain yang ditolak oleh /etc/hosts.deny.
+ Minimal anda harus mengizinkan komputer anda (127.0.0.1) untuk mengakses dirinya
+ sendiri !
+\layout Code
+
+# 
+\newline 
+# hosts.allow This file describes the names of the hosts which are 
+\newline 
+# allowed to use the local INET services, as decided 
+\newline 
+# by the '/usr/sbin/tcpd' server.
+ 
+\newline 
+# 
+\newline 
+ALL:127.0.0.1
+\layout Standard
+
+Jika komputer anda berada dalam jaringan (LAN) anda harus menambah entry
+ di hosts.allow dengan IP LAN anda atau komputer anda tidak dapat diakses
+ dari komputer lainnya di LAN.
+ Untuk komputer yang berada di LAN dengan range IP subclass C unregistered
+ (192.168.1.x) file /etc/hosts.deny-nya adalah:
+\layout Code
+
+#
+\newline 
+# hosts.allow
+\protected_separator 
+
+\protected_separator 
+ This file describes the names of the hosts which are
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ allowed to use the local INET services, as decided
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ by the '/usr/sbin/tcpd' server.
+\newline 
+#
+\newline 
+ALL:127.0.0.1
+\newline 
+ALL:192.168.1.0/255.255.255.0
+\layout Subsection
+
+Setting DNS Server  
+\layout Standard
+
+Edit file /etc/resolv.conf (root, root 644) untuk menunjukkan DNS server
+ ISP anda 
+\layout Subsubsection
+
+DNS CBN
+\layout Code
+
+# CBN 
+\newline 
+search cbn.net.id 
+\newline 
+nameserver 202.158.3.6 
+\newline 
+nameserver 202.158.3.7 
+\layout Subsubsection
+
+DNS IndosatNet  
+\layout Code
+
+# IndosatNet 
+\newline 
+search indosat.net.id 
+\newline 
+nameserver 202.155.0.10 
+\newline 
+nameserver 202.155.0.15 
+\layout Subsection
+
+Script ppp-on  
+\layout Standard
+
+Buat file /etc/ppp/ppp-on (root, root 700) untuk menjalankan pppd 
+\layout Subsubsection
+
+CBN  
+\layout Code
+
+#!/bin/sh 
+\newline 
+# 
+\newline 
+# script to connect to ISP 
+\newline 
+# 
+\newline 
+# CBN 
+\newline 
+exec /usr/sbin/pppd debug /dev/ttyS0 115200 
+\backslash 
+ 
+\newline 
+       connect /etc/ppp/ppp-redialer 
+\layout Subsubsection
+
+IndosatNet 
+\layout Code
+
+#!/bin/sh 
+\newline 
+# 
+\newline 
+# script to connect to ISP 
+\newline 
+# 
+\newline 
+# IndosatNet 
+\newline 
+exec /usr/sbin/pppd debug name user /dev/ttyS0 115200 
+\backslash 
+ 
+\newline 
+      connect /etc/ppp/ppp-redialer 
+\layout Subsection
+
+Script ppp-redialer
+\layout Standard
+
+Buata file /etc/ppp/ppp-redialer (root, root 700) untuk mendial ke ISP
+\layout Subsubsection
+
+CBN
+\layout Code
+
+#!/bin/sh
+\newline 
+# Script untuk mendial ISP dengan mencari line telepon yang kosong
+\newline 
+# Copyright (c) Zakaria 1999 licensed in GPL
+\newline 
+#
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Parameter ini mengatur urutan dial
+\newline 
+#
+\newline 
+# Berapa kali nomor telepon yang sama di dial
+\newline 
+MAX_ATTEMPTS=5
+\newline 
+
+\newline 
+# Waktu antara setiap dial.
+ Parameter ini digunakan oleh sleep
+\newline 
+# jadi gunakan "15s" untuk 15 second (detik), "1m" untuk 1 menit, dst
+\newline 
+SLEEP_DELAY=1s
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# No awal di dial untuk telepon keluar, gunakan bila anda memakai PABX
+\newline 
+PHONEPRE=""
+\newline 
+
+\newline 
+# Daftar nomor telepon.
+ Tambahkan no telepon baru dan
+\newline 
+# ubah function callall supaya sesuai dengan daftar no telepon
+\newline 
+#
+\newline 
+#PHONE1=5759000
+\newline 
+PHONE1=57989000
+\newline 
+#PHONE2=52994999
+\newline 
+#PHONE3=25537500
+\newline 
+PHONE2=25507500
+\newline 
+PHONE3=25655000
+\newline 
+
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mengeset modem untuk memastikan modem siap dipakai
+\newline 
+
+\newline 
+function initialize
+\newline 
+{
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ /usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ return
+\newline 
+}
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mendial no telepon
+\newline 
+#
+\newline 
+function callnumber
+\newline 
+{
+\newline 
+# initialize setiap dial untuk menghindarkan modem hang pada saat chat
+\newline 
+/usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+\newline 
+
+\newline 
+# Jika koneksi berhasil maka kita akhiri script
+\newline 
+# dengan return value 0 (tanpa error)
+\newline 
+#
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ if [ "$?" = "0" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ exit 0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ else
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ initialize
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ fi
+\newline 
+
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ return
+\newline 
+}
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mendial semua no telepon
+\newline 
+#
+\newline 
+function callall
+\newline 
+{
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ echo "dialing attempt number: $1" >/dev/console
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE2
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE3
+\newline 
+}
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Set modem jika tidak berhasil exit dengan return value = 1 (ada error)
+\newline 
+
+\newline 
+initialize
+\newline 
+if [ ! "$?" = "0" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ exit 1
+\newline 
+fi
+\newline 
+
+\newline 
+#
+\newline 
+# Dial no telepon sampai salah satu nyambung atau MAX_ATTEMPTS tercapai
+\newline 
+#
+\newline 
+attempt=0
+\newline 
+while : ; do
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ attempt=`expr $attempt + 1`
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ callall $attempt
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ if [ "$attempt" = "$MAX_ATTEMPTS" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+exit 1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ fi
+\protected_separator 
+
+\protected_separator 
+
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ sleep "$SLEEP_DELAY"
+\newline 
+done
+\layout Subsubsection
+
+IndosatNet
+\layout Code
+
+#!/bin/sh
+\newline 
+# Script untuk mendial ISP dengan mencari line telepon yang kosong
+\newline 
+
+\newline 
+# Copyright (c) Zakaria 1999 licensed in GPL
+\newline 
+#
+\newline 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Parameter ini mengatur urutan dial
+\newline 
+#
+\newline 
+# Berapa kali nomor telepon yang sama di dial
+\newline 
+MAX_ATTEMPTS=5
+\newline 
+
+\protected_separator 
+
+\newline 
+# Waktu antara setiap dial.
+ Parameter ini digunakan oleh sleep
+\newline 
+# jadi gunakan "15s" untuk 15 second (detik), "1m" untuk 1 menit, dst
+\newline 
+SLEEP_DELAY=1s
+\newline 
+
+\protected_separator 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# No awal di dial untuk telepon keluar, gunakan bila anda memakai PABX
+\newline 
+PHONEPRE=""
+\newline 
+
+\protected_separator 
+
+\newline 
+# Daftar nomor telepon.
+ Tambahkan no telepon baru dan
+\newline 
+# ubah function callall supaya sesuai dengan daftar no telepon
+\newline 
+#
+\newline 
+PHONE1=3825001 
+\newline 
+PHONE2=3825200 
+\newline 
+PHONE3=34354000 
+\newline 
+PHONE4=7507977
+\newline 
+PHONE5=3524001 
+\newline 
+PHONE6=3520550 
+\newline 
+PHONE7=3864901 
+\newline 
+
+\protected_separator 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mengeset modem untuk memastikan modem siap dipakai
+\newline 
+
+\protected_separator 
+
+\newline 
+function initialize
+\newline 
+{
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ /usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ return
+\newline 
+}
+\newline 
+
+\protected_separator 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mendial no telepon
+\newline 
+#
+\newline 
+function callnumber
+\newline 
+{
+\newline 
+# initialize setiap dial untuk menghindarkan modem hang pada saat chat
+\newline 
+initialize
+\newline 
+/usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+\newline 
+
+\protected_separator 
+
+\newline 
+# Jika koneksi berhasil maka kita akhiri script
+\newline 
+# dengan return value 0 (tanpa error)
+\newline 
+#
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ if [ "$?" = "0" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ exit 0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ fi
+\newline 
+
+\protected_separator 
+
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ return
+\newline 
+}
+\newline 
+
+\protected_separator 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Function untuk mendial semua no telepon
+\newline 
+#
+\newline 
+function callall
+\newline 
+{
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ echo "dialing attempt number: $1" >/dev/console
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE2
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE3
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE4
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE5
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE6
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ callnumber $PHONEPRE$PHONE7
+\newline 
+}
+\newline 
+
+\protected_separator 
+
+\newline 
+###################################################################
+\newline 
+#
+\newline 
+# Set modem jika tidak berhasil exit dengan return value = 1 (ada error)
+\newline 
+
+\protected_separator 
+
+\newline 
+initialize
+\newline 
+if [ ! "$?" = "0" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+ exit 1
+\newline 
+fi
+\newline 
+
+\protected_separator 
+
+\newline 
+#
+\newline 
+# Dial no telepon sampai salah satu nyambung atau MAX_ATTEMPTS tercapai
+\newline 
+#
+\newline 
+attempt=0
+\newline 
+while : ; do
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ attempt=`expr $attempt + 1`
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ callall $attempt
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ if [ "$attempt" = "$MAX_ATTEMPTS" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+exit 1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ fi
+\protected_separator 
+
+\protected_separator 
+
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ sleep "$SLEEP_DELAY"
+\newline 
+done
+\protected_separator 
+
+\layout Subsection
+
+Setting Modem dan Script ppp-chat-init
+\layout Standard
+
+Untuk bekerja dengan baik, modem harus diset dengan menggunakan modem init
+ string.
+ Modem init string adalah suatu kumpulan perintah untuk menginisialisasi
+ modem supaya bekerja pada modus yang sesuai.
+ Perintah-perintah ini biasanya dimulai dengan huruf AT sehingga sering
+ disebut perintah AT atau AT command.
+ Jika anda mempunya manual book modem anda dapat melihat daftar AT command
+ di manual book tersebut.
+ Jika anda tidak mempunyai manual book modem anda bisa mencoba init string
+ standar atau anda dapat mencari init string untuk modem anda di 
+\begin_inset LatexCommand \url[http://www.spy.net/~dustin/modem/]{http://www.spy.net/~dustin/modem/}
+
+\end_inset 
+
+.
+ 
+\layout Standard
+
+Jika anda mempunyai manual modem menurut PPP-HOWTO minimal yang anda harus
+ perhatikan adalah
+\layout Itemize
+
+Hardware flow control (RTS/CTS) (&K3 on many Hayes modems) 
+\layout Standard
+
+Setting lain yang patut diselidiki 
+\layout Itemize
+
+E1 Command/usr/src/linux-2.0.27/include/linux/serial.h Echo ON (required for
+ chat to operate) 
+\layout Itemize
+
+Q0 Report result codes (required for chat to operate) 
+\layout Itemize
+
+S0=0 Auto Answer OFF (unless you want your modem to answer the phone) 
+\layout Itemize
+
+&C1 Carrier Detect ON only after connect 
+\layout Itemize
+
+&S0 Data Set Ready (DSR) always ON 
+\layout Itemize
+
+(depends) Data Terminal Ready 
+\layout Standard
+
+Tetapi biasanya AT&F dan/atau AT&Z sudah mencukupi.
+ Jika anda sudah mengetahui perintah AT Command yang sesuai dengan modem
+ anda atau anda yakin modem anda cukup standar buat file /etc/ppp/ppp-chat-init
+ (root, root 600) untuk chat script inisialisasi modem
+\layout Code
+
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 3
+\newline 
+''
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 
+\backslash 
+rAT
+\newline 
+'OK-+++
+\backslash 
+c-OK'
+\protected_separator 
+
+\protected_separator 
+ ATH
+\newline 
+OK
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ AT&F
+\layout Subsection
+
+Script ppp-chat-dial
+\layout Standard
+
+Buat file /etc/ppp/ppp-chat-dial (root, root 600) untuk chat script dial
+\layout Subsubsection
+
+CBN
+\layout Code
+
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+3
+\newline 
+OK-
+\backslash 
+rAT-OK
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ATDT
+\backslash 
+T
+\newline 
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+60
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nBUSY
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO ANSWER
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO DIALTONE
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO CARRIER
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nRINGING
+\backslash 
+r
+\backslash 
+n
+\backslash 
+r
+\backslash 
+nRINGING
+\backslash 
+r'
+\newline 
+SAY "Dialing CBN ..
+\backslash 
+n"
+\newline 
+'CONNECT'
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+''
+\newline 
+ECHO ON
+\newline 
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+20
+\newline 
+ogin:--ogin:
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ user
+\newline 
+ECHO OFF
+\newline 
+SAY "Sending Login
+\backslash 
+n"
+\newline 
+assword:
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ pass
+\newline 
+SAY "Sending Password
+\backslash 
+n"
+\newline 
+
+\backslash 
+~
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+''
+\newline 
+SAY "Connected
+\backslash 
+n"
+\layout Subsubsection
+
+IndosatNet
+\layout Code
+
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+3
+\newline 
+OK-
+\backslash 
+rAT-OK
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ATDT
+\backslash 
+T
+\newline 
+TIMEOUT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+60
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nBUSY
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO ANSWER
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO DIALTONE
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nNO CARRIER
+\backslash 
+r'
+\newline 
+ABORT
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+'
+\backslash 
+nRINGING
+\backslash 
+r
+\backslash 
+n
+\backslash 
+r
+\backslash 
+nRINGING
+\backslash 
+r'
+\newline 
+SAY "Dialing IndosatNet ..
+\backslash 
+n"
+\newline 
+'CONNECT'
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+''
+\newline 
+'0'
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+''
+\newline 
+SAY "Connected
+\backslash 
+n"
+\layout Subsection
+
+Setting Option PPP
+\layout Standard
+
+edit file /etc/ppp/options (root, root 600)
+\layout Code
+
+# Prevent pppd from forking into the background
+\newline 
+-detach
+\newline 
+#
+\newline 
+# use the modem control lines
+\newline 
+modem
+\newline 
+# use uucp style locks to ensure exclusive access to the serial device
+\newline 
+lock
+\newline 
+# use hardware flow control
+\newline 
+crtscts
+\newline 
+# create a default route for this connection in the routing table
+\newline 
+defaultroute
+\newline 
+# do NOT set up any "escaped" control sequences
+\newline 
+asyncmap 0
+\newline 
+# use a maximum transmission packet size of 552 bytes
+\newline 
+# Put values 2*N*128 + 40 (40 header)
+\newline 
+#mtu 1064
+\newline 
+mtu 552
+\newline 
+#mtu 296
+\newline 
+# use a maximum receive packet size of 552 bytes
+\newline 
+#mru 1064
+\newline 
+mru 552
+\newline 
+#mru 296
+\newline 
+#
+\newline 
+# Set the maximum number of LCP configure-request transmissions to <n>
+\newline 
+# (default 10).
+\newline 
+# Some PPP servers are slow to start up.
+ You may need to increase this
+\newline 
+# if you keep getting 'serial line looped back' errors and your are SURE
+\newline 
+# that you have logged in correctly and PPP should be starting on the server.
+\newline 
+# lcp-max-configure 25
+\newline 
+# How many second we tolerate idle ? Useful for cron dialing
+\newline 
+# idle 60
+\layout Subsection
+
+PAP Secret (hanya PAP)
+\layout Standard
+
+edit file /etc/ppp/pap-secrets (root, root 600) untuk menyimpan password
+ anda
+\layout Subsubsection
+
+IndosatNet
+\layout Code
+
+# Secrets for authentication using PAP
+\newline 
+# client
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ server
+\protected_separator 
+ secret
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ IP addresses
+\newline 
+user
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ *
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ pass
+\layout Subsection
+
+File-file lain
+\layout Standard
+
+File-file ini secara default sudah ada di linux anda tetapi untuk kelengkapan
+ saya sertakan disini.
+ Biasanya file ini terletak di /etc/ppp atau /usr/doc/ppp-*/scripts
+\layout Subsubsection
+
+File /etc/ppp/ppp-off
+\layout Standard
+
+Script untuk memutuskan koneksi (root, root 700)
+\layout Code
+
+#!/bin/sh
+\newline 
+######################################################################
+\newline 
+#
+\newline 
+# Determine the device to be terminated.
+\newline 
+#
+\newline 
+if [ "$1" = "" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ DEVICE=ppp0
+\newline 
+else
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ DEVICE=$1
+\newline 
+fi
+\newline 
+
+\newline 
+######################################################################
+\newline 
+#
+\newline 
+# If the ppp0 pid file is present then the program is running.
+ Stop it.
+\newline 
+if [ -r /var/run/$DEVICE.pid ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ kill -INT `cat /var/run/$DEVICE.pid`
+\newline 
+#
+\newline 
+# If the kill did not work then there is no process running for this
+\newline 
+# pid.
+ It may also mean that the lock file will be left.
+ You may wish
+\newline 
+# to delete the lock file at the same time.
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ if [ ! "$?" = "0" ]; then
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ rm -f /var/run/$DEVICE.pid
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ echo "ERROR: Removed stale pid file"
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ exit 1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ fi
+\newline 
+#
+\newline 
+# Success.
+ Let pppd clean up its own junk.
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ echo "PPP link to $DEVICE terminated."
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ exit 0
+\newline 
+fi
+\newline 
+#
+\newline 
+# The ppp process is not running for ppp0
+\newline 
+echo "ERROR: PPP link is not active on $DEVICE"
+\newline 
+exit 1
+\layout Subsubsection
+
+File /etc/ppp/ip-up
+\layout Standard
+
+Script yang dieksekusi pada saat koneksi PPP terhubung (root, root 700)
+\layout Code
+
+#!/bin/bash
+\newline 
+
+\newline 
+# This file should not be modified -- make local changes to
+\newline 
+# /etc/ppp/ip-up.local instead
+\newline 
+
+\newline 
+LOGDEVICE=$6
+\newline 
+REALDEVICE=$1
+\newline 
+
+\newline 
+export PATH=/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin
+\newline 
+
+\newline 
+echo "$REALDEVICE" > /var/run/ppp-$LOGDEVICE.dev
+\newline 
+[ -x /etc/ppp/ip-up.local ] && /etc/ppp/ip-up.local $*
+\newline 
+
+\newline 
+/etc/sysconfig/network-scripts/ifup-post ifcfg-${LOGDEVICE}
+\newline 
+
+\newline 
+exit 0
+\layout Subsubsection
+
+File /etc/ppp/ip-down
+\layout Standard
+
+Script yang dieksekusi pada saat koneksi PPP teputus (root, root 700)
+\layout Code
+
+#!/bin/bash
+\newline 
+
+\newline 
+# This file should not be modified -- make local changes to
+\newline 
+# /etc/ppp/ip-down.local instead
+\newline 
+
+\newline 
+LOGDEVICE=$6
+\newline 
+REALDEVICE=$1
+\newline 
+
+\newline 
+[ -x /etc/ppp/ip-down.local ] && /etc/ppp/ip-down.local $*
+\newline 
+/etc/sysconfig/network-scripts/ifdown-post ifcfg-${LOGDEVICE}
+\newline 
+
+\newline 
+exit 0
+\layout Subsection
+
+Perubahan Setting
+\begin_inset LatexCommand \label{customize}
+
+\end_inset 
+
+
+\layout Standard
+
+Jika ISP anda CBN/IndosatNet perubahan minimal adalah User Name, Password
+ dan No Telp.
+\layout Subsubsection
+
+Modem
+\layout Itemize
+
+Ubah ppp-chat-init jika modem anda tidak cukup diinisialisasi dengan ATZ
+ (lihat man chat untuk lebih detail)
+\layout Itemize
+
+Ubah ppp-chat-dial jika modem anda mempunyai response yang berbeda dari
+ yang sudah ada (lihat man chat untuk lebih detail)
+\layout Subsubsection
+
+No Telp.
+\layout Itemize
+
+Ubah ppp-chat-redialer edit bagian PHONE...
+ dan function callall
+\layout Itemize
+
+Ubah ppp-chat-redialer edit bagian PHONEPRE jika untuk menelepon anda harus
+ menekan angka khusus misalnya 9 hal ini biasanya diperlukan jika anda men-dial
+ dari jaringan PABX
+\layout Subsubsection
+
+User Name dan Password
+\layout Itemize
+
+Ubah ppp-chat-dial untuk ISP dengan login biasa (tanpa PAP/CHAP) seperti
+ CBN
+\layout Itemize
+
+Ubah pap-secrets untuk ISP memakai PAP dan chap-secrets untuk ISP memakai
+ CHAP (format chap-secrets dan pap-secrets sama)
+\layout Itemize
+
+Ubah ppp-on ganti 
+\series bold 
+user
+\series default 
+ dengan nama user anda jika ISP anda memakai PAP atau CHAP
+\layout Subsubsection
+
+ISP
+\layout Standard
+
+Pilih dasar setting untuk ISP anda sesuai dengan jenis ISP.
+ Login biasa dasar settingnya CBN dan login PAP dasar settingnya IndosatNet
+ untuk CHAP saya belum pernah coba :(
+\layout Itemize
+
+Ubah resolv.conf sesuai dengan IP DNS Server ISP anda
+\layout Itemize
+
+Ubah No Telp
+\layout Itemize
+
+Ubah User Name dan Passwordnya juga dong :)
+\layout Subsubsection
+
+MTU/MRU
+\layout Standard
+
+MTU (Maximum Transfer Unit) dan MRU (Maximum Receive Unit) menentukan besar
+ paket yang dikirim dan diterima jika modem dan line telepon anda bagus
+ naikkan MTU & MRU jika jelek turunkan MTU & MRU.
+ Jika MTU & MRU besar maka paket TCP yang dikirimkan akan besar sehingga
+ menguntungkan transfer file (FTP) tetapi jika linenya jelek maka paket
+ yang besar itu harus dikirimkan ulang.
+ Jika MTU & MRU kecil maka paket TCP yang dikirimkan akan kecil sehingga
+ menguntungkan untuk line yang jelek (pake yang dikirim ulang tidak terlalu
+ besar).
+ Untuk mengetahui MTU & MRU yang ideal anda harus ber-experimen sendiri.
+\layout Standard
+
+Rumus untuk mengubah MTU & MRU adalah:
+\layout Code
+
+2 * N * 128 + 40
+\layout Standard
+
+Jadi tinggal ganti N dengan angka yang diinginkan.
+\layout Section
+
+Testing
+\layout Standard
+
+Untuk mencoba setting anda lakukan langkah berikut
+\layout Enumerate
+
+Buka dua console atau xterm jika anda di X
+\layout Enumerate
+
+Pada console kedua jalankan perintah
+\family typewriter 
+:
+\family default 
+ 
+\begin_deeper 
+\layout Verbatim
+
+tail -f /var/log/messages
+\end_deeper 
+\layout Enumerate
+
+Pada console pertama jalankan perintah:
+\begin_deeper 
+\layout Verbatim
+
+/etc/ppp/ppp-on
+\end_deeper 
+\layout Enumerate
+
+Jika koneksi berjalan baik status koneksi akan terlihat pada console kedua
+ seperti dibawah ini
+\begin_deeper 
+\layout Code
+
+Jun 16 12:19:08 linux pppd[841]: Serial connection established.
+\newline 
+Jun 16 12:19:09 linux pppd[841]: Using interface ppp0
+\newline 
+Jun 16 12:19:09 linux pppd[841]: Connect: ppp0 <--> /dev/ttyS0
+\newline 
+Jun 16 12:19:15 linux pppd[841]: Remote message: Login Succeeded
+\newline 
+Jun 16 12:19:16 linux pppd[841]: local
+\protected_separator 
+ IP address 202.155.28.33
+\newline 
+Jun 16 12:19:16 linux pppd[841]: remote IP address 202.155.30.35
+\end_deeper 
+\layout Enumerate
+
+Tekan Ctrl + C pada console kedua dan jalankan ifconfig untuk mengecek koneksi,
+ hasilnya harus terlihat seperti dibawah ini
+\begin_deeper 
+\layout Code
+
+[root@linux /root]# ifconfig
+\newline 
+lo
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Link encap:Local Loopback
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ inet addr:127.0.0.1
+\protected_separator 
+ Bcast:127.255.255.255
+\protected_separator 
+ Mask:255.0.0.0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ UP BROADCAST LOOPBACK RUNNING
+\protected_separator 
+ MTU:3584
+\protected_separator 
+ Metric:1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ RX packets:172 errors:0 dropped:0 overruns:0 frame:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ TX packets:172 errors:0 dropped:0 overruns:0 carrier:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ collisions:0
+\newline 
+
+\newline 
+eth0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Link encap:Ethernet
+\protected_separator 
+ HWaddr 00:00:E8:68:C1:6B
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ inet addr:192.168.1.100
+\protected_separator 
+ Bcast:192.168.1.255
+\protected_separator 
+ Mask:255.255.255.0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ UP BROADCAST RUNNING MULTICAST
+\protected_separator 
+ MTU:1500
+\protected_separator 
+ Metric:1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ RX packets:15841 errors:0 dropped:0 overruns:0 frame:19
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ TX packets:191 errors:0 dropped:0 overruns:0 carrier:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ collisions:3
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Interrupt:9 Base address:0x300
+\newline 
+
+\newline 
+ppp0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Link encap:Point-to-Point Protocol
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ inet addr:202.155.28.33
+\protected_separator 
+ P-t-P:202.155.30.35
+\protected_separator 
+ Mask:255.255.255.0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ UP POINTOPOINT RUNNING
+\protected_separator 
+ MTU:552
+\protected_separator 
+ Metric:1
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ RX packets:18 errors:1 dropped:1 overruns:0 frame:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ TX packets:32 errors:0 dropped:0 overruns:0 carrier:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ collisions:0
+\newline 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Memory:1f2e038-1f2e49c
+\end_deeper 
+\layout Enumerate
+
+Jalankan route -n untuk melihat routing, outputnya harus terlihat seperti
+ dibawah ini
+\begin_deeper 
+\layout Code
+
+[root@linux /root]# route -n
+\newline 
+Kernel IP routing table
+\newline 
+Destination
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Gateway
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Genmask
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Flags Metric Ref
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ Use Iface
+\newline 
+202.155.30.35
+\protected_separator 
+
+\protected_separator 
+ 0.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 255.255.255.255 UH
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0 ppp0
+\newline 
+192.168.1.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 255.255.255.0
+\protected_separator 
+
+\protected_separator 
+ U
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 2 eth0
+\newline 
+127.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 255.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ U
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 4 lo
+\newline 
+0.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 202.155.30.35
+\protected_separator 
+
+\protected_separator 
+ 0.0.0.0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ UG
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 0
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ 3 ppp0
+\end_deeper 
+\layout Enumerate
+
+Testing DNS dengan ping ke alamat internet misalnya ping ke jakarta.linux.or.id.
+ Tekan Ctrl+C untuk menghentikan ping
+\begin_deeper 
+\layout Code
+
+[root@linux /root]# ping jakarta.linux.or.id
+\newline 
+PING jakarta.linux.or.id (207.106.122.73): 56 data bytes
+\newline 
+64 bytes from 207.106.122.73: icmp_seq=0 ttl=54 time=618.5 ms
+\newline 
+64 bytes from 207.106.122.73: icmp_seq=1 ttl=54 time=730.1 ms
+\newline 
+64 bytes from 207.106.122.73: icmp_seq=2 ttl=54 time=1670.0 ms
+\newline 
+64 bytes from 207.106.122.73: icmp_seq=3 ttl=54 time=700.0 ms
+\newline 
+
+\newline 
+--- jakarta.linux.or.id ping statistics ---
+\newline 
+5 packets transmitted, 4 packets received, 20% packet loss
+\newline 
+round-trip min/avg/max = 618.5/929.6/1670.0 ms
+\end_deeper 
+\layout Enumerate
+
+Untuk disconnect ada beberapa cara yaitu:
+\begin_deeper 
+\layout Enumerate
+
+Tekan Ctrl+C pada console pertama
+\layout Enumerate
+
+Jalankan perintah /etc/ppp/ppp-off
+\layout Enumerate
+
+Matiin modemnya :)
+\end_deeper 
+\layout Enumerate
+
+Jika sudah OK anda dapat mengedit file /etc/ppp/ppp-redialer dan menghapus
+ option -v dari perintah chat sehingga dari
+\begin_deeper 
+\layout Code
+
+/usr/sbin/chat -v -f /etc/ppp/ppp-chat-init
+\layout Standard
+
+di function initialize dan 
+\layout Code
+
+/usr/sbin/chat -v -T $1 -f /etc/ppp/ppp-chat-dial
+\layout Standard
+
+di function callnumber 
+\layout Standard
+
+Menjadi:
+\layout Code
+
+/usr/sbin/chat -f /etc/ppp/ppp-chat-init
+\layout Standard
+
+di function initialize dan 
+\layout Code
+
+/usr/sbin/chat -T $1 -f /etc/ppp/ppp-chat-dial
+\layout Standard
+
+di function callnumber sehingga anda bisa melihat output dari perintah SAY
+ di chat script.
+\end_deeper 
+\layout Section
+
+Penggunaan Lebih Lanjut
+\begin_inset LatexCommand \label{advance}
+
+\end_inset 
+
+
+\layout Subsection
+
+Link ppp-on
+\layout Standard
+
+Untuk memudahkan penggunaan ada baik anda link script ppp-on dan ppp-off
+ ke direktory /sbin
+\layout Code
+
+[root@linux /root]# ln -s /etc/ppp/ppp-on /sbin/ppp-on
+\newline 
+[root@linux /root]# ln -s /etc/ppp/ppp-off /sbin/ppp-off
+\layout Standard
+
+Sehingga anda tinggal mengetikkan ppp-on untuk connect ke internet.
+\layout Subsection
+
+Script see-ppp
+\layout Standard
+
+Untuk memantau proses dialing ada baiknya anda buat script /root/bin/see-ppp
+ (root, root 700)
+\layout Code
+
+#!/bin/sh
+\newline 
+tail -f /var/log/messages
+\layout Standard
+
+Sehingga anda tinggal jalankan see-ppp untuk melihat perkembangan proses
+ dialing.
+\layout Subsection
+
+Script ip-up.local dan ip-down.local
+\layout Standard
+
+Pada saat koneksi ppp terhubung dan terputus pppd akan menjalankan dua buah
+ script yaitu
+\layout Enumerate
+
+/etc/ppp/ip-up pada saat koneksi terhubung
+\layout Enumerate
+
+/etc/ppp/ip-down pada saat koneksi terputus
+\layout Standard
+
+Tetapi pada redhat linux kedua script itu sudah berisi dengan statndar distribus
+i sehingga tidak disarankan mengedit file tersebut tetapi mengedit/membuat
+ script
+\layout Enumerate
+
+/etc/ppp/ip-up.local yang dijalankan pada saat koneksi terhubung
+\layout Enumerate
+
+/etc/ppp/ip-down.local yang dijalankan pada saat koneksi terputus
+\layout Standard
+
+Pada kedua script ini anda bisa mencatat log koneksi, mengambil mail dan
+ lain sebagainya.
+ Sebagai contoh saya tampilkan isi file /etc/ppp/ip-up.local dan /etc/ppp/ip-down.
+local saya.
+\layout Subsubsection
+
+Contoh Script ip-up.local
+\layout Standard
+
+Script /etc/ppp/ip-up.local (root, root 700)ini berfungsi untuk mencatat
+ waktu memulai koneksi, start masquerade, start cache DNS, mengirim e-mail
+ dengan serialmail-nya qmail dan mengambil e-mail dengan fetchmail.
+\layout Code
+
+#!/bin/bash
+\newline 
+#
+\newline 
+# When the ppp link comes up, this script is called with the following
+\newline 
+# parameters
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $1
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the interface name used by pppd (e.g.
+ ppp3)
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $2
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the tty device name
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $3
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the tty device speed
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $4
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the local IP address for the interface
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $5
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the remote IP address
+\newline 
+#
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ $6
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+
+\protected_separator 
+ the parameter specified by the 'ipparam' option to pppd
+\newline 
+#
+\newline 
+# Catat semua output pada file /root/spool-mail-log
+\newline 
+exec >>/root/spool-mail-log
+\newline 
+exec 2>&1
+\newline 
+#
+\newline 
+# Catat waktu mulai koneksi pada file /root/ppp-log
+\newline 
+echo Start: `date`>>/root/ppp-log
+\newline 
+echo Start: `date`
+\newline 
+# Start cache only dns
+\newline 
+/usr/sbin/ndc start
+\newline 
+# Start Masquerade service
+\newline 
+/etc/ppp/masq start
+\newline 
+# Lihat berapa besar e-mail yang akan dikirim
+\newline 
+du -b /var/qmail/alias/pppdir/new
+\newline 
+# send batched mail to smarthost
+\newline 
+
+\newline 
+/usr/local/bin/maildirsmtp ~alias/pppdir alias-ppp- mail.indosat.net.id $4
+\newline 
+echo Fetch: `date`
+\newline 
+# fetch pop mail
+\newline 
+/usr/bin/fetchmail
+\newline 
+echo End: `date`
+\layout Subsubsection
+
+Contoh Script ip-down.local
+\layout Standard
+
+Script /etc/ppp/ip-down.local (root, root 700)ini berfungsi untuk mencatat
+ waktu akhir koneksi, stop masquerade dan stop cache DNS.
+\layout Code
+
+echo Stop: `date`>>/root/ppp-log
+\newline 
+/etc/ppp/masq stop
+\newline 
+/usr/sbin/ndc stop
+\layout Subsection
+
+Dialing Secara Berkala
+\layout Standard
+
+Apabila anda memerlukan koneksi secara berkala, untuk mengambil mail misalnya
+ anda bisa menjalankan script /etc/ppp/ppp-on melalui crontab.
+ Apabila anda menjalankan ini anda sebaiknya mengaktipkan option idle di
+ file /etc/ppp/options cukup tambahkan/uncomment baris
+\layout Code
+
+idle 60
+\layout Standard
+
+Sehingga bila tidak ada lalulintas data melalui ppp selama 60 detik maka
+ pppd akan memutuskan hubungan secara otomatis.
+\layout Standard
+
+Tambahkan /etc/ppp/ppp-on pada crontab anda dengan cara:
+\layout Enumerate
+
+List crontab anda:
+\begin_deeper 
+\layout Code
+
+# crontab -l>cron.txt
+\end_deeper 
+\layout Enumerate
+
+Edit cron.txt tambahkan baris berikut:
+\begin_deeper 
+\layout Code
+
+# use /bin/sh to run commands, no matter what /etc/passwd says
+\newline 
+SHELL=/bin/sh
+\newline 
+#
+\newline 
+# spool mail at 8,10,12,14,16,18 at works day
+\newline 
+0 8,10,12,14,16,18 * * 1-5 /etc/ppp/ppp-on
+\layout Standard
+
+Jika anda ingin mendial pada jam 8,10,12,14,16,18 pada hari kerja (senin-jum'at).
+\end_deeper 
+\layout Enumerate
+
+Jalankan perintah berikut untuk mengupdate crontab
+\begin_deeper 
+\layout Code
+
+# crontab cron.txt
+\end_deeper 
+\layout Section
+
+Masukan & Troubleshooting
+\layout Standard
+
+Jika anda punya komentar, kritik dan saran silahkan e-mail saya di 
+\begin_inset LatexCommand \htmlurl[zak@telkom.net]{mailto:zak@telkom.net}
+
+\end_inset 
+
+.
+ Jika anda mempunyai masalah dengan setting PPP periksa lagi apakah settingnya
+ sudah sesuai terutama perhatikan output dari /var/log/messages.
+ Jika masih belum berhasil juga silahkan tanya ke saya atau bergabung dengan
+ mailing list linux-setup@linux.or.id.
+ Tetapi karena kesibukan saya lebih disarankan untuk bertanya ke mailing
+ list.
+\layout Standard
+
+Untuk bergabung dengan mailing list linux-setup kirim e-mail kosong ke:
+ 
+\begin_inset LatexCommand \htmlurl[linux-setup-subscribe@linux.or.id]{mailto:linux-setup-subscribe@linux.or.id}
+
+\end_inset 
+
+
+\the_end
